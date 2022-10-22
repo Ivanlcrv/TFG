@@ -1,7 +1,9 @@
 package com.example.app;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.app.ui.login.LoginActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
+        Intent loginintent = new Intent(this, LoginActivity.class);
+        startActivity(loginintent);
     }
 
 }
