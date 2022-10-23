@@ -12,7 +12,8 @@
     tools:context=".ui.login.LoginActivity">
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/username_layout"
+        android:id="@+id/email_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
@@ -22,10 +23,10 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/login_subtitle"
-        style="@style/AppTheme.TextInputLayout">
+        app:startIconDrawable="@drawable/ic_user">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editUsername"
+            android:id="@+id/editEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/calistoga"
@@ -33,21 +34,23 @@
             android:inputType="textEmailAddress"
             android:minHeight="48dp"
             android:selectAllOnFocus="true"
+            android:textColorHint="@color/hint"
             android:textStyle="bold"
-            android:typeface="normal" />
+            tools:ignore="TextContrastCheck" />
     </com.google.android.material.textfield.TextInputLayout>
 
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/password_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.531"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/username_layout"
-        style="@style/AppTheme.TextInputLayout">
+        app:layout_constraintTop_toBottomOf="@+id/email_layout"
+        app:startIconDrawable="@drawable/ic_password">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editPassword"
@@ -60,7 +63,9 @@
             android:inputType="textPassword"
             android:minHeight="48dp"
             android:selectAllOnFocus="true"
-            android:textStyle="bold" />
+            android:textColorHint="@color/hint"
+            android:textStyle="bold"
+            tools:ignore="TextContrastCheck,TextContrastCheck,TextContrastCheck" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
@@ -70,12 +75,13 @@
         android:layout_gravity="start"
         android:layout_marginTop="10dp"
         android:enabled="false"
+        android:fontFamily="@font/calistoga"
         android:text="@string/action_sign_in"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/password_layout"
-        app:layout_constraintVertical_bias="0.2"
-        style="@style/Button"/>
+        app:layout_constraintVertical_bias="0.2"/>
 
     <TextView
         android:id="@+id/login_title"
@@ -83,11 +89,10 @@
         android:layout_height="0dp"
         android:layout_marginStart="6dp"
         android:layout_marginTop="130dp"
-        android:fontFamily="@font/fugaz_one"
-        android:text="Login"
-        android:textColor="#000000"
+        android:fontFamily="@font/calistoga"
+        android:text="@string/login_title"
+        android:textColor="@color/black"
         android:textSize="60sp"
-        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -98,9 +103,8 @@
         android:layout_marginStart="6dp"
         android:layout_marginTop="10dp"
         android:fontFamily="@font/calistoga"
-        android:text="Please sign in to continue"
+        android:text="@string/login_text"
         android:textSize="24sp"
-        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/login_title" />
 
@@ -110,11 +114,13 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:fontFamily="@font/calistoga"
-        android:text="Don't have an account? Sign up"
+        android:onClick="register"
+        android:text="@string/register_text"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="TouchTargetSizeCheck,TouchTargetSizeCheck" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

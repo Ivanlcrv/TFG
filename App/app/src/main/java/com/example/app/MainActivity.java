@@ -2,21 +2,22 @@ package com.example.app;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import com.example.app.ui.login.LoginActivity;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-
 import com.example.app.databinding.ActivityMainBinding;
+import com.example.app.ui.login.LoginActivity;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,8 +35,14 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
-        Intent loginintent = new Intent(this, LoginActivity.class);
-        startActivity(loginintent);
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user == null) {
+            Intent loginIntent = new Intent(this, LoginActivity.class);
+            startActivity(loginIntent);
+        } else {
+            Toast.makeText(getApplicationContext(), user.getEmail(), Toast.LENGTH_SHORT).show();
+        }
     }
 
 }

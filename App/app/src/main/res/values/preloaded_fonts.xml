@@ -4,6 +4,11 @@
         <item>@font/atomic_age</item>
         <item>@font/calistoga</item>
         <item>@font/fugaz_one</item>
+        <item>@font/lato_black_italic</item>
+        <item>@font/nunito_sans_bold</item>
+        <item>@font/open_sans</item>
         <item>@font/pacifico</item>
+        <item>@font/poppins_thin</item>
+        <item>@font/roboto_slab</item>
     </array>
 </resources>
