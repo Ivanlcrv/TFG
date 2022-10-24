@@ -1,5 +1,6 @@
 package com.example.app.ui.register;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -7,20 +8,29 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
+
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.Observer;
+
 import com.example.app.R;
 import com.example.app.databinding.ActivityRegisterBinding;
 
 
 public class RegisterActivity extends AppCompatActivity {
 
+    String checked;
     private ActivityRegisterBinding binding;
     private RegisterViewModel registerViewModel;
+    private Button date;
+    private EditText UsernameEditText;
+    private EditText emailEditText;
+    private EditText passwordEditText;
     @Override
 
     public void onCreate(Bundle savedInstanceState) {
@@ -30,25 +40,30 @@ public class RegisterActivity extends AppCompatActivity {
 
         registerViewModel = new RegisterViewModel();
 
-        final EditText emailUsernameText = binding.editUsername;
-        final EditText emailEditText = binding.editEmail;
-        final EditText passwordEditText = binding.editPassword;
+        UsernameEditText = binding.editUsername;
+        emailEditText = binding.editEmail;
+        passwordEditText = binding.editPassword;
         final Button registerButton = binding.register;
-        RadioGroup radioGroup = binding.radioSex;
-
+        final RadioGroup radioGroup = binding.radioSex;
+        date = binding.date;
         registerViewModel.getRegisterFormState().observe(this, new Observer<RegisterFormState>() {
             @Override
             public void onChanged(@Nullable RegisterFormState registerFormState) {
                 if (registerFormState == null) return;
                 registerButton.setEnabled(registerFormState.isDataValid());
                 if (registerFormState.getUsernameError() != null) {
-                    assert emailEditText != null;
-                    emailEditText.setError(getString(registerFormState.getUsernameError()));
+                    UsernameEditText.setError(getString(registerFormState.getUsernameError()));
                 }
                 if (registerFormState.getPasswordError() != null) {
-                    assert passwordEditText != null;
                     passwordEditText.setError(getString(registerFormState.getPasswordError()));
                 }
+                if (registerFormState.getEmailError() != null) {
+                    emailEditText.setError(getString(registerFormState.getEmailError()));
+                }
+                if (registerFormState.getGenreError() != null) {
+                    binding.genreTitle.setError(getString(registerFormState.getGenreError()));
+                }
+
             }
         });
 
@@ -76,31 +91,31 @@ public class RegisterActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                assert emailEditText != null;
-                assert passwordEditText != null;
-                registerViewModel.registerDataChanged(emailEditText.getText().toString(), passwordEditText.getText().toString());
+                registerViewModel.registerDataChanged(UsernameEditText.getText().toString(), emailEditText.getText().toString(), passwordEditText.getText().toString(), checked, date.getText().toString());
             }
         };
-
-        assert emailEditText != null;
+        UsernameEditText.addTextChangedListener(afterTextChangedListener);
         emailEditText.addTextChangedListener(afterTextChangedListener);
-        assert passwordEditText != null;
         passwordEditText.addTextChangedListener(afterTextChangedListener);
 
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                registerViewModel.register(emailEditText.getText().toString(), passwordEditText.getText().toString());
+                registerViewModel.register(UsernameEditText.getText().toString(), emailEditText.getText().toString(), passwordEditText.getText().toString(), checked, date.getText().toString());
             }
         });
 
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-
+                RadioButton check = group.findViewById(checkedId);
+                checked = check.getText().toString();
+                if (!checked.isEmpty()) binding.genreTitle.setError(null);
+                registerViewModel.registerDataChanged(UsernameEditText.getText().toString(), emailEditText.getText().toString(), passwordEditText.getText().toString(), checked, date.getText().toString());
             }
         });
     }
+
     private void updateUiWithUser(String email) {
         String welcome = getString(R.string.welcome) + email;
         // TODO : initiate successful logged in experience
@@ -109,5 +124,22 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void showLoginFailed(@StringRes Integer errorString) {
         Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
+    }
+
+    public void showDatePicker(View view) {
+        DialogFragment newFragment = new DatePickerFragment();
+        newFragment.show(getSupportFragmentManager(), getString(R.string.datepicker));
+    }
+
+    public void processDatePickerResult(int year, int month, int day) {
+        String day_string;
+        String month_string;
+        if(day < 9) day_string = "0"+Integer.toString(day);
+        else day_string = Integer.toString(day);
+        if(month < 9) month_string = "0"+Integer.toString(month + 1);
+        else month_string = Integer.toString(month + 1);
+        String year_string = Integer.toString(year);
+        date.setText(day_string + "/" + month_string + "/" + year_string);
+        registerViewModel.registerDataChanged(UsernameEditText.getText().toString(), emailEditText.getText().toString(), passwordEditText.getText().toString(), checked, date.getText().toString());
     }
 }

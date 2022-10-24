@@ -50,7 +50,7 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/username_layout"
-        app:startIconDrawable="@drawable/ic_user">
+        app:startIconDrawable="@drawable/ic_email">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editEmail"
@@ -94,28 +94,15 @@
             tools:ignore="TextContrastCheck,TextContrastCheck,TextContrastCheck" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <Button
-        android:id="@+id/register"
-        android:layout_width="wrap_content"
-        android:layout_height="48dp"
-        android:layout_gravity="start"
-        android:layout_marginEnd="16dp"
-        android:enabled="false"
-        android:fontFamily="@font/calistoga"
-        android:text="@string/action_sign_up"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
     <TextView
         android:id="@+id/register_title"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginStart="6dp"
-        android:layout_marginTop="130dp"
+        android:layout_marginTop="80dp"
         android:fontFamily="@font/calistoga"
         android:text="@string/register_title"
-        android:textColor="@color/black"
+        android:textColor="@color/dark_grey"
         android:textSize="60sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -125,13 +112,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="2dp"
-        android:layout_marginTop="5dp"
         android:fontFamily="@font/calistoga"
         android:text="@string/genre_title"
-        android:textColor="@color/black"
+        android:textColor="@color/grey_text"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password_layout" />
+        app:layout_constraintTop_toBottomOf="@+id/date" />
 
     <RadioGroup
         android:id="@+id/radio_sex"
@@ -146,6 +132,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
+            android:buttonTint="@color/secondary_grey"
             android:fontFamily="@font/calistoga"
             android:text="@string/male" />
 
@@ -154,6 +141,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
+            android:buttonTint="@color/grey_text"
             android:fontFamily="@font/calistoga"
             android:text="@string/female" />
 
@@ -161,8 +149,36 @@
             android:id="@+id/radio_other"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:buttonTint="@color/grey_text"
             android:fontFamily="@font/calistoga"
             android:text="@string/other" />
     </RadioGroup>
+
+    <Button
+        android:id="@+id/date"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/secondary_grey"
+        android:fontFamily="@font/calistoga"
+        android:onClick="showDatePicker"
+        android:text="@string/birthdate"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/password_layout" />
+
+    <Button
+        android:id="@+id/register"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:enabled="false"
+        android:fontFamily="@font/calistoga"
+        android:text="@string/action_sign_up"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/date"
+        app:layout_constraintTop_toBottomOf="@+id/radio_sex"
+        app:layout_constraintVertical_bias="0.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

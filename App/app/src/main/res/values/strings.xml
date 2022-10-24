@@ -23,4 +23,9 @@
     <string name="female">Female</string>
     <string name="other">Other</string>
     <string name="genre_title">Select your genre:</string>
+    <string name="birthdate">Pick your date of birth</string>
+    <string name="datepicker">datePicker</string>
+    <string name="invalid_user">Username can not be empty</string>
+    <string name="invalid_genre">Genre can not be empty</string>
+    <string name="invalid_date">Please pick your birth date</string>
 </resources>

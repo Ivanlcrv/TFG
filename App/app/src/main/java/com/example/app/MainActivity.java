@@ -44,5 +44,4 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), user.getEmail(), Toast.LENGTH_SHORT).show();
         }
     }
-
 }
