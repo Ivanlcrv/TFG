@@ -7,6 +7,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
@@ -33,6 +34,7 @@ public class RegisterActivity extends AppCompatActivity {
         final EditText emailEditText = binding.editEmail;
         final EditText passwordEditText = binding.editPassword;
         final Button registerButton = binding.register;
+        RadioGroup radioGroup = binding.radioSex;
 
         registerViewModel.getRegisterFormState().observe(this, new Observer<RegisterFormState>() {
             @Override
@@ -89,6 +91,13 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 registerViewModel.register(emailEditText.getText().toString(), passwordEditText.getText().toString());
+            }
+        });
+
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+
             }
         });
     }
