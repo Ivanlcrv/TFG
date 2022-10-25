@@ -3,36 +3,36 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_menu">
-
-    <fragment
-        android:id="@+id/navigation_menu"
-        android:name="com.example.app.ui.home.HomeFragment"
-        android:label="@string/title_menu"
-        tools:layout="@layout/fragment_shopping" />
-
-    <fragment
-        android:id="@+id/navigation_shopping"
-        android:name="com.example.app.ui.dashboard.DashboardFragment"
-        android:label="@string/title_shopping"
-        tools:layout="@layout/fragment_menu" />
+    app:startDestination="@+id/navigation_recipe">
 
     <fragment
         android:id="@+id/navigation_recipe"
-        android:name="com.example.app.ui.notifications.NotificationsFragment"
+        android:name="com.example.app.ui.recipe.RecipeFragment"
         android:label="@string/title_recipe"
         tools:layout="@layout/fragment_recipe" />
 
     <fragment
-        android:id="@+id/navigation_pantry"
-        android:name="com.example.app.ui.dashboard.DashboardFragment"
-        android:label="@string/title_pantry"
+        android:id="@+id/navigation_shopping"
+        android:name="com.example.app.ui.shopping.ShoppingFragment"
+        android:label="@string/title_shopping"
+        tools:layout="@layout/fragment_shopping" />
+
+    <fragment
+        android:id="@+id/navigation_menu"
+        android:name="com.example.app.ui.menu.MenuFragment"
+        android:label="@string/title_menu"
         tools:layout="@layout/fragment_menu" />
 
     <fragment
-        android:id="@+id/navigation_user"
-        android:name="com.example.app.ui.notifications.NotificationsFragment"
+        android:id="@+id/navigation_pantry"
+        android:name="com.example.app.ui.pantry.PantryFragment"
+        android:label="@string/title_pantry"
+        tools:layout="@layout/fragment_pantry" />
+
+    <fragment
+        android:id="@+id/navigation_account"
+        android:name="com.example.app.ui.account.AccountFragment"
         android:label="@string/title_account"
-        tools:layout="@layout/fragment_recipe" />
+        tools:layout="@layout/fragment_account" />
 
 </navigation>
