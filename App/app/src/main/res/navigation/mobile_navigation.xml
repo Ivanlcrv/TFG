@@ -6,20 +6,33 @@
     app:startDestination="@+id/navigation_home">
 
     <fragment
-        android:id="@+id/navigation_home"
+        android:id="@+id/navigation_menu"
         android:name="com.example.app.ui.home.HomeFragment"
-        android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        android:label="@string/title_menu"
+        tools:layout="@layout/fragment_shopping" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
+        android:id="@+id/navigation_shopping"
         android:name="com.example.app.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:label="@string/title_shopping"
+        tools:layout="@layout/fragment_menu" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
+        android:id="@+id/navigation_recipe"
         android:name="com.example.app.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:label="@string/title_recipe"
+        tools:layout="@layout/fragment_recipe" />
+
+    <fragment
+        android:id="@+id/navigation_pantry"
+        android:name="com.example.app.ui.dashboard.DashboardFragment"
+        android:label="@string/title_pantry"
+        tools:layout="@layout/fragment_menu" />
+
+    <fragment
+        android:id="@+id/navigation_user"
+        android:name="com.example.app.ui.notifications.NotificationsFragment"
+        android:label="@string/title_account"
+        tools:layout="@layout/fragment_recipe" />
+
 </navigation>

@@ -23,6 +23,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private LoginViewModel loginViewModel;
     private ActivityLoginBinding binding;
+    public static final int TEXT_REQUEST = 1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -108,6 +109,16 @@ public class LoginActivity extends AppCompatActivity {
 
     public void register(View view) {
         Intent registerIntent = new Intent(this, RegisterActivity.class);
-        startActivity(registerIntent);
+        startActivityForResult(registerIntent, TEXT_REQUEST);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == TEXT_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                finish();
+            }
+        }
     }
 }

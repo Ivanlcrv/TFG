@@ -1,8 +1,5 @@
 <resources>
     <string name="app_name">App</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
@@ -28,4 +25,9 @@
     <string name="invalid_user">Username can not be empty</string>
     <string name="invalid_genre">Genre can not be empty</string>
     <string name="invalid_date">Please pick your birth date</string>
+    <string name="title_recipe">Recipe</string>
+    <string name="title_shopping">Shopping list</string>
+    <string name="title_pantry">Pantry</string>
+    <string name="title_account">Account</string>
+    <string name="title_menu">Menu</string>
 </resources>

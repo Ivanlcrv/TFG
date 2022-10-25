@@ -1,19 +1,33 @@
 package com.example.app.ui.register;
 
+import android.os.Bundle;
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import com.example.app.R;
+import com.example.app.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.regex.Pattern;
 
 public class RegisterViewModel {
     private final MutableLiveData<RegisterFormState> registerFormState = new MutableLiveData<>();
     private final MutableLiveData<RegisterResult> registerResult = new MutableLiveData<>();
+    FirebaseAuth mAuth;
+    FirebaseUser userF;
+    DatabaseReference myRef;
+    private static final String TAG = "AddToDatabase";
 
     LiveData<RegisterFormState> getRegisterFormState() {
         return registerFormState;
@@ -24,16 +38,19 @@ public class RegisterViewModel {
     }
 
     public void register(String username, String email, String password, String checked, String date) {
-        FirebaseAuth mAuth;
+
+
         mAuth = FirebaseAuth.getInstance();
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            assert user != null;
-                            registerResult.setValue(new RegisterResult(user.getDisplayName()));
+                            myRef = FirebaseDatabase.getInstance().getReference();
+                            userF = mAuth.getCurrentUser();
+                            User user = new User(username, email,checked, date);
+                            myRef.child("users").child(userF.getUid()).setValue(user);
+                            registerResult.setValue(new RegisterResult(username));
                         } else {
                             registerResult.setValue(new RegisterResult(R.string.login_failed));
                         }
@@ -69,7 +86,7 @@ public class RegisterViewModel {
 
     // A placeholder password validation check
     private Integer isPasswordValid(String password) {
-        if (password != null && password.trim().length() > 6) return null;
+        if (password != null && password.trim().length() > 5) return null;
         else return R.string.invalid_password;
     }
 
