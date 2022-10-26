@@ -1,5 +1,7 @@
 package com.example.app.ui.login;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -10,6 +12,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.regex.Pattern;
 
@@ -17,6 +22,9 @@ public class LoginViewModel {
 
     private final MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();
     private final MutableLiveData<LoginResult> loginResult = new MutableLiveData<>();
+    FirebaseAuth mAuth;
+    FirebaseUser userF;
+    DatabaseReference myRef;
 
     LiveData<LoginFormState> getLoginFormState() {
         return loginFormState;
@@ -27,7 +35,6 @@ public class LoginViewModel {
     }
 
     public void login(String email, String password) {
-        FirebaseAuth mAuth;
         mAuth = FirebaseAuth.getInstance();
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -35,8 +42,14 @@ public class LoginViewModel {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             FirebaseUser user = mAuth.getCurrentUser();
-                            assert user != null;
-                            loginResult.setValue(new LoginResult(user.getDisplayName()));
+                            myRef = FirebaseDatabase.getInstance().getReference();
+                            myRef.child("users").child(user.getUid()).child("username").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                    if (!task.isSuccessful()) loginResult.setValue(new LoginResult(R.string.login_failed));
+                                    else loginResult.setValue(new LoginResult(String.valueOf(task.getResult().getValue())));
+                                }
+                            });
                         } else {
                             loginResult.setValue(new LoginResult(R.string.login_failed));
 

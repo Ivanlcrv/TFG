@@ -30,4 +30,5 @@
     <string name="title_pantry">Pantry</string>
     <string name="title_account">Account</string>
     <string name="title_menu">Menu</string>
+    <string name="title_activity_main">MainActivity</string>
 </resources>

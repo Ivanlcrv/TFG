@@ -48,7 +48,7 @@ public class RegisterViewModel {
                         if (task.isSuccessful()) {
                             myRef = FirebaseDatabase.getInstance().getReference();
                             userF = mAuth.getCurrentUser();
-                            User user = new User(username, email,checked, date);
+                            User user = new User(username, email, checked, date);
                             myRef.child("users").child(userF.getUid()).setValue(user);
                             registerResult.setValue(new RegisterResult(username));
                         } else {
