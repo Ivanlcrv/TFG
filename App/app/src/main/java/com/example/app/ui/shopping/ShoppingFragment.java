@@ -18,14 +18,14 @@ public class ShoppingFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        ShoppingViewModel homeViewModel =
+        ShoppingViewModel shoppingViewModel =
                 new ViewModelProvider(this).get(ShoppingViewModel.class);
 
         binding = FragmentAccountBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         final TextView textView = binding.textAccount;
-        homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        shoppingViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
 

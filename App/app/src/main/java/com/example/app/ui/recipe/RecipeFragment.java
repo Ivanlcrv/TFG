@@ -18,14 +18,14 @@ public class RecipeFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        RecipeViewModel notificationsViewModel =
+        RecipeViewModel recipeViewModel =
                 new ViewModelProvider(this).get(RecipeViewModel.class);
 
         binding = FragmentShoppingBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         final TextView textView = binding.textShopping;
-        notificationsViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        recipeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
 
