@@ -34,4 +34,5 @@
         android:name="com.example.app.ui.account.AccountFragment"
         android:label="@string/title_account"
         tools:layout="@layout/fragment_account" />
+
 </navigation>

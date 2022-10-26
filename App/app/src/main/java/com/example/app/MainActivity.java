@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         if (user == null) {
             Intent loginIntent = new Intent(this, LoginActivity.class);
             startActivity(loginIntent);
-        } else Toast.makeText(getApplicationContext(), user.getEmail(), Toast.LENGTH_SHORT).show();
+        }
     }
 
 }

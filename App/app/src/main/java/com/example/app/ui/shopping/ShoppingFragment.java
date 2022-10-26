@@ -23,9 +23,6 @@ public class ShoppingFragment extends Fragment {
 
         binding = FragmentAccountBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
-        final TextView textView = binding.textAccount;
-        shoppingViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
 
