@@ -35,4 +35,6 @@
     <string name="account_information">Account information</string>
     <string name="prompt_genre">Genre</string>
     <string name="prompt_date">Birth date</string>
+    <string name="save_changes">Save changes</string>
+    <string name="delete_your_account">Delete your account</string>
 </resources>

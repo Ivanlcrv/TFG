@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/calistoga"
             android:hint="@string/prompt_username"
-            android:inputType="textEmailAddress"
+            android:inputType="text"
             android:minHeight="48dp"
             android:selectAllOnFocus="true"
             android:textColorHint="@color/hint"
