@@ -91,7 +91,6 @@
         android:layout_marginTop="130dp"
         android:fontFamily="@font/calistoga"
         android:text="@string/login_title"
-        android:textColor="@color/dark_grey"
         android:textSize="60sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

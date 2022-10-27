@@ -31,4 +31,8 @@
     <string name="title_account">Account</string>
     <string name="title_menu">Menu</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="details_account">Details account</string>
+    <string name="account_information">Account information</string>
+    <string name="prompt_genre">Genre</string>
+    <string name="prompt_date">Birth date</string>
 </resources>
