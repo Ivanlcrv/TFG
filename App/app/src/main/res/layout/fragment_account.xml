@@ -27,7 +27,7 @@
                 android:id="@+id/details_account"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginEnd="15dp"
                 android:layout_marginBottom="10dp"
                 android:fontFamily="@font/calistoga"
@@ -42,10 +42,12 @@
                 android:layout_width="50dp"
                 android:layout_height="54dp"
                 android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
                 android:src="@drawable/ic_logout"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:contentDescription="TODO" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
