@@ -23,7 +23,6 @@ public class LoginViewModel {
     private final MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();
     private final MutableLiveData<LoginResult> loginResult = new MutableLiveData<>();
     FirebaseAuth mAuth;
-    FirebaseUser userF;
     DatabaseReference myRef;
 
     LiveData<LoginFormState> getLoginFormState() {

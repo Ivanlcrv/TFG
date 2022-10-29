@@ -10,7 +10,7 @@
     <color name="primary_blue">#4c6999</color>
     <color name="light_blue">#7c97ca</color>
     <color name="dark_blue">#1a3f6b</color>
-    <color name="text_primary">#ffffff</color>
+    <color name="text_primary">#000000</color>
     <color name="text_secondary">#00695c</color>
     <color name="secondary_green">#c8e6c9</color>
     <color name="light_green">#fbfffc</color>

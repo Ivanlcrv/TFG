@@ -1,4 +1,4 @@
-package com.example.app.ui.register;
+package com.example.app.ui.account;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -7,10 +7,12 @@ import android.widget.DatePicker;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
 
-import java.util.Calendar;
+import com.example.app.R;
+import com.example.app.ui.register.RegisterActivity;
 
-public class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
+public class DatePickerAccountFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -31,8 +33,8 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
      * @return A new instance of fragment DatePickerFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static DatePickerFragment newInstance(String param1, String param2) {
-        DatePickerFragment fragment = new DatePickerFragment();
+    public static DatePickerAccountFragment newInstance(String param1, String param2) {
+        DatePickerAccountFragment fragment = new DatePickerAccountFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -58,7 +60,8 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
 
     @Override
     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-        RegisterActivity activity = (RegisterActivity) getActivity();
-        activity.processDatePickerResult(year, month, day);
+        AccountFragment fragment = AccountFragment.getInstance();
+        fragment.processDatePickerResult(year, month, day);
     }
 }
+

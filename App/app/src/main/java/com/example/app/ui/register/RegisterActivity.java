@@ -10,13 +10,9 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
-
-import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
-import androidx.lifecycle.Observer;
-
 import com.example.app.R;
 import com.example.app.databinding.ActivityRegisterBinding;
 
@@ -45,37 +41,31 @@ public class RegisterActivity extends AppCompatActivity {
         final Button registerButton = binding.register;
         final RadioGroup radioGroup = binding.radioSex;
         date = binding.date;
-        registerViewModel.getRegisterFormState().observe(this, new Observer<RegisterFormState>() {
-            @Override
-            public void onChanged(@Nullable RegisterFormState registerFormState) {
-                if (registerFormState == null) return;
-                registerButton.setEnabled(registerFormState.isDataValid());
-                if (registerFormState.getUsernameError() != null) {
-                    UsernameEditText.setError(getString(registerFormState.getUsernameError()));
-                }
-                if (registerFormState.getPasswordError() != null) {
-                    passwordEditText.setError(getString(registerFormState.getPasswordError()));
-                }
-                if (registerFormState.getEmailError() != null) {
-                    emailEditText.setError(getString(registerFormState.getEmailError()));
-                }
-                if (registerFormState.getGenreError() != null) {
-                    binding.genreTitle.setError(getString(registerFormState.getGenreError()));
-                }
-
+        registerViewModel.getRegisterFormState().observe(this, registerFormState -> {
+            if (registerFormState == null) return;
+            registerButton.setEnabled(registerFormState.isDataValid());
+            if (registerFormState.getUsernameError() != null) {
+                UsernameEditText.setError(getString(registerFormState.getUsernameError()));
             }
+            if (registerFormState.getPasswordError() != null) {
+                passwordEditText.setError(getString(registerFormState.getPasswordError()));
+            }
+            if (registerFormState.getEmailError() != null) {
+                emailEditText.setError(getString(registerFormState.getEmailError()));
+            }
+            if (registerFormState.getGenreError() != null) {
+                binding.genreTitle.setError(getString(registerFormState.getGenreError()));
+            }
+
         });
 
-        registerViewModel.getRegisterResult().observe(this, new Observer<RegisterResult>() {
-            @Override
-            public void onChanged(@Nullable RegisterResult registerResult) {
-                if (registerResult == null) return;
-                if (registerResult.getError() != null) showLoginFailed(registerResult.getError());
-                if (registerResult.getUserName() != null) {
-                    updateUiWithUser(registerResult.getUserName());
-                    setResult(Activity.RESULT_OK);
-                    finish();
-                }
+        registerViewModel.getRegisterResult().observe(this, registerResult -> {
+            if (registerResult == null) return;
+            if (registerResult.getError() != null) showLoginFailed(registerResult.getError());
+            if (registerResult.getUserName() != null) {
+                updateUiWithUser(registerResult.getUserName());
+                setResult(Activity.RESULT_OK);
+                finish();
             }
         });
 
@@ -97,27 +87,18 @@ public class RegisterActivity extends AppCompatActivity {
         emailEditText.addTextChangedListener(afterTextChangedListener);
         passwordEditText.addTextChangedListener(afterTextChangedListener);
 
-        registerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                registerViewModel.register(UsernameEditText.getText().toString(), emailEditText.getText().toString(), passwordEditText.getText().toString(), checked, date.getText().toString());
-            }
-        });
+        registerButton.setOnClickListener(v -> registerViewModel.register(UsernameEditText.getText().toString(), emailEditText.getText().toString(), passwordEditText.getText().toString(), checked, date.getText().toString()));
 
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                RadioButton check = group.findViewById(checkedId);
-                checked = check.getText().toString();
-                if (!checked.isEmpty()) binding.genreTitle.setError(null);
-                registerViewModel.registerDataChanged(UsernameEditText.getText().toString(), emailEditText.getText().toString(), passwordEditText.getText().toString(), checked, date.getText().toString());
-            }
+        radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            RadioButton check = group.findViewById(checkedId);
+            checked = check.getText().toString();
+            if (!checked.isEmpty()) binding.genreTitle.setError(null);
+            registerViewModel.registerDataChanged(UsernameEditText.getText().toString(), emailEditText.getText().toString(), passwordEditText.getText().toString(), checked, date.getText().toString());
         });
     }
 
     private void updateUiWithUser(String email) {
         String welcome = getString(R.string.welcome) + email;
-        // TODO : initiate successful logged in experience
         Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
     }
 
@@ -126,7 +107,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     public void showDatePicker(View view) {
-        DialogFragment newFragment = new DatePickerFragment();
+        DialogFragment newFragment = new DatePickerRegisterFragment();
         newFragment.show(getSupportFragmentManager(), getString(R.string.datepicker));
     }
 

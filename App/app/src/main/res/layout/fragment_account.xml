@@ -103,6 +103,7 @@
             android:inputType="text"
             android:textColor="@color/primary_blue"
             android:textSize="16sp"
+            android:text=""
             app:boxBackgroundColor="#FFF"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -137,6 +138,7 @@
             android:inputType="text"
             android:textColor="@color/primary_blue"
             android:textSize="16sp"
+            android:text=""
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
@@ -163,7 +165,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <RadioGroup
-            android:id="@+id/radio_sex"
+            android:id="@+id/edit_genre"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
@@ -214,13 +216,12 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.google.android.material.textfield.TextInputEditText
+        <TextView
             android:id="@+id/editDate_account"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
             android:fontFamily="@font/calistoga"
-            android:inputType="text"
             android:textColor="@color/primary_blue"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"

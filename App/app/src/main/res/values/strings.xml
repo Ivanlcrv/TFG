@@ -11,7 +11,7 @@
     <string name="login_failed">"Login failed"</string>
     <string name="login_title">Login</string>
     <string name="login_text">Please sign in to continue</string>
-    <string name="register_text">Don\'t have an account? <font color='#2f9a38'>Sign up</font></string>
+    <string name="register_text">Don\'t have an account? <font color='#4c6999'>Sign up</font></string>
     <string name="prompt_username">Username</string>
     <string name="title_activity_register">RegisterActivity</string>
     <string name="register_title">Register</string>
