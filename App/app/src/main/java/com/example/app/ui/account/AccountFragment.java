@@ -54,12 +54,7 @@ public class AccountFragment extends Fragment {
                 User user = dataSnapshot.getValue(User.class);
                 if(user != null) {
                     binding.editUsernameAccount.setHint(user.getUsername());
-                    binding.editUsernameAccount.setText(null);
                     binding.editEmailAccount.setHint(user.getEmail());
-                    binding.editEmailAccount.setText(null);
-                    binding.radioMen.setChecked(false);
-                    binding.radioWomen.setChecked(false);
-                    binding.radioOther.setChecked(false);
                     if(user.getGenre().equals("Male")) binding.radioMen.setChecked(true);
                     else if(user.getGenre().equals("Female")) binding.radioMen.setChecked(true);
                     else binding.radioOther.setChecked(true);
@@ -98,7 +93,9 @@ public class AccountFragment extends Fragment {
                         actual_user.updateEmail(email);
                     }
                     if(!checked.equals("")) myRef.child("users").child(actual_user.getUid()).child("genre").setValue(checked);
-                    if(!edit_date.equals("")) myRef.child("users").child(actual_user.getUid()).child("Date").setValue(edit_date);
+                    if(!edit_date.equals("")) {
+                        myRef.child("users").child(actual_user.getUid()).child("date").setValue(edit_date);
+                    }
                 })
                 .setNegativeButton(android.R.string.no, null).show());
         binding.deleteAccount.setOnClickListener(v -> new AlertDialog.Builder(requireContext())
