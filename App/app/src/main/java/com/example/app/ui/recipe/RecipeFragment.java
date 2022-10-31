@@ -10,21 +10,22 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.app.databinding.FragmentRecipeBinding;
 import com.example.app.databinding.FragmentShoppingBinding;
 
 public class RecipeFragment extends Fragment {
 
-    private FragmentShoppingBinding binding;
+    private FragmentRecipeBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         RecipeViewModel recipeViewModel =
                 new ViewModelProvider(this).get(RecipeViewModel.class);
 
-        binding = FragmentShoppingBinding.inflate(inflater, container, false);
+        binding = FragmentRecipeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textShopping;
+        final TextView textView = binding.textRecipe;
         recipeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
