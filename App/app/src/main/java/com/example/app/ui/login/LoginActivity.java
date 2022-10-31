@@ -57,8 +57,10 @@ public class LoginActivity extends AppCompatActivity {
                 public void onChanged(@Nullable LoginFormState loginFormState) {
                     if (loginFormState == null) return;
                     loginButton.setEnabled(loginFormState.isDataValid());
-                    if (loginFormState.getUsernameError() != null) emailEditText.setError(getString(loginFormState.getUsernameError()));
-                    if (loginFormState.getPasswordError() != null) passwordEditText.setError(getString(loginFormState.getPasswordError()));
+                    if (loginFormState.getUsernameError() != null) binding.emailLayout.setError(getString(loginFormState.getUsernameError()));
+                    else binding.emailLayout.setError(null);
+                    if (loginFormState.getPasswordError() != null) binding.passwordLayout.setError(getString(loginFormState.getPasswordError()));
+                    else binding.passwordLayout.setError(null);
                 }
             });
 

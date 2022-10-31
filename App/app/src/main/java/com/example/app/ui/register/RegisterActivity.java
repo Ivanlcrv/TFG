@@ -44,19 +44,14 @@ public class RegisterActivity extends AppCompatActivity {
         registerViewModel.getRegisterFormState().observe(this, registerFormState -> {
             if (registerFormState == null) return;
             registerButton.setEnabled(registerFormState.isDataValid());
-            if (registerFormState.getUsernameError() != null) {
-                UsernameEditText.setError(getString(registerFormState.getUsernameError()));
-            }
-            if (registerFormState.getPasswordError() != null) {
-                passwordEditText.setError(getString(registerFormState.getPasswordError()));
-            }
-            if (registerFormState.getEmailError() != null) {
-                emailEditText.setError(getString(registerFormState.getEmailError()));
-            }
-            if (registerFormState.getGenreError() != null) {
-                binding.genreTitle.setError(getString(registerFormState.getGenreError()));
-            }
-
+            if (registerFormState.getUsernameError() != null) binding.usernameLayout.setError(getString(registerFormState.getUsernameError()));
+            else binding.usernameLayout.setError(null);
+            if (registerFormState.getPasswordError() != null) binding.passwordLayout.setError(getString(registerFormState.getPasswordError()));
+            else binding.passwordLayout.setError(null);
+            if (registerFormState.getEmailError() != null) binding.emailLayout.setError(getString(registerFormState.getEmailError()));
+            else binding.emailLayout.setError(null);
+            if (registerFormState.getGenreError() != null) binding.genreTitle.setError(getString(registerFormState.getGenreError()));
+            else binding.genreTitle.setError(null);
         });
 
         registerViewModel.getRegisterResult().observe(this, registerResult -> {
