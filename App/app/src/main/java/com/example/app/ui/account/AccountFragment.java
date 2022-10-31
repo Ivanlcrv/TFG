@@ -55,7 +55,7 @@ public class AccountFragment extends Fragment {
                     binding.editUsernameAccount.setHint(user.getUsername());
                     binding.editEmailAccount.setHint(user.getEmail());
                     if(user.getGenre().equals("Male")) binding.radioMen.setChecked(true);
-                    else if(user.getGenre().equals("Female")) binding.radioMen.setChecked(true);
+                    else if(user.getGenre().equals("Female")) binding.radioWomen.setChecked(true);
                     else binding.radioOther.setChecked(true);
                     binding.editDateAccount.setText(user.getDate());
                 }
@@ -104,6 +104,7 @@ public class AccountFragment extends Fragment {
                 .setPositiveButton(android.R.string.yes, (dialog, whichButton) -> {
                     myRef.child("users").child(actual_user.getUid()).removeValue();
                     actual_user.delete();
+                    FirebaseAuth.getInstance().signOut();
                     Toast.makeText(getContext(), "Account delete.", Toast.LENGTH_LONG).show();
                     Intent loginIntent = new Intent(getContext(), LoginActivity.class);
                     startActivity(loginIntent);
