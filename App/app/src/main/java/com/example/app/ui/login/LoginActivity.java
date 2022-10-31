@@ -105,7 +105,8 @@ public class LoginActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == TEXT_REQUEST)
             if (resultCode == RESULT_OK) {
-
+                FirebaseUser user = mAuth.getCurrentUser();
+                checkUser(user.getUid());
             }
     }
 
