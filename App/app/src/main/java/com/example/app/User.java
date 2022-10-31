@@ -6,6 +6,7 @@ public class User  {
     private String email;
     private String genre;
     private String date;
+    private Boolean admin;
 
     public User(){}
 
@@ -14,6 +15,7 @@ public class User  {
         this.username = username;
         this.genre = genre;
         this.date = date;
+        this.admin = false;
     }
 
     public String getEmail() {
@@ -31,4 +33,6 @@ public class User  {
     public String getDate() {
         return date;
     }
+
+    public Boolean getAdmin() {return admin;}
 }

@@ -38,15 +38,14 @@ public class RegisterViewModel {
     }
 
     public void register(String username, String email, String password, String checked, String date) {
-
-
         mAuth = FirebaseAuth.getInstance();
+        myRef = FirebaseDatabase.getInstance().getReference();
+
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            myRef = FirebaseDatabase.getInstance().getReference();
                             userF = mAuth.getCurrentUser();
                             User user = new User(username, email, checked, date);
                             myRef.child("users").child(userF.getUid()).setValue(user);
@@ -58,7 +57,6 @@ public class RegisterViewModel {
                 });
     }
 
-    //Terminar
     public void registerDataChanged(String username, String email, String password, String checked, String date) {
         Integer errUser = isUserNameValid(username);
         Integer errMail = isEmailValid(email);

@@ -33,10 +33,9 @@ public class AccountFragment extends Fragment {
     private FragmentAccountBinding binding;
     private TextView date;
     private static AccountFragment instance = null;
-
-    FirebaseAuth mAuth;
-    DatabaseReference myRef;
-    String checked;
+    private FirebaseAuth mAuth;
+    private DatabaseReference myRef;
+    private String checked;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mAuth = FirebaseAuth.getInstance();

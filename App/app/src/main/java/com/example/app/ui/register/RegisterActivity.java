@@ -61,7 +61,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         registerViewModel.getRegisterResult().observe(this, registerResult -> {
             if (registerResult == null) return;
-            if (registerResult.getError() != null) showLoginFailed(registerResult.getError());
+            if (registerResult.getError() != null) showRegisterFailed(registerResult.getError());
             if (registerResult.getUserName() != null) {
                 updateUiWithUser(registerResult.getUserName());
                 setResult(Activity.RESULT_OK);
@@ -102,7 +102,7 @@ public class RegisterActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
     }
 
-    private void showLoginFailed(@StringRes Integer errorString) {
+    private void showRegisterFailed(@StringRes Integer errorString) {
         Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
     }
 
