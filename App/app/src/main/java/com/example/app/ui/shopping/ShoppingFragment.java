@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.app.databinding.FragmentAccountBinding;
 import com.example.app.databinding.FragmentShoppingBinding;
 
 public class ShoppingFragment extends Fragment {

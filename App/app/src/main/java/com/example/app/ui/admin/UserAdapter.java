@@ -1,5 +1,7 @@
 package com.example.app.ui.admin;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,24 +10,26 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.app.InfoUserAdmin;
 import com.example.app.R;
 import com.example.app.User;
 
-import java.text.CollationElementIterator;
 import java.util.LinkedList;
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> {
 
     private final LinkedList<User> userList;
     private LayoutInflater mInflater;
+    private Context context;
+    private User usuario_actual;
 
     public UserAdapter(AdminFragment adminFragment, LinkedList<User> userList) {
         mInflater = LayoutInflater.from(adminFragment.getContext());
         this.userList = userList;
+        context = adminFragment.getContext();
     }
 
-    class UserViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-
+    class UserViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public final TextView userItemView;
         final UserAdapter mAdapter;
@@ -34,11 +38,16 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
             super(itemView);
             userItemView = itemView.findViewById(R.id.user_of_list);
             mAdapter = userAdapter;
+            userItemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
-
+            Intent intent = new Intent(context, InfoUserAdmin.class);
+            int mPosition = getLayoutPosition();
+            usuario_actual = userList.get(mPosition);
+            intent.putExtra("user", usuario_actual.getEmail());
+            context.startActivity(intent);
         }
     }
     @NonNull

@@ -46,12 +46,11 @@ public class AccountFragment extends Fragment {
         myRef = FirebaseDatabase.getInstance().getReference();
         FirebaseUser actual_user = mAuth.getCurrentUser();
 
-
-        ValueEventListener postListener = new ValueEventListener() {
+        myRef.child("users").child(actual_user.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
                 // Get Post object and use the values to update the UI
-                User user = dataSnapshot.getValue(User.class);
+                User user = snapshot.getValue(User.class);
                 if(user != null) {
                     binding.editUsernameAccount.setHint(user.getUsername());
                     binding.editEmailAccount.setHint(user.getEmail());
@@ -63,12 +62,12 @@ public class AccountFragment extends Fragment {
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError error) {
                 // Getting Post failed, log a message
                 Toast.makeText(getContext(), "Error loading account information.", Toast.LENGTH_LONG).show();
+
             }
-        };
-        myRef.child("users").child(actual_user.getUid()).addValueEventListener(postListener);
+        });
         binding.iconLogout.setOnClickListener(v -> new AlertDialog.Builder(requireContext())
                 .setTitle("Log out")
                 .setMessage("Do you really want to log out")

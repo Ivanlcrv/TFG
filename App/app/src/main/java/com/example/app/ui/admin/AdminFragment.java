@@ -5,13 +5,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,7 +26,7 @@ public class AdminFragment extends Fragment  {
 
     private FirebaseAuth mAuth;
     private DatabaseReference myRef;
-    private final LinkedList<User> UserList = new LinkedList<User>();
+    private final LinkedList<User> userList = new LinkedList<User>();
     private static final String TAG = "MyActivity";
     private FragmentAdminBinding binding;
     private RecyclerView recyclerView;
@@ -45,11 +41,11 @@ public class AdminFragment extends Fragment  {
         myRef.child("users").addValueEventListener(new ValueEventListener(){
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                for (DataSnapshot postSnapshot: snapshot.getChildren()) {
-                    User user = postSnapshot.getValue(User.class);
-                    if(!user.getAdmin() && !UserList.contains(user)) {
+                for (DataSnapshot userSnapshot: snapshot.getChildren()) {
+                    User user = userSnapshot.getValue(User.class);
+                    if(!user.getAdmin() && !userList.contains(user)) {
                         Log.d(TAG, "Username: " + user.getUsername());
-                        UserList.addLast(user);
+                        userList.addLast(user);
                     }
                 }
             }
@@ -60,11 +56,10 @@ public class AdminFragment extends Fragment  {
             }
         });
         recyclerView = binding.recyclerViewAdmin;
-        mAdapter = new UserAdapter(this, UserList);
+        mAdapter = new UserAdapter(this, userList);
         recyclerView.setAdapter(mAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        //final TextView textView = binding.textMenu;
-        // adminViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+
         return root;
     }
 

@@ -39,4 +39,6 @@
     <string name="delete_your_account">Delete your account</string>
     <string name="title_admin">Manage users</string>
     <string name="title_activity_main_admin">MainActivityAdmin</string>
+    <string name="icon_account">Icon account</string>
+    <string name="delete_account">Delete account</string>
 </resources>

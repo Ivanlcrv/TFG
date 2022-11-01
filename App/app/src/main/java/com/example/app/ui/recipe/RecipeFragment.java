@@ -11,7 +11,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.app.databinding.FragmentRecipeBinding;
-import com.example.app.databinding.FragmentShoppingBinding;
 
 public class RecipeFragment extends Fragment {
 
