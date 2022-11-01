@@ -63,9 +63,9 @@ public class InfoUserAdmin extends AppCompatActivity  {
 
             }
         });
-        binding.deleteAccountUser.setOnClickListener(v -> new AlertDialog.Builder(requireContext())
-                .setTitle("Update account")
-                .setMessage("Do you really want to update your account")
+        binding.deleteAccountUser.setOnClickListener(v -> new AlertDialog.Builder(this)
+                .setTitle("Delete account")
+                .setMessage("Do you really want to delete account")
                 .setIcon(R.drawable.ic_warning)
                 .setPositiveButton(android.R.string.yes, (dialog, whichButton) -> {
                     myRef.child("users").child("email").removeValue();
