@@ -35,4 +35,12 @@ public class User  {
     }
 
     public Boolean getAdmin() {return admin;}
+
+    @Override
+    public boolean equals(Object o){
+        User u = (User) o;
+        if(o == null) return false;
+        if (this.getEmail()==null) return u.getEmail()==null;
+        return this.getEmail().equals(u.getEmail());
+    }
 }

@@ -46,6 +46,7 @@ public class AccountFragment extends Fragment {
         myRef = FirebaseDatabase.getInstance().getReference();
         FirebaseUser actual_user = mAuth.getCurrentUser();
 
+
         ValueEventListener postListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
