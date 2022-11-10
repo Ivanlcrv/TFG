@@ -46,12 +46,17 @@ public class LoginViewModel {
                                 @Override
                                 public void onComplete(@NonNull Task<DataSnapshot> task) {
                                     if (!task.isSuccessful()) loginResult.setValue(new LoginResult(R.string.login_failed));
-                                    else loginResult.setValue(new LoginResult(String.valueOf(task.getResult().getValue())));
+                                    else {
+                                        if(task.getResult().getValue() != null) loginResult.setValue(new LoginResult(String.valueOf(task.getResult().getValue())));
+                                        else {
+                                            user.delete();
+                                            loginResult.setValue(new LoginResult(R.string.account_delete));
+                                        }
+                                    }
                                 }
                             });
                         } else {
                             loginResult.setValue(new LoginResult(R.string.login_failed));
-
                         }
                     }
                 });

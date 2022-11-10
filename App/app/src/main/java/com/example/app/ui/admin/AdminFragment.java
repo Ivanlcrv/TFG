@@ -55,6 +55,7 @@ public class AdminFragment extends Fragment  {
                 Log.w(TAG, "loadPost:onCancelled", error.toException());
             }
         });
+
         recyclerView = binding.recyclerViewAdmin;
         mAdapter = new UserAdapter(this, userList);
         recyclerView.setAdapter(mAdapter);

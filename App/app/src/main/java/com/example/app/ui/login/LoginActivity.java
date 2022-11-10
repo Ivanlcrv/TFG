@@ -133,6 +133,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if (!task.isSuccessful()) Toast.makeText(getApplicationContext(), "Account delete.", Toast.LENGTH_LONG).show();
                 else {
+                    if(task.getResult().getValue() == null) register(null);
                     if((Boolean)task.getResult().getValue()){
                         Intent intent_amin = new Intent(getApplicationContext(), MainActivityAdmin.class);
                         startActivity(intent_amin);

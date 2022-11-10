@@ -5,7 +5,7 @@
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in</string>
     <string name="action_sign_in_short">Sign in</string>
-    <string name="welcome">"Welcome !"</string>
+    <string name="welcome">"Welcome "</string>
     <string name="invalid_email">Not a valid email</string>
     <string name="invalid_password">Password must be more than 6 characters</string>
     <string name="login_failed">"Login failed"</string>
@@ -41,4 +41,5 @@
     <string name="title_activity_main_admin">MainActivityAdmin</string>
     <string name="icon_account">Icon account</string>
     <string name="delete_account">Delete account</string>
+    <string name="account_delete">Your account has been delete</string>
 </resources>

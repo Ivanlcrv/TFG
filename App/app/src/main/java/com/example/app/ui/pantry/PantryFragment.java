@@ -18,14 +18,9 @@ public class PantryFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        PantryViewModel pantryViewModel =
-                new ViewModelProvider(this).get(PantryViewModel.class);
 
         binding = FragmentPantryBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
-        final TextView textView = binding.textPantry;
-        pantryViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
 
