@@ -4,9 +4,11 @@ package com.example.app;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import android.app.Fragment;
 import android.os.Bundle;
 import android.widget.Toast;
 import com.example.app.databinding.ActivityInfoUserAdminBinding;
+import com.example.app.ui.admin.AdminFragment;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -60,5 +62,11 @@ public class InfoUserAdmin extends AppCompatActivity  {
                     finish();
                 })
                 .setNegativeButton(android.R.string.no, null).show());
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //MainActivityAdmin.fa.getFragmentManager().beginTransaction().detach((Fragment) AdminFragment.f).attach(AdminFragment.f).commit();
     }
 }

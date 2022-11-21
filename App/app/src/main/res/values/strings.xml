@@ -42,4 +42,12 @@
     <string name="icon_account">Icon account</string>
     <string name="delete_account">Delete account</string>
     <string name="account_delete">Your account has been delete</string>
+    <string name="prompt_search_food">Search for food in your pantry</string>
+    <string name="add_food">Add food</string>
+    <string name="prompt_name">Name</string>
+    <string name="prompt_amount">Amount</string>
+    <string name="action_add_food">Add</string>
+    <string name="add_food_title">Pantry</string>
+    <string name="food_text">Add food to your pantry</string>
+    <string name="title_activity_add_food">Add food</string>
 </resources>

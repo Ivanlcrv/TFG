@@ -30,6 +30,10 @@
             android:exported="false"
             android:label="@string/title_activity_main_admin" />
         <activity
+            android:name=".ui.pantry.AddFoodActivity"
+            android:exported="false"
+            android:label="@string/title_activity_add_food" />
+        <activity
             android:name=".ui.login.LoginActivity"
             android:exported="true"
             android:label="@string/title_activity_login">

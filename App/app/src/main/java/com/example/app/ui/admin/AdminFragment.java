@@ -31,9 +31,9 @@ public class AdminFragment extends Fragment  {
     private FragmentAdminBinding binding;
     private RecyclerView recyclerView;
     private UserAdapter mAdapter;
-
+    public static Fragment f;
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
+        f = this;
         binding = FragmentAdminBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         myRef = FirebaseDatabase.getInstance().getReference();
@@ -69,4 +69,6 @@ public class AdminFragment extends Fragment  {
         super.onDestroyView();
         binding = null;
     }
+
+
 }

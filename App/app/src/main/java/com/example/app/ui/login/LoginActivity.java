@@ -137,10 +137,12 @@ public class LoginActivity extends AppCompatActivity {
                     if((Boolean)task.getResult().getValue()){
                         Intent intent_amin = new Intent(getApplicationContext(), MainActivityAdmin.class);
                         startActivity(intent_amin);
+                        finish();
                     }
                     else {
                         Intent intent_user = new Intent(getApplicationContext(), MainActivityUser.class);
                         startActivity(intent_user);
+                        finish();
                     }
                 }
             }

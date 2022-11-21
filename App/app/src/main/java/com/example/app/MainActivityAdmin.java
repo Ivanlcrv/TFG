@@ -1,5 +1,6 @@
 package com.example.app;
 
+import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,11 +12,11 @@ import com.example.app.databinding.ActivityMainAdminBinding;
 
 public class MainActivityAdmin extends AppCompatActivity {
     private ActivityMainAdminBinding binding;
-
+    public static Activity fa;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        fa = this;
         binding = ActivityMainAdminBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
