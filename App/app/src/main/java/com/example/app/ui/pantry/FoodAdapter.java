@@ -21,10 +21,10 @@ public class FoodAdapter  extends RecyclerView.Adapter<FoodAdapter.FoodViewHolde
     private Context context;
     private Food actual_food;
 
-    public FoodAdapter(PantryFragment pantryFragment, LinkedList<Food> foodList) {
-        mInflater = LayoutInflater.from(pantryFragment.getContext());
+    public FoodAdapter(Context pantryFragment, LinkedList<Food> foodList) {
+        mInflater = LayoutInflater.from(pantryFragment);
         this.foodList = foodList;
-        context = pantryFragment.getContext();
+        context = pantryFragment;
     }
 
     class FoodViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -34,7 +34,7 @@ public class FoodAdapter  extends RecyclerView.Adapter<FoodAdapter.FoodViewHolde
 
         public FoodViewHolder(@NonNull View itemView, FoodAdapter foodAdapter) {
             super(itemView);
-            foodItemView = itemView.findViewById(R.id.user_of_list);
+            foodItemView = itemView.findViewById(R.id.food_list);
             mAdapter = foodAdapter;
             foodItemView.setOnClickListener(this);
         }
@@ -43,12 +43,13 @@ public class FoodAdapter  extends RecyclerView.Adapter<FoodAdapter.FoodViewHolde
         public void onClick(View v) {
 
         }
+
     }
     @NonNull
     @Override
     public FoodAdapter.FoodViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View mItemView = mInflater.inflate(R.layout.food_item, parent, false);
-        return new FoodAdapter.FoodViewHolder(mItemView,this);
+        return new FoodAdapter.FoodViewHolder(mItemView,this).set;
     }
 
     @Override

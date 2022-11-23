@@ -23,10 +23,10 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     private Context context;
     private User usuario_actual;
 
-    public UserAdapter(AdminFragment adminFragment, LinkedList<User> userList) {
-        mInflater = LayoutInflater.from(adminFragment.getContext());
+    public UserAdapter(Context adminFragment, LinkedList<User> userList) {
+        mInflater = LayoutInflater.from(adminFragment);
         this.userList = userList;
-        context = adminFragment.getContext();
+        context = adminFragment;
     }
 
     class UserViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -48,6 +48,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
             usuario_actual = userList.get(mPosition);
             intent.putExtra("user", usuario_actual.getEmail());
             context.startActivity(intent);
+
         }
     }
     @NonNull

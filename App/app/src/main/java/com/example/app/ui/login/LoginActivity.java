@@ -31,76 +31,78 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private FirebaseAuth mAuth;
+
     private LoginViewModel loginViewModel;
     private ActivityLoginBinding binding;
     public static final int TEXT_REQUEST = 1;
+    private FirebaseAuth mAuth;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         mAuth = FirebaseAuth.getInstance();
-        FirebaseUser user = mAuth.getCurrentUser();
-        if (user == null) {
-            binding = ActivityLoginBinding.inflate(getLayoutInflater());
-            setContentView(binding.getRoot());
+        binding = ActivityLoginBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-            loginViewModel = new LoginViewModel();
+        loginViewModel = new LoginViewModel();
 
-            final EditText emailEditText = binding.editEmail;
-            final EditText passwordEditText = binding.editPassword;
-            final Button loginButton = binding.login;
+        final EditText emailEditText = binding.editEmail;
+        final EditText passwordEditText = binding.editPassword;
+        final Button loginButton = binding.login;
 
-            loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
-                @Override
-                public void onChanged(@Nullable LoginFormState loginFormState) {
-                    if (loginFormState == null) return;
-                    loginButton.setEnabled(loginFormState.isDataValid());
-                    if (loginFormState.getUsernameError() != null) binding.emailLayout.setError(getString(loginFormState.getUsernameError()));
-                    else binding.emailLayout.setError(null);
-                    if (loginFormState.getPasswordError() != null) binding.passwordLayout.setError(getString(loginFormState.getPasswordError()));
-                    else binding.passwordLayout.setError(null);
+        loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
+            @Override
+            public void onChanged(@Nullable LoginFormState loginFormState) {
+                if (loginFormState == null) return;
+                loginButton.setEnabled(loginFormState.isDataValid());
+                if (loginFormState.getUsernameError() != null)
+                    binding.emailLayout.setError(getString(loginFormState.getUsernameError()));
+                else binding.emailLayout.setError(null);
+                if (loginFormState.getPasswordError() != null)
+                    binding.passwordLayout.setError(getString(loginFormState.getPasswordError()));
+                else binding.passwordLayout.setError(null);
+            }
+        });
+
+        loginViewModel.getLoginResult().observe(this, new Observer<LoginResult>() {
+            @Override
+            public void onChanged(@Nullable LoginResult loginResult) {
+                if (loginResult == null) return;
+                if (loginResult.getError() != null) showLoginFailed(loginResult.getError());
+                if (loginResult.getUserName() != null) {
+                    updateUiWithUser(loginResult.getUserName());
+                    FirebaseUser user = mAuth.getCurrentUser();
+                    checkUser(user.getUid());
                 }
-            });
+            }
+        });
 
-            loginViewModel.getLoginResult().observe(this, new Observer<LoginResult>() {
-                @Override
-                public void onChanged(@Nullable LoginResult loginResult) {
-                    if (loginResult == null) return;
-                    if (loginResult.getError() != null) showLoginFailed(loginResult.getError());
-                    if (loginResult.getUserName() != null) {
-                        updateUiWithUser(loginResult.getUserName());
-                        FirebaseUser user = mAuth.getCurrentUser();
-                        checkUser(user.getUid());
-                    }
-                }
-            });
+        TextWatcher afterTextChangedListener = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
-            TextWatcher afterTextChangedListener = new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
 
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(Editable s) {
+                loginViewModel.loginDataChanged(emailEditText.getText().toString(), passwordEditText.getText().toString());
+            }
+        };
 
-                @Override
-                public void afterTextChanged(Editable s) {loginViewModel.loginDataChanged(emailEditText.getText().toString(), passwordEditText.getText().toString());}
-            };
+        emailEditText.addTextChangedListener(afterTextChangedListener);
+        passwordEditText.addTextChangedListener(afterTextChangedListener);
 
-            emailEditText.addTextChangedListener(afterTextChangedListener);
-            passwordEditText.addTextChangedListener(afterTextChangedListener);
-
-            loginButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {loginViewModel.login(emailEditText.getText().toString(), passwordEditText.getText().toString());}
-            });
-        }
-        else {
-            checkUser(user.getUid());
-        }
-
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loginViewModel.login(emailEditText.getText().toString(), passwordEditText.getText().toString());
+            }
+        });
     }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

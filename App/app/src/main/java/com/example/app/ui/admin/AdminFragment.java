@@ -41,13 +41,17 @@ public class AdminFragment extends Fragment  {
         myRef.child("users").addValueEventListener(new ValueEventListener(){
             @Override
             public void onDataChange(DataSnapshot snapshot) {
+                userList.clear();
                 for (DataSnapshot userSnapshot: snapshot.getChildren()) {
                     User user = userSnapshot.getValue(User.class);
                     if(!user.getAdmin() && !userList.contains(user)) {
-                        Log.d(TAG, "Username: " + user.getUsername());
                         userList.addLast(user);
                     }
                 }
+                recyclerView = binding.recyclerViewAdmin;
+                mAdapter = new UserAdapter(getContext(), userList);
+                recyclerView.setAdapter(mAdapter);
+                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             }
 
             @Override
@@ -56,10 +60,7 @@ public class AdminFragment extends Fragment  {
             }
         });
 
-        recyclerView = binding.recyclerViewAdmin;
-        mAdapter = new UserAdapter(this, userList);
-        recyclerView.setAdapter(mAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
 
         return root;
     }

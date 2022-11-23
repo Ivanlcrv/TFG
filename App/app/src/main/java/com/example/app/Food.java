@@ -3,11 +3,11 @@ package com.example.app;
 public class Food {
 
     private String name;
-    private Float amount;
+    private String amount;
 
     public Food(){}
 
-    public Food(String name, Float amount) {
+    public Food(String name, String amount) {
         this.name = name;
         this.amount = amount;
     }
@@ -16,7 +16,7 @@ public class Food {
         return name;
     }
 
-    public Float getAmount() {
+    public String getAmount() {
         return amount;
     }
 }
