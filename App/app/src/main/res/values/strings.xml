@@ -50,4 +50,10 @@
     <string name="add_food_title">Pantry</string>
     <string name="food_text">Add food to your pantry</string>
     <string name="title_activity_add_food">Add food</string>
+    <string name="details_food">Details food</string>
+    <string name="icon_food">food\'s icon</string>
+    <string name="information_food">Food information</string>
+    <string name="prompt_foodname">Name: </string>
+    <string name="prompt_amount_">Amount: </string>
+    <string name="save_your_food">Save food info</string>
 </resources>

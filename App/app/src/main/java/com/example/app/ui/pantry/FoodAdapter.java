@@ -1,7 +1,9 @@
 package com.example.app.ui.pantry;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -10,6 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.app.Food;
+import com.example.app.FoodActivity;
+import com.example.app.InfoUserAdmin;
 import com.example.app.R;
 
 import java.util.LinkedList;
@@ -27,7 +31,7 @@ public class FoodAdapter  extends RecyclerView.Adapter<FoodAdapter.FoodViewHolde
         context = pantryFragment;
     }
 
-    class FoodViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class FoodViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnTouchListener {
 
         public final TextView foodItemView;
         final FoodAdapter mAdapter;
@@ -41,15 +45,23 @@ public class FoodAdapter  extends RecyclerView.Adapter<FoodAdapter.FoodViewHolde
 
         @Override
         public void onClick(View v) {
-
+            Intent intent = new Intent(context, FoodActivity.class);
+            int mPosition = getLayoutPosition();
+            actual_food = foodList.get(mPosition);
+            intent.putExtra("food", actual_food.getName());
+            context.startActivity(intent);
         }
 
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            return false;
+        }
     }
     @NonNull
     @Override
     public FoodAdapter.FoodViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View mItemView = mInflater.inflate(R.layout.food_item, parent, false);
-        return new FoodAdapter.FoodViewHolder(mItemView,this).set;
+        return new FoodAdapter.FoodViewHolder(mItemView,this);
     }
 
     @Override
