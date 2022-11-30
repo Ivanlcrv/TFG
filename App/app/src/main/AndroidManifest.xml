@@ -16,9 +16,6 @@
             android:name=".FoodActivity"
             android:exported="false"
             android:parentActivityName=".MainActivityUser">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
         </activity>
         <activity
             android:name=".MainActivity"

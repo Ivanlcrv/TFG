@@ -12,7 +12,7 @@ import com.example.app.databinding.ActivityMainUserBinding;
 public class MainActivityUser extends AppCompatActivity {
 
     private ActivityMainUserBinding binding;
-
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
