@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.example.app.databinding.ActivityMainAdminBinding;
+import com.example.app.databinding.ActivityMainBinding;
 import com.example.app.ui.login.LoginActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -20,10 +22,12 @@ import com.google.firebase.database.FirebaseDatabase;
 public class MainActivity extends Activity {
 
     private FirebaseAuth mAuth;
-
+    private ActivityMainBinding binding;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         if (user == null){

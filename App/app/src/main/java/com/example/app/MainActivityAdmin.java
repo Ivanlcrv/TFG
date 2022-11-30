@@ -12,11 +12,9 @@ import com.example.app.databinding.ActivityMainAdminBinding;
 
 public class MainActivityAdmin extends AppCompatActivity {
     private ActivityMainAdminBinding binding;
-    public static Activity fa;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        fa = this;
         binding = ActivityMainAdminBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 

@@ -138,10 +138,4 @@ public class AccountFragment extends Fragment {
     public static AccountFragment getInstance() {
         return instance;
     }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
-    }
 }

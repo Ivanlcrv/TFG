@@ -59,16 +59,7 @@ public class AdminFragment extends Fragment  {
                 Log.w(TAG, "loadPost:onCancelled", error.toException());
             }
         });
-
-
-
         return root;
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
     }
 
 
