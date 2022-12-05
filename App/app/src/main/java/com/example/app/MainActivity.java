@@ -45,7 +45,11 @@ public class MainActivity extends Activity {
         myRef.child("users").child(uid).child("admin").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) Toast.makeText(getApplicationContext(), "Account delete.", Toast.LENGTH_LONG).show();
+                if (!task.isSuccessful()) {
+                    Toast.makeText(getApplicationContext(), "Account delete.", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                    startActivity(intent);
+                }
                 else {
                     if(task.getResult().getValue() == null) {
                         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
