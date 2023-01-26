@@ -57,4 +57,10 @@
     <string name="prompt_amount_">Amount: </string>
     <string name="save_your_food">Save food info</string>
     <string name="title_activity_add_recipe">Add recipe</string>
+    <string name="details_recipe">Details recipe</string>
+    <string name="icon_reicpe">recipe\'s icon</string>
+    <string name="information_recipe">Recipe information</string>
+    <string name="prompt_recipename">Name: </string>
+    <string name="prompt_amount_">Amount: </string>
+    <string name="save_your_recipe">Save recipe info</string>
 </resources>

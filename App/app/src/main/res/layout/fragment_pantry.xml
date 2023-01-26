@@ -27,7 +27,6 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/calistoga"
             android:hint="@string/prompt_search_food"
-            android:inputType="textEmailAddress"
             android:minHeight="48dp"
             android:selectAllOnFocus="true"
             android:textColor="@color/primary_blue"
@@ -35,7 +34,6 @@
             android:textStyle="bold"
             tools:ignore="TextContrastCheck" />
     </com.google.android.material.textfield.TextInputLayout>
-
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewPantry"
