@@ -56,4 +56,5 @@
     <string name="prompt_foodname">Name: </string>
     <string name="prompt_amount_">Amount: </string>
     <string name="save_your_food">Save food info</string>
+    <string name="title_activity_add_recipe">Add recipe</string>
 </resources>
