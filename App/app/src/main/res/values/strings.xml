@@ -52,9 +52,9 @@
     <string name="title_activity_add_food">Add food</string>
     <string name="details_food">Details food</string>
     <string name="icon_food">food\'s icon</string>
+    <string name="icon_recipe">recipe\'s icon</string>
     <string name="information_food">Food information</string>
     <string name="prompt_foodname">Name: </string>
-    <string name="prompt_amount_">Amount: </string>
     <string name="save_your_food">Save food info</string>
     <string name="title_activity_add_recipe">Add recipe</string>
     <string name="details_recipe">Details recipe</string>
@@ -63,4 +63,10 @@
     <string name="prompt_recipename">Name: </string>
     <string name="prompt_amount_">Amount: </string>
     <string name="save_your_recipe">Save recipe info</string>
+    <string name="action_add_recipe">Add</string>
+    <string name="add_recipe_title">Recipes</string>
+    <string name="recipe_text">Create a new recipe</string>
+    <string name="prompt_search_recipe">Search a recipe</string>
+    <string name="add_recipe">Add recipe</string>
+    <string name="prompt_description">Description</string>
 </resources>
