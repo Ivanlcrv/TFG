@@ -55,7 +55,7 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:background="@color/primary_blue"
-            android:contentDescription="binImage"
+            android:contentDescription="@string/binimage"
             android:src="@drawable/ic_bin" />
     </androidx.cardview.widget.CardView>
 

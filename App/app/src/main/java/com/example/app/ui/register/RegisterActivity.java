@@ -40,6 +40,7 @@ public class RegisterActivity extends AppCompatActivity {
         passwordEditText = binding.editPassword;
         final Button registerButton = binding.register;
         final RadioGroup radioGroup = binding.radioSex;
+
         date = binding.date;
         registerViewModel.getRegisterFormState().observe(this, registerFormState -> {
             if (registerFormState == null) return;

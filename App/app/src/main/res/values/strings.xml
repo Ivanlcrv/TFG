@@ -69,4 +69,12 @@
     <string name="prompt_search_recipe">Search a recipe</string>
     <string name="add_recipe">Add recipe</string>
     <string name="prompt_description">Description</string>
+    <string name="type_private">Private</string>
+    <string name="type_public">Public</string>
+    <string name="upload_an_image">Upload an image</string>
+    <string name="addimage">addImage</string>
+    <string name="binimage">binImage</string>
+    <string name="pair_amount">Amount</string>
+    <string name="pair_ingredient">Ingredient</string>
+    <string name="title_pair">Add ingredients and their amount to the recipe</string>
 </resources>

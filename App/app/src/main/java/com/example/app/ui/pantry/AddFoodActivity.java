@@ -50,6 +50,7 @@ public class AddFoodActivity extends AppCompatActivity {
                         !nameEditText.getText().toString().equals("") && !amountEditText.getText().toString().equals("")){
                     addButton.setEnabled(true);
                 }
+                else addButton.setEnabled(false);
             }
         };
         nameEditText.addTextChangedListener(afterTextChangedListener);

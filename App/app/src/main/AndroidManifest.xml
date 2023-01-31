@@ -58,7 +58,7 @@
             android:label="@string/title_activity_add_food"
             android:parentActivityName=".MainActivityUser" />
         <activity
-            android:name=".ui.pantry.AddRecipeActivity"
+            android:name=".ui.recipe.AddRecipeActivity"
             android:exported="false"
             android:label="@string/title_activity_add_recipe"
             android:parentActivityName=".MainActivityUser" />

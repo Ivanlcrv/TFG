@@ -103,6 +103,8 @@ public class AccountFragment extends Fragment {
                 .setIcon(R.drawable.ic_warning)
                 .setPositiveButton(android.R.string.yes, (dialog, whichButton) -> {
                     myRef.child("users").child(actual_user.getUid()).removeValue();
+                    myRef.child("pantry").child(actual_user.getUid()).removeValue();
+                    myRef.child("recipes").child(actual_user.getUid()).removeValue();
                     actual_user.delete();
                     FirebaseAuth.getInstance().signOut();
                     Toast.makeText(getContext(), "Account delete.", Toast.LENGTH_LONG).show();

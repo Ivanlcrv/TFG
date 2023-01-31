@@ -46,6 +46,7 @@ public class RegisterViewModel {
                             User user = new User(username, email, checked, date);
                             myRef.child("users").child(userF.getUid()).setValue(user);
                             myRef.child("pantry").child(userF.getUid()).setValue("");
+                            myRef.child("recipes").child(userF.getUid()).setValue("");
                             registerResult.setValue(new RegisterResult(username));
                         } else {
                             registerResult.setValue(new RegisterResult(R.string.login_failed));
