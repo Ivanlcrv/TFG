@@ -87,6 +87,10 @@ public class ListviewAdapter extends BaseAdapter {
         Pair<String,String> pair = list.get(0);
         return pair.first.isEmpty() || pair.second.isEmpty();
     }
+
+    public List<Pair<String, String>> getList() {
+        return list;
+    }
 }
 
 class ViewHolder {

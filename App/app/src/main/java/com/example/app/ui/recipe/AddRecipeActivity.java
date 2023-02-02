@@ -13,21 +13,31 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.app.R;
+import com.example.app.Recipe;
 import com.example.app.databinding.ActivityAddRecipeBinding;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -147,37 +157,24 @@ public class AddRecipeActivity extends AppCompatActivity {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(checked.equals("puclic")){
+                    return;
+                }
+                Recipe recipe = new Recipe(nameEditText.getText().toString(), descriptionEditText.getText().toString(), checked, selectedImageBitmap, adpter.getList());
                 DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
                 FirebaseUser user = mAuth.getCurrentUser();
-                /*
-                revisar!!!!!!!!!!
-
+                StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+                StorageReference recipeRef = storageRef.child(recipe.getName()+".jpg");
+                StorageReference recipeImagesRef = storageRef.child("images/mountains.jpg");
+                recipeRef.getName().equals(recipeImagesRef.getName());
+                recipeRef.getPath().equals(recipeImagesRef.getPath());
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                selectedImageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
                 byte[] data = baos.toByteArray();
-
-                UploadTask uploadTask = mountainsRef.putBytes(data);
-                uploadTask.addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        // Handle unsuccessful uploads
-                    }
-                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-                        // ...
-                    }
-                });
-
-
-
-                Recipe recipe = new Recipe(nameEditText.getText().toString(), descriptionEditText.getText().toString());
-                myRef.child("recipes").child(user.getUid()).child(recipe.getName()).setValue(recipe.getAmount());
-                Toast.makeText(getApplicationContext(), "Se ha añadido " + recipe.getAmount() + " de " + recipe.getName(), Toast.LENGTH_SHORT).show();
+                recipeRef.putBytes(data);
+                // revisar !!!!!!!!!!!!!!!!!!!!!                  myRef.child("recipes").child(user.getUid()).child(recipe.getName()).setValue(recipe.getAmount());
+                Toast.makeText(getApplicationContext(), "Se ha añadido la receta: " + recipe.getName() + " correctamente", Toast.LENGTH_SHORT).show();
                 finish();
-                */
-
             }
         });
     }
