@@ -11,7 +11,6 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 
 import com.example.app.R;
-import com.example.app.databinding.ActivityAddRecipeBinding;
 
 import java.util.List;
 
