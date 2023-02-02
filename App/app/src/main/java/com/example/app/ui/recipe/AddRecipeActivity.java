@@ -115,10 +115,44 @@ public class AddRecipeActivity extends AppCompatActivity {
                     listView.setLayoutParams(params);
                     listView.requestLayout();
                 }
+                else if(list.size() == 2){
+                    ViewGroup.LayoutParams params = listView.getLayoutParams();
+                    params.height = 300;
+                    listView.setLayoutParams(params);
+                    listView.requestLayout();
+                }
                 adpter = new ListviewAdapter(getApplicationContext(),list);
                 listView.setAdapter(adpter);
             }
         });
+
+        binding.imageremove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(list.size() > 1) list.remove(list.size()-1);
+                if(list.size() > 2){
+                    ViewGroup.LayoutParams params = listView.getLayoutParams();
+                    params.height = 450;
+                    listView.setLayoutParams(params);
+                    listView.requestLayout();
+                }
+                else if(list.size() == 2){
+                    ViewGroup.LayoutParams params = listView.getLayoutParams();
+                    params.height = 300;
+                    listView.setLayoutParams(params);
+                    listView.requestLayout();
+                }
+                else {
+                    ViewGroup.LayoutParams params = listView.getLayoutParams();
+                    params.height = 150;
+                    listView.setLayoutParams(params);
+                    listView.requestLayout();
+                }
+                adpter = new ListviewAdapter(getApplicationContext(),list);
+                listView.setAdapter(adpter);
+            }
+        });
+
 
         radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
             RadioButton check = group.findViewById(checkedId);

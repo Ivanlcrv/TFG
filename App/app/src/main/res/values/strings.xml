@@ -77,4 +77,5 @@
     <string name="pair_amount">Amount</string>
     <string name="pair_ingredient">Ingredient</string>
     <string name="title_pair">Add ingredients and their amount to the recipe</string>
+    <string name="removeimage">removeImage</string>
 </resources>
