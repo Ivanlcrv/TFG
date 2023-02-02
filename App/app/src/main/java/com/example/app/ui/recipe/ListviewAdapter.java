@@ -13,17 +13,17 @@ import android.widget.EditText;
 import com.example.app.R;
 
 import java.util.List;
+import java.util.Map;
 
 public class ListviewAdapter extends BaseAdapter {
 
     private final Context context;
-    private final List<Pair<String, String>> list;
+    private final Map<String, String> list;
     LayoutInflater mInflater;
 
-    public ListviewAdapter(Context context, List<Pair<String, String>> list){
+    public ListviewAdapter(Context context, Map<String, String> list){
         this.context = context;
         this.list = list;
-
     }
 
     @Override
@@ -44,11 +44,9 @@ public class ListviewAdapter extends BaseAdapter {
         TextWatcher afterTextChangedListener = new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                final int position = holder.caption.getId();
-                final EditText amount = (EditText) holder.caption;
-                final EditText ingredient = (EditText) holder.caption;
-                Pair<String, String> pair = new Pair<>(ingredient.getText().toString(), amount.getText().toString());
-                list.set(position,pair);
+                final EditText amount = (EditText) holder.caption.findViewById(R.id.number);
+                final EditText ingredient = (EditText) holder.caption.findViewById(R.id.name);
+                if(ingredient != null && amount !=null)list.put(ingredient.getText().toString(),amount.getText().toString());
             }
 
             @Override
@@ -83,11 +81,13 @@ public class ListviewAdapter extends BaseAdapter {
     }
 
     public boolean getEmpty(){
-        Pair<String,String> pair = list.get(0);
-        return pair.first.isEmpty() || pair.second.isEmpty();
+        for(Map.Entry<String,String> entry: list.entrySet()){
+            if(!entry.getKey().equals("") && !entry.getValue().equals("")) return true;
+        }
+        return false;
     }
 
-    public List<Pair<String, String>> getList() {
+    public Map<String, String> getList() {
         return list;
     }
 }
