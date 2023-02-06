@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,10 +23,16 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public class RecipeFragment extends Fragment {
 
@@ -55,13 +62,16 @@ public class RecipeFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         recyclerView = binding.recyclerViewRecipe;
-        /*revisar
-        myRef.child("recipes").child(user.getUid()).addValueEventListener(new ValueEventListener(){
+
+        myRef.child("recipes").child("public").addValueEventListener(new ValueEventListener(){
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 recipeList.clear();
                 for (DataSnapshot recipeSnapshot: snapshot.getChildren()) {
-
+                    List<Pair<String, Recipe>> list;
+                    list = (List<Pair<String, Recipe>>) recipeSnapshot.getValue();
+                    Recipe r = recipeSnapshot.getValue(Recipe.class);
+                    recipeList.add(r);
                 }
                 mAdapter = new RecipeAdapter(getContext(), recipeList);
                 recyclerView.setAdapter(mAdapter);
@@ -71,7 +81,26 @@ public class RecipeFragment extends Fragment {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {}
         });
-        */
+        myRef.child("recipes").child(user.getUid()).addValueEventListener(new ValueEventListener(){
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                recipeList.clear();
+                for (DataSnapshot recipeSnapshot: snapshot.getChildren()) {
+                    String name = recipeSnapshot.child("name").getValue(String.class);
+                    String description = recipeSnapshot.child("description").getValue(String.class);
+                    List<Pair<String, String>> list;
+                    list = (List<Pair<String, String>>) recipeSnapshot.child("list").getValue();
+                    Recipe r = new Recipe(name, description, list);
+                    recipeList.add(r);
+                }
+                mAdapter = new RecipeAdapter(getContext(), recipeList);
+                recyclerView.setAdapter(mAdapter);
+                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        });
         TextWatcher afterTextChangedListener = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {

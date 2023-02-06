@@ -10,15 +10,13 @@ public class Recipe {
 
     private String name;
     private String description;
-    private String type;
-    private Map<String, String> list;
+    private List<Pair<String, String>> list;
 
     public Recipe(){}
 
-    public Recipe(String name, String description, String type, Map<String, String> list) {
+    public Recipe(String name, String description, List<Pair<String, String>> list) {
         this.name = name;
         this.description = description;
-        this.type = type;
         this.list = list;
     }
 
@@ -30,12 +28,7 @@ public class Recipe {
         return description;
     }
 
-    public String getType() {
-        return type;
-    }
-
-
-    public Map<String, String> getList() {
+    public List<Pair<String, String>> getList() {
         return list;
     }
 

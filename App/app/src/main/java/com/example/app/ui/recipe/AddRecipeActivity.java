@@ -50,7 +50,7 @@ public class AddRecipeActivity extends AppCompatActivity {
     protected ActivityAddRecipeBinding binding;
     private FirebaseAuth mAuth;
     private String checked;
-    private Map<String, String> list;
+    private List<Pair<String, String>> list;
     private ListView listView;
     private ListviewAdapter adpter;
     private Bitmap selectedImageBitmap;
@@ -63,10 +63,11 @@ public class AddRecipeActivity extends AppCompatActivity {
         binding = ActivityAddRecipeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        list = new HashMap<>();
+        list = new ArrayList<>();
         listView = (ListView)findViewById(R.id.listview);
         listView.setItemsCanFocus(true);
-        list.put("","");
+        Pair<String, String> p = new Pair<>("","");
+        list.add(p);
         adpter = new ListviewAdapter(this,list);
         listView.setAdapter(adpter);
 
@@ -86,7 +87,7 @@ public class AddRecipeActivity extends AppCompatActivity {
                         uploadButton.setText("Uploaded image");
                         addButton.setEnabled(nameEditText.getText() != null && descriptionEditText.getText() != null &&
                                 !nameEditText.getText().toString().equals("") && !descriptionEditText.getText().toString().equals("") && uploadButton.getText().toString().equals("Uploaded image")
-                                && !adpter.getEmpty());
+                                && adpter.getEmpty());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -104,7 +105,9 @@ public class AddRecipeActivity extends AppCompatActivity {
 
 
         binding.imageadd.setOnClickListener(v -> {
-            list.put("","");
+            list = adpter.getList();
+            Pair<String, String> pair = new Pair<>("","");
+            list.add(pair);
             if(list.size() > 2){
                 ViewGroup.LayoutParams params = listView.getLayoutParams();
                 params.height = 450;
@@ -151,7 +154,7 @@ public class AddRecipeActivity extends AppCompatActivity {
             checked = check.getText().toString();
             addButton.setEnabled(nameEditText.getText() != null && descriptionEditText.getText() != null &&
                     !nameEditText.getText().toString().equals("") && !descriptionEditText.getText().toString().equals("") && uploadButton.getText().toString().equals("Uploaded image")
-                    && !adpter.getEmpty());
+                    && adpter.getEmpty());
         });
 
         TextWatcher afterTextChangedListener = new TextWatcher() {
@@ -167,7 +170,7 @@ public class AddRecipeActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
                 addButton.setEnabled(nameEditText.getText() != null && descriptionEditText.getText() != null &&
                         !nameEditText.getText().toString().equals("") && !descriptionEditText.getText().toString().equals("") && uploadButton.getText().toString().equals("Uploaded image")
-                        && !adpter.getEmpty());
+                        && adpter.getEmpty());
             }
         };
 
@@ -175,7 +178,7 @@ public class AddRecipeActivity extends AppCompatActivity {
         descriptionEditText.addTextChangedListener(afterTextChangedListener);
 
         addButton.setOnClickListener(v -> {
-            Recipe recipe = new Recipe(nameEditText.getText().toString(), descriptionEditText.getText().toString(), checked,  adpter.getList());
+            Recipe recipe = new Recipe(nameEditText.getText().toString(), descriptionEditText.getText().toString(),  adpter.getList());
             DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
             FirebaseUser user = mAuth.getCurrentUser();
             StorageReference storageRef = FirebaseStorage.getInstance().getReference();
@@ -184,7 +187,7 @@ public class AddRecipeActivity extends AppCompatActivity {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             selectedImageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
             byte[] data = baos.toByteArray();
-            if(checked.equals("public")){
+            if(checked.equals("Public")){
                 myRef.child("recipes").child("public").addValueEventListener(new ValueEventListener(){
                     @Override
                     public void onDataChange(DataSnapshot snapshot) {
@@ -195,19 +198,40 @@ public class AddRecipeActivity extends AppCompatActivity {
                         }
                         if(!recipesList.contains(recipe.getName())) {
                             recipeRef.putBytes(data);
-                            myRef.child("recipes").child("public").child(user.getUid()).setValue(recipe);
+                            myRef.child("recipes").child("public").child(user.getUid()).child(recipe.getName()).setValue(recipe);
                         }
+                        else  Toast.makeText(getApplicationContext(), "The recipe: " + recipe.getName() + " already exists", Toast.LENGTH_SHORT).show();
+
                     }
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {}
                 });
-                return;
+
             }
-            else{
-                recipeRef.putBytes(data);
-                myRef.child("recipes").child(user.getUid()).setValue(recipe);
+            else {
+                myRef.child("recipes").child(user.getUid()).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot snapshot) {
+                        List<Recipe> recipesList = new ArrayList<>();
+                        for (DataSnapshot recipeSnapshot : snapshot.getChildren()) {
+                            Recipe r = recipeSnapshot.getValue(Recipe.class);
+                            recipesList.add(r);
+                        }
+                        if (!recipesList.contains(recipe.getName())) {
+                            recipeRef.putBytes(data);
+                            myRef.child("recipes").child(user.getUid()).child(recipe.getName()).setValue(recipe);
+                        } else
+                            Toast.makeText(getApplicationContext(), "The recipe: " + recipe.getName() + " already exists", Toast.LENGTH_SHORT).show();
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
-            Toast.makeText(getApplicationContext(), "Se ha añadido la receta: " + recipe.getName() + " correctamente", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "The recipe: " + recipe.getName() + " has been added successfully", Toast.LENGTH_SHORT).show();
             finish();
         });
     }
