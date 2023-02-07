@@ -30,8 +30,11 @@ import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class RecipeFragment extends Fragment {
@@ -46,7 +49,6 @@ public class RecipeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-
         binding = FragmentRecipeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         context = getContext();
@@ -57,7 +59,6 @@ public class RecipeFragment extends Fragment {
                 startActivity(intent);
             }
         });
-
         myRef = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
@@ -66,12 +67,30 @@ public class RecipeFragment extends Fragment {
         myRef.child("recipes").child("public").addValueEventListener(new ValueEventListener(){
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                recipeList.clear();
+                List<Recipe> list_aux = new ArrayList<>();
                 for (DataSnapshot recipeSnapshot: snapshot.getChildren()) {
-                    List<Pair<String, Recipe>> list;
-                    list = (List<Pair<String, Recipe>>) recipeSnapshot.getValue();
-                    Recipe r = recipeSnapshot.getValue(Recipe.class);
-                    recipeList.add(r);
+                    for(DataSnapshot r: recipeSnapshot.getChildren()){
+                        String name = r.child("name").getValue(String.class);
+                        String description = r.child("description").getValue(String.class);
+                        String type = r.child("type").getValue(String.class);
+                        List<Pair<String, String>> list = (List<Pair<String, String>>) r.child("list").getValue();
+                        Recipe recipe = new Recipe(name, description, list, type);
+                        list_aux.add(recipe);
+                    }
+                }
+                for(Recipe r: list_aux){
+                    if(!recipeList.contains(r)){
+                        recipeList.add(r);
+                    }
+                }
+
+                Iterator<Recipe> iterator = recipeList.iterator();
+
+                while (iterator.hasNext()){
+                    Recipe r = iterator.next();
+                    if(r.getType().equals("public") && !list_aux.contains(r)){
+                        iterator.remove();
+                    }
                 }
                 mAdapter = new RecipeAdapter(getContext(), recipeList);
                 recyclerView.setAdapter(mAdapter);
@@ -84,14 +103,27 @@ public class RecipeFragment extends Fragment {
         myRef.child("recipes").child(user.getUid()).addValueEventListener(new ValueEventListener(){
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                recipeList.clear();
+                List<Recipe> list_aux = new ArrayList<>();
                 for (DataSnapshot recipeSnapshot: snapshot.getChildren()) {
                     String name = recipeSnapshot.child("name").getValue(String.class);
                     String description = recipeSnapshot.child("description").getValue(String.class);
-                    List<Pair<String, String>> list;
-                    list = (List<Pair<String, String>>) recipeSnapshot.child("list").getValue();
-                    Recipe r = new Recipe(name, description, list);
-                    recipeList.add(r);
+                    String type = recipeSnapshot.child("type").getValue(String.class);
+                    List<Pair<String, String>> list = (List<Pair<String, String>>) recipeSnapshot.child("list").getValue();
+                    Recipe r = new Recipe(name, description, list, type);
+                    list_aux.add(r);
+                }
+                for(Recipe r: list_aux){
+                    if(!recipeList.contains(r)){
+                        recipeList.add(r);
+                    }
+                }
+                Iterator<Recipe> iterator = recipeList.iterator();
+
+                while (iterator.hasNext()){
+                    Recipe r = iterator.next();
+                    if(r.getType().equals("private") && !list_aux.contains(r)){
+                        iterator.remove();
+                    }
                 }
                 mAdapter = new RecipeAdapter(getContext(), recipeList);
                 recyclerView.setAdapter(mAdapter);
@@ -112,13 +144,38 @@ public class RecipeFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                myRef.child("recipes").child(user.getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                myRef.child("recipes").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DataSnapshot> task) {
                         if (task.isSuccessful()) {
                             recipeList.clear();
-                            for (DataSnapshot recipeSnapshot: task.getResult().getChildren()) {
-
+                            for (DataSnapshot idSnapshot: task.getResult().getChildren()) {
+                                if(idSnapshot.getKey().equals("public")){
+                                    for(DataSnapshot recipeSnapshot: idSnapshot.getChildren()){
+                                        for(DataSnapshot r: recipeSnapshot.getChildren()){
+                                            String name = r.child("name").getValue(String.class);
+                                            String description = r.child("description").getValue(String.class);
+                                            String type = r.child("type").getValue(String.class);
+                                            List<Pair<String, String>> list = (List<Pair<String, String>>) r.child("list").getValue();
+                                            Recipe recipe = new Recipe(name, description, list, type);
+                                            if(!recipeList.contains(recipe) && r.getKey().toLowerCase(Locale.ROOT).contains(binding.editSearchRecipe.getText().toString().toLowerCase(Locale.ROOT))){
+                                                recipeList.add(recipe);
+                                            }
+                                        }
+                                    }
+                                }
+                                else if (idSnapshot.getKey().equals(user.getUid())){
+                                    for(DataSnapshot r: idSnapshot.getChildren()){
+                                        String name = r.child("name").getValue(String.class);
+                                        String description = r.child("description").getValue(String.class);
+                                        String type = r.child("type").getValue(String.class);
+                                        List<Pair<String, String>> list = (List<Pair<String, String>>) r.child("list").getValue();
+                                        Recipe recipe = new Recipe(name, description, list, type);
+                                        if(!recipeList.contains(recipe) && r.getKey().toLowerCase(Locale.ROOT).contains(binding.editSearchRecipe.getText().toString().toLowerCase(Locale.ROOT))){
+                                            recipeList.add(recipe);
+                                        }
+                                    }
+                                }
                             }
                             mAdapter = new RecipeAdapter(getContext(), recipeList);
                             recyclerView.setAdapter(mAdapter);
@@ -128,9 +185,7 @@ public class RecipeFragment extends Fragment {
                 });
             }
         };
-
         binding.editSearchRecipe.addTextChangedListener(afterTextChangedListener);
-
         return root;
     }
 }

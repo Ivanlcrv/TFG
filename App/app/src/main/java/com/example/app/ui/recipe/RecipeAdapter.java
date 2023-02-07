@@ -53,8 +53,10 @@ public class RecipeAdapter  extends RecyclerView.Adapter<RecipeAdapter.RecipeVie
                     .setIcon(R.drawable.ic_warning)
                     .setPositiveButton(android.R.string.yes, (dialog, whichButton) -> {
                         DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
-                        //revisar
+
+                        myRef.child("recipes").child("public").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(recipeItemView.getText().toString()).removeValue();
                         myRef.child("recipes").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(recipeItemView.getText().toString()).removeValue();
+
                         Toast.makeText(context, recipeItemView.getText().toString() + " has been remove from the database", Toast.LENGTH_SHORT).show();
                     })
                     .setNegativeButton(android.R.string.no, null).show());
