@@ -16,7 +16,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.app.Recipe;
 import com.example.app.RecipeActivity;
 import com.example.app.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -28,11 +31,15 @@ public class RecipeAdapter  extends RecyclerView.Adapter<RecipeAdapter.RecipeVie
     private LayoutInflater mInflater;
     private Context context;
     private Recipe actual_recipe;
+    private DatabaseReference myRef;
+    private String user;
 
     public RecipeAdapter(Context recipeFragment, LinkedList<Recipe> recipeList) {
         mInflater = LayoutInflater.from(recipeFragment);
         this.recipeList = recipeList;
         context = recipeFragment;
+        myRef = FirebaseDatabase.getInstance().getReference();
+        user = FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
 
     class RecipeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
@@ -40,22 +47,21 @@ public class RecipeAdapter  extends RecyclerView.Adapter<RecipeAdapter.RecipeVie
         public final TextView recipeItemView;
         public final CardView recipeCardView;
         final RecipeAdapter mAdapter;
+        private boolean public_type;
 
         public RecipeViewHolder(@NonNull View itemView, RecipeAdapter recipeAdapter) {
             super(itemView);
             recipeItemView = itemView.findViewById(R.id.recipe_list);
             //bin_recipe
             recipeCardView = itemView.findViewById(R.id.bin_recipe);
-
             recipeCardView.setOnClickListener(v -> new AlertDialog.Builder(context)
                     .setTitle("Delete recipe")
                     .setMessage("Do you really want to remove this recipe: " + recipeItemView.getText().toString())
                     .setIcon(R.drawable.ic_warning)
                     .setPositiveButton(android.R.string.yes, (dialog, whichButton) -> {
-                        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
 
-                        myRef.child("recipes").child("public").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(recipeItemView.getText().toString()).removeValue();
-                        myRef.child("recipes").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(recipeItemView.getText().toString()).removeValue();
+                        if(public_type) myRef.child("recipes").child("public").child(user).child(recipeItemView.getText().toString()).removeValue();
+                        else myRef.child("recipes").child(user).child(recipeItemView.getText().toString()).removeValue();
 
                         Toast.makeText(context, recipeItemView.getText().toString() + " has been remove from the database", Toast.LENGTH_SHORT).show();
                     })
@@ -77,7 +83,40 @@ public class RecipeAdapter  extends RecyclerView.Adapter<RecipeAdapter.RecipeVie
 
         @Override
         public boolean onLongClick(View v) {
-            recipeCardView.setVisibility(CardView.VISIBLE);
+            myRef.child("recipes").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DataSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        boolean permission = false;
+                        for (DataSnapshot idSnapshot: task.getResult().getChildren()) {
+                            if(idSnapshot.getKey().equals("public")){
+                                for(DataSnapshot recipeSnapshot: idSnapshot.getChildren()){
+                                    for(DataSnapshot r: recipeSnapshot.getChildren()){
+                                        if(r.child("name").getValue(String.class).equals(recipeItemView.getText().toString())){
+                                            permission = true;
+                                            public_type = true;
+                                        }
+
+                                    }
+                                }
+                            }
+                            else if (idSnapshot.getKey().equals(user)){
+                                for(DataSnapshot r: idSnapshot.getChildren()){
+                                    if(r.child("name").getValue(String.class).equals(recipeItemView.getText().toString())){
+                                        permission = true;
+                                        public_type = false;
+                                    }
+                                }
+                            }
+                        }
+                        if(permission){
+                            recipeCardView.setVisibility(CardView.VISIBLE);
+                        }
+                        else Toast.makeText(context, "You can't delete a recipe that's not yours", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
             return true;
         }
     }
