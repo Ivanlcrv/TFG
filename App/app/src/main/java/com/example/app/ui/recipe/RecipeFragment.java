@@ -181,6 +181,7 @@ public class RecipeFragment extends Fragment {
                 mAdapter = new RecipeAdapter(getContext(), recipeList);
                 recyclerView.setAdapter(mAdapter);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
             }
 
             @Override
