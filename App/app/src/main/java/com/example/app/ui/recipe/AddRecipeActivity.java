@@ -43,6 +43,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class AddRecipeActivity extends AppCompatActivity {
@@ -178,7 +179,7 @@ public class AddRecipeActivity extends AppCompatActivity {
         descriptionEditText.addTextChangedListener(afterTextChangedListener);
 
         addButton.setOnClickListener(v -> {
-            Recipe recipe = new Recipe(nameEditText.getText().toString(), descriptionEditText.getText().toString(),  adpter.getList(), checked);
+            Recipe recipe = new Recipe(nameEditText.getText().toString(), descriptionEditText.getText().toString(),  adpter.getList(), checked.toLowerCase(Locale.ROOT));
             DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
             FirebaseUser user = mAuth.getCurrentUser();
             StorageReference storageRef = FirebaseStorage.getInstance().getReference();
@@ -192,9 +193,12 @@ public class AddRecipeActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot snapshot) {
                         List<Recipe> recipesList = new ArrayList<>();
-                        for (DataSnapshot recipeSnapshot: snapshot.getChildren()) {
-                            Recipe r = recipeSnapshot.getValue(Recipe.class);
-                            recipesList.add(r);
+                        for(DataSnapshot userSnapshot: snapshot.getChildren()){
+                            for (DataSnapshot recipeSnapshot: userSnapshot.getChildren()) {
+                                Recipe recipe = new Recipe(recipeSnapshot.child("name").getValue(String.class), recipeSnapshot.child("description").getValue(String.class),
+                                        (List<Pair<String, String>>) recipeSnapshot.child("list").getValue(), recipeSnapshot.child("type").getValue(String.class));
+                                recipesList.add(recipe);
+                            }
                         }
                         if(!recipesList.contains(recipe.getName())) {
                             recipeRef.putBytes(data);
@@ -214,11 +218,8 @@ public class AddRecipeActivity extends AppCompatActivity {
                     public void onDataChange(DataSnapshot snapshot) {
                         List<Recipe> recipesList = new ArrayList<>();
                         for (DataSnapshot recipeSnapshot : snapshot.getChildren()) {
-                            String name = recipeSnapshot.child("name").getValue(String.class);
-                            String description = recipeSnapshot.child("description").getValue(String.class);
-                            String type = recipeSnapshot.child("type").getValue(String.class);
-                            List<Pair<String, String>> list = (List<Pair<String, String>>) recipeSnapshot.child("list").getValue();
-                            Recipe recipe = new Recipe(name, description, list, type);
+                            Recipe recipe = new Recipe(recipeSnapshot.child("name").getValue(String.class), recipeSnapshot.child("description").getValue(String.class),
+                                    (List<Pair<String, String>>) recipeSnapshot.child("list").getValue(), recipeSnapshot.child("type").getValue(String.class));
                             recipesList.add(recipe);
                         }
                         if (!recipesList.contains(recipe.getName())) {

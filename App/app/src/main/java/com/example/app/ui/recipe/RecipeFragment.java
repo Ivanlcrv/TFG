@@ -72,22 +72,16 @@ public class RecipeFragment extends Fragment {
                     if(idSnapshot.getKey().equals("public")){
                         for(DataSnapshot recipeSnapshot: idSnapshot.getChildren()){
                             for(DataSnapshot r: recipeSnapshot.getChildren()){
-                                String name = r.child("name").getValue(String.class);
-                                String description = r.child("description").getValue(String.class);
-                                String type = r.child("type").getValue(String.class);
-                                List<Pair<String, String>> list = (List<Pair<String, String>>) r.child("list").getValue();
-                                Recipe recipe = new Recipe(name, description, list, type);
+                                Recipe recipe = new Recipe(r.child("name").getValue(String.class), r.child("description").getValue(String.class),
+                                        (List<Pair<String, String>>) r.child("list").getValue(), r.child("type").getValue(String.class));
                                 list_aux.add(recipe);
                             }
                         }
                     }
                     else if (idSnapshot.getKey().equals(user.getUid())){
                         for(DataSnapshot r: idSnapshot.getChildren()){
-                            String name = r.child("name").getValue(String.class);
-                            String description = r.child("description").getValue(String.class);
-                            String type = r.child("type").getValue(String.class);
-                            List<Pair<String, String>> list = (List<Pair<String, String>>) r.child("list").getValue();
-                            Recipe recipe = new Recipe(name, description, list, type);
+                            Recipe recipe = new Recipe(idSnapshot.child("name").getValue(String.class), idSnapshot.child("description").getValue(String.class),
+                                    (List<Pair<String, String>>) idSnapshot.child("list").getValue(), idSnapshot.child("type").getValue(String.class));
                             list_aux.add(recipe);
                         }
                     }
@@ -135,11 +129,8 @@ public class RecipeFragment extends Fragment {
                                 if(idSnapshot.getKey().equals("public")){
                                     for(DataSnapshot recipeSnapshot: idSnapshot.getChildren()){
                                         for(DataSnapshot r: recipeSnapshot.getChildren()){
-                                            String name = r.child("name").getValue(String.class);
-                                            String description = r.child("description").getValue(String.class);
-                                            String type = r.child("type").getValue(String.class);
-                                            List<Pair<String, String>> list = (List<Pair<String, String>>) r.child("list").getValue();
-                                            Recipe recipe = new Recipe(name, description, list, type);
+                                            Recipe recipe = new Recipe(idSnapshot.child("name").getValue(String.class), idSnapshot.child("description").getValue(String.class),
+                                                    (List<Pair<String, String>>) idSnapshot.child("list").getValue(), idSnapshot.child("type").getValue(String.class));
                                             if(!recipeList.contains(recipe) && r.getKey().toLowerCase(Locale.ROOT).contains(binding.editSearchRecipe.getText().toString().toLowerCase(Locale.ROOT))){
                                                 recipeList.add(recipe);
                                             }
@@ -148,11 +139,8 @@ public class RecipeFragment extends Fragment {
                                 }
                                 else if (idSnapshot.getKey().equals(user.getUid())){
                                     for(DataSnapshot r: idSnapshot.getChildren()){
-                                        String name = r.child("name").getValue(String.class);
-                                        String description = r.child("description").getValue(String.class);
-                                        String type = r.child("type").getValue(String.class);
-                                        List<Pair<String, String>> list = (List<Pair<String, String>>) r.child("list").getValue();
-                                        Recipe recipe = new Recipe(name, description, list, type);
+                                        Recipe recipe = new Recipe(idSnapshot.child("name").getValue(String.class), idSnapshot.child("description").getValue(String.class),
+                                                (List<Pair<String, String>>) idSnapshot.child("list").getValue(), idSnapshot.child("type").getValue(String.class));
                                         if(!recipeList.contains(recipe) && r.getKey().toLowerCase(Locale.ROOT).contains(binding.editSearchRecipe.getText().toString().toLowerCase(Locale.ROOT))){
                                             recipeList.add(recipe);
                                         }
