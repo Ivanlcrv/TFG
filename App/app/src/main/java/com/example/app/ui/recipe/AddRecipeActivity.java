@@ -182,7 +182,7 @@ public class AddRecipeActivity extends AppCompatActivity {
             DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
             FirebaseUser user = mAuth.getCurrentUser();
             StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-            StorageReference recipeRef = storageRef.child(recipe.getName()+".jpg");
+            StorageReference recipeRef = storageRef.child(recipe.getName());
 
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             selectedImageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);

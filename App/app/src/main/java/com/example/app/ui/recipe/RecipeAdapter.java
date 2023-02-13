@@ -68,11 +68,10 @@ public class RecipeAdapter  extends RecyclerView.Adapter<RecipeAdapter.RecipeVie
                     .setMessage("Do you really want to remove this recipe: " + recipeItemView.getText().toString())
                     .setIcon(R.drawable.ic_warning)
                     .setPositiveButton(android.R.string.yes, (dialog, whichButton) -> {
-
+                        StorageReference storageRef = FirebaseStorage.getInstance().getReference().child(recipeItemView.getText().toString()+".jpg");
+                        storageRef.delete();
                         if(public_type) myRef.child("recipes").child("public").child(user).child(recipeItemView.getText().toString()).removeValue();
                         else myRef.child("recipes").child(user).child(recipeItemView.getText().toString()).removeValue();
-                        StorageReference storageRef = FirebaseStorage.getInstance().getReference().child(recipeItemView.getText().toString());
-                        storageRef.delete();
                         Toast.makeText(context, recipeItemView.getText().toString() + " has been remove from the database", Toast.LENGTH_SHORT).show();
                     })
                     .setNegativeButton(android.R.string.no, null).show());
@@ -141,7 +140,7 @@ public class RecipeAdapter  extends RecyclerView.Adapter<RecipeAdapter.RecipeVie
     public void onBindViewHolder(@NonNull RecipeAdapter.RecipeViewHolder holder, int position) {
         String mCurrent = recipeList.get(position).getName();
         holder.recipeItemView.setText(mCurrent);
-        StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(mCurrent+".jpg");
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(mCurrent);
         final long ONE_MEGABYTE = 1024 * 1024;
         storageReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
@@ -152,7 +151,6 @@ public class RecipeAdapter  extends RecyclerView.Adapter<RecipeAdapter.RecipeVie
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
-
             }
         });
     }
