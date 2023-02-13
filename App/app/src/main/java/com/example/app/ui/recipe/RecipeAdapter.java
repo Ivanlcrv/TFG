@@ -105,7 +105,6 @@ public class RecipeAdapter  extends RecyclerView.Adapter<RecipeAdapter.RecipeVie
                                             permission = true;
                                             public_type = true;
                                         }
-
                                     }
                                 }
                             }
