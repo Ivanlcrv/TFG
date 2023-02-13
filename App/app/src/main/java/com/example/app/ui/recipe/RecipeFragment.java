@@ -64,6 +64,7 @@ public class RecipeFragment extends Fragment {
         FirebaseUser user = mAuth.getCurrentUser();
         recyclerView = binding.recyclerViewRecipe;
 
+        /*
         myRef.child("recipes").child("public").addValueEventListener(new ValueEventListener(){
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -112,6 +113,58 @@ public class RecipeFragment extends Fragment {
                     Recipe r = new Recipe(name, description, list, type);
                     list_aux.add(r);
                 }
+                for(Recipe r: list_aux){
+                    if(!recipeList.contains(r)){
+                        recipeList.add(r);
+                    }
+                }
+                Iterator<Recipe> iterator = recipeList.iterator();
+
+                while (iterator.hasNext()){
+                    Recipe r = iterator.next();
+                    if(r.getType().equals("private") && !list_aux.contains(r)){
+                        iterator.remove();
+                    }
+                }
+                mAdapter = new RecipeAdapter(getContext(), recipeList);
+                recyclerView.setAdapter(mAdapter);
+                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        });
+
+         */
+        myRef.child("recipes").addValueEventListener(new ValueEventListener(){
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                List<Recipe> list_aux = new ArrayList<>();
+                for (DataSnapshot idSnapshot: snapshot.getChildren()) {
+                    if(idSnapshot.getKey().equals("public")){
+                        for(DataSnapshot recipeSnapshot: idSnapshot.getChildren()){
+                            for(DataSnapshot r: recipeSnapshot.getChildren()){
+                                String name = r.child("name").getValue(String.class);
+                                String description = r.child("description").getValue(String.class);
+                                String type = r.child("type").getValue(String.class);
+                                List<Pair<String, String>> list = (List<Pair<String, String>>) r.child("list").getValue();
+                                Recipe recipe = new Recipe(name, description, list, type);
+                                list_aux.add(recipe);
+                            }
+                        }
+                    }
+                    else if (idSnapshot.getKey().equals(user.getUid())){
+                        for(DataSnapshot r: idSnapshot.getChildren()){
+                            String name = r.child("name").getValue(String.class);
+                            String description = r.child("description").getValue(String.class);
+                            String type = r.child("type").getValue(String.class);
+                            List<Pair<String, String>> list = (List<Pair<String, String>>) r.child("list").getValue();
+                            Recipe recipe = new Recipe(name, description, list, type);
+                            list_aux.add(recipe);
+                        }
+                    }
+                }
+
                 for(Recipe r: list_aux){
                     if(!recipeList.contains(r)){
                         recipeList.add(r);
