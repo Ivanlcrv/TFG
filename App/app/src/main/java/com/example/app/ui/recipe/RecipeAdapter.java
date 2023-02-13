@@ -68,7 +68,7 @@ public class RecipeAdapter  extends RecyclerView.Adapter<RecipeAdapter.RecipeVie
                     .setMessage("Do you really want to remove this recipe: " + recipeItemView.getText().toString())
                     .setIcon(R.drawable.ic_warning)
                     .setPositiveButton(android.R.string.yes, (dialog, whichButton) -> {
-                        StorageReference storageRef = FirebaseStorage.getInstance().getReference().child(recipeItemView.getText().toString()+".jpg");
+                        StorageReference storageRef = FirebaseStorage.getInstance().getReference().child(recipeItemView.getText().toString());
                         storageRef.delete();
                         if(public_type) myRef.child("recipes").child("public").child(user).child(recipeItemView.getText().toString()).removeValue();
                         else myRef.child("recipes").child(user).child(recipeItemView.getText().toString()).removeValue();
