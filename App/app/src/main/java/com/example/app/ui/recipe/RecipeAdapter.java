@@ -16,14 +16,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
+import com.example.app.R;
 import com.example.app.Recipe;
 import com.example.app.RecipeActivity;
-import com.example.app.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
@@ -32,22 +27,22 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.LinkedList;
+import java.util.Objects;
 
 public class RecipeAdapter  extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder> {
 
     private final LinkedList<Recipe> recipeList;
-    private LayoutInflater mInflater;
-    private Context context;
-    private Recipe actual_recipe;
-    private DatabaseReference myRef;
-    private String user;
+    private final LayoutInflater mInflater;
+    private final Context context;
+    private final DatabaseReference myRef;
+    private final String user;
 
     public RecipeAdapter(Context recipeFragment, LinkedList<Recipe> recipeList) {
         mInflater = LayoutInflater.from(recipeFragment);
         this.recipeList = recipeList;
         context = recipeFragment;
         myRef = FirebaseDatabase.getInstance().getReference();
-        user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        user = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
     }
 
     class RecipeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
@@ -85,46 +80,36 @@ public class RecipeAdapter  extends RecyclerView.Adapter<RecipeAdapter.RecipeVie
         public void onClick(View v) {
             Intent intent = new Intent(context, RecipeActivity.class);
             int mPosition = getLayoutPosition();
-            actual_recipe = recipeList.get(mPosition);
+            Recipe actual_recipe = recipeList.get(mPosition);
             intent.putExtra("recipe", actual_recipe.getName());
             context.startActivity(intent);
         }
 
         @Override
         public boolean onLongClick(View v) {
-            myRef.child("recipes").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DataSnapshot> task) {
-                    if (task.isSuccessful()) {
-                        boolean permission = false;
-                        for (DataSnapshot idSnapshot: task.getResult().getChildren()) {
-                            if(idSnapshot.getKey().equals("public")){
-                                for(DataSnapshot recipeSnapshot: idSnapshot.getChildren()){
-                                    for(DataSnapshot r: recipeSnapshot.getChildren()){
-                                        if(r.child("name").getValue(String.class).equals(recipeItemView.getText().toString())){
-                                            permission = true;
-                                            public_type = true;
-                                        }
-                                    }
-                                }
-                            }
-                            else if (idSnapshot.getKey().equals(user)){
-                                for(DataSnapshot r: idSnapshot.getChildren()){
-                                    if(r.child("name").getValue(String.class).equals(recipeItemView.getText().toString())){
+            myRef.child("recipes").get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    boolean permission = false;
+                    for (DataSnapshot idSnapshot: task.getResult().getChildren()) {
+                        if(Objects.equals(idSnapshot.getKey(), "public")){
+                            for(DataSnapshot recipeSnapshot: idSnapshot.getChildren())
+                                for(DataSnapshot r: recipeSnapshot.getChildren())
+                                    if(Objects.equals(r.child("name").getValue(String.class), recipeItemView.getText().toString())) {
                                         permission = true;
-                                        public_type = false;
+                                        public_type = true;
                                     }
+                        }
+                        else if (Objects.equals(idSnapshot.getKey(), user))
+                            for(DataSnapshot r: idSnapshot.getChildren())
+                                if(Objects.equals(r.child("name").getValue(String.class), recipeItemView.getText().toString())){
+                                    permission = true;
+                                    public_type = false;
                                 }
-                            }
-                        }
-                        if(permission){
-                            recipeCardView.setVisibility(CardView.VISIBLE);
-                        }
-                        else Toast.makeText(context, "You can't delete a recipe that's not yours", Toast.LENGTH_SHORT).show();
                     }
+                    if(permission)recipeCardView.setVisibility(CardView.VISIBLE);
+                    else Toast.makeText(context, "You can't delete a recipe that's not yours", Toast.LENGTH_SHORT).show();
                 }
             });
-
             return true;
         }
     }
@@ -141,21 +126,13 @@ public class RecipeAdapter  extends RecyclerView.Adapter<RecipeAdapter.RecipeVie
         holder.recipeItemView.setText(mCurrent);
         StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(mCurrent);
         final long ONE_MEGABYTE = 1024 * 1024;
-        storageReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0,bytes.length);
-                holder.imageRecipeView.setImageBitmap(bitmap);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-            }
+        storageReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(bytes -> {
+            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0,bytes.length);
+            holder.imageRecipeView.setImageBitmap(bitmap);
+        }).addOnFailureListener(exception -> {
         });
     }
 
     @Override
-    public int getItemCount() {
-        return recipeList.size();
-    }
+    public int getItemCount() {return recipeList.size();}
 }

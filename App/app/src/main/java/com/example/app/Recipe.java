@@ -6,7 +6,6 @@ import android.util.Pair;
 import androidx.annotation.Nullable;
 
 import java.util.List;
-import java.util.Map;
 
 public class Recipe {
 
@@ -28,15 +27,11 @@ public class Recipe {
         return name;
     }
 
-    public String getDescription() {
-        return description;
-    }
+    public String getDescription() {return description;}
 
-    public List<Pair<String, String>> getList() {
-        return list;
-    }
+    public List<Pair<String, String>> getList() {return list;}
 
-    public String getType(){ return type; }
+    public String getType(){ return type;}
 
     @Override
     public boolean equals(@Nullable Object obj) {

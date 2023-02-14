@@ -21,13 +21,10 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.example.app.Food;
 import com.example.app.R;
 import com.example.app.Recipe;
 import com.example.app.databinding.ActivityAddRecipeBinding;
-import com.example.app.ui.pantry.FoodAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -41,10 +38,8 @@ import com.google.firebase.storage.StorageReference;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 public class AddRecipeActivity extends AppCompatActivity {
 
@@ -53,13 +48,15 @@ public class AddRecipeActivity extends AppCompatActivity {
     private String checked;
     private List<Pair<String, String>> list;
     private ListView listView;
-    private ListviewAdapter adpter;
+    private ListviewAdapter adapter;
     private Bitmap selectedImageBitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         checked="private";
+
         mAuth = FirebaseAuth.getInstance();
         binding = ActivityAddRecipeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -67,10 +64,12 @@ public class AddRecipeActivity extends AppCompatActivity {
         list = new ArrayList<>();
         listView = (ListView)findViewById(R.id.listview);
         listView.setItemsCanFocus(true);
+
         Pair<String, String> p = new Pair<>("","");
         list.add(p);
-        adpter = new ListviewAdapter(this,list);
-        listView.setAdapter(adpter);
+
+        adapter = new ListviewAdapter(this,list);
+        listView.setAdapter(adapter);
 
         final EditText nameEditText = binding.editNameRecipe;
         final EditText descriptionEditText = binding.editDescription;
@@ -88,7 +87,7 @@ public class AddRecipeActivity extends AppCompatActivity {
                         uploadButton.setText("Uploaded image");
                         addButton.setEnabled(nameEditText.getText() != null && descriptionEditText.getText() != null &&
                                 !nameEditText.getText().toString().equals("") && !descriptionEditText.getText().toString().equals("") && uploadButton.getText().toString().equals("Uploaded image")
-                                && adpter.getEmpty());
+                                && adapter.getEmpty());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -103,10 +102,8 @@ public class AddRecipeActivity extends AppCompatActivity {
             launchSomeActivity.launch(i);
         });
 
-
-
         binding.imageadd.setOnClickListener(v -> {
-            list = adpter.getList();
+            list = adapter.getList();
             Pair<String, String> pair = new Pair<>("","");
             list.add(pair);
             if(list.size() > 2){
@@ -121,8 +118,8 @@ public class AddRecipeActivity extends AppCompatActivity {
                 listView.setLayoutParams(params);
                 listView.requestLayout();
             }
-            adpter = new ListviewAdapter(getApplicationContext(),list);
-            listView.setAdapter(adpter);
+            adapter = new ListviewAdapter(getApplicationContext(),list);
+            listView.setAdapter(adapter);
         });
 
         binding.imageremove.setOnClickListener(v -> {
@@ -145,33 +142,30 @@ public class AddRecipeActivity extends AppCompatActivity {
                 listView.setLayoutParams(params);
                 listView.requestLayout();
             }
-            adpter = new ListviewAdapter(getApplicationContext(),list);
-            listView.setAdapter(adpter);
+            adapter = new ListviewAdapter(getApplicationContext(),list);
+            listView.setAdapter(adapter);
         });
 
 
         radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
             RadioButton check = group.findViewById(checkedId);
             checked = check.getText().toString();
-            addButton.setEnabled(nameEditText.getText() != null && descriptionEditText.getText() != null &&
-                    !nameEditText.getText().toString().equals("") && !descriptionEditText.getText().toString().equals("") && uploadButton.getText().toString().equals("Uploaded image")
-                    && adpter.getEmpty());
+            addButton.setEnabled(nameEditText.getText() != null && descriptionEditText.getText() != null && !nameEditText.getText().toString().equals("") && !descriptionEditText.getText().toString().equals("")
+                    && uploadButton.getText().toString().equals("Uploaded image")
+                    && adapter.getEmpty());
         });
 
         TextWatcher afterTextChangedListener = new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
             @Override
             public void afterTextChanged(Editable s) {
-                addButton.setEnabled(nameEditText.getText() != null && descriptionEditText.getText() != null &&
-                        !nameEditText.getText().toString().equals("") && !descriptionEditText.getText().toString().equals("") && uploadButton.getText().toString().equals("Uploaded image")
-                        && adpter.getEmpty());
+                addButton.setEnabled(nameEditText.getText() != null && descriptionEditText.getText() != null && !nameEditText.getText().toString().equals("") && !descriptionEditText.getText().toString().equals("")
+                        && uploadButton.getText().toString().equals("Uploaded image") && adapter.getEmpty());
             }
         };
 
@@ -179,7 +173,9 @@ public class AddRecipeActivity extends AppCompatActivity {
         descriptionEditText.addTextChangedListener(afterTextChangedListener);
 
         addButton.setOnClickListener(v -> {
-            Recipe recipe = new Recipe(nameEditText.getText().toString(), descriptionEditText.getText().toString(),  adpter.getList(), checked.toLowerCase(Locale.ROOT));
+
+            Recipe recipe = new Recipe(nameEditText.getText().toString(), descriptionEditText.getText().toString(),  adapter.getList(), checked.toLowerCase(Locale.ROOT));
+
             DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
             FirebaseUser user = mAuth.getCurrentUser();
             StorageReference storageRef = FirebaseStorage.getInstance().getReference();
@@ -188,10 +184,11 @@ public class AddRecipeActivity extends AppCompatActivity {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             selectedImageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
             byte[] data = baos.toByteArray();
+
             if(checked.equals("Public")){
                 myRef.child("recipes").child("public").addValueEventListener(new ValueEventListener(){
                     @Override
-                    public void onDataChange(DataSnapshot snapshot) {
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
                         List<Recipe> recipesList = new ArrayList<>();
                         for(DataSnapshot userSnapshot: snapshot.getChildren()){
                             for (DataSnapshot recipeSnapshot: userSnapshot.getChildren()) {
@@ -202,6 +199,7 @@ public class AddRecipeActivity extends AppCompatActivity {
                         }
                         if(!recipesList.contains(recipe.getName())) {
                             recipeRef.putBytes(data);
+                            assert user != null;
                             myRef.child("recipes").child("public").child(user.getUid()).child(recipe.getName()).setValue(recipe);
                         }
                         else  Toast.makeText(getApplicationContext(), "The recipe: " + recipe.getName() + " already exists", Toast.LENGTH_SHORT).show();
@@ -213,9 +211,10 @@ public class AddRecipeActivity extends AppCompatActivity {
 
             }
             else {
+                assert user != null;
                 myRef.child("recipes").child(user.getUid()).addValueEventListener(new ValueEventListener() {
                     @Override
-                    public void onDataChange(DataSnapshot snapshot) {
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
                         List<Recipe> recipesList = new ArrayList<>();
                         for (DataSnapshot recipeSnapshot : snapshot.getChildren()) {
                             Recipe recipe = new Recipe(recipeSnapshot.child("name").getValue(String.class), recipeSnapshot.child("description").getValue(String.class),
@@ -231,9 +230,7 @@ public class AddRecipeActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
+                    public void onCancelled(@NonNull DatabaseError error) {}
                 });
             }
             Toast.makeText(getApplicationContext(), "The recipe: " + recipe.getName() + " has been added successfully", Toast.LENGTH_SHORT).show();

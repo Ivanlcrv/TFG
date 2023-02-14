@@ -1,5 +1,6 @@
 package com.example.app.ui.recipe;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -13,7 +14,6 @@ import android.widget.EditText;
 import com.example.app.R;
 
 import java.util.List;
-import java.util.Map;
 
 public class ListviewAdapter extends BaseAdapter {
 
@@ -27,6 +27,7 @@ public class ListviewAdapter extends BaseAdapter {
         this.list = list;
     }
 
+    @SuppressLint({"ViewHolder", "InflateParams"})
     @Override
     public View getView(int position, View convertView, ViewGroup arg2) {
         final ViewHolder holder = new ViewHolder();
@@ -34,8 +35,10 @@ public class ListviewAdapter extends BaseAdapter {
 
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         convertView = mInflater.inflate(R.layout.listview_adapter, null);
+
         final EditText name = (EditText) convertView.findViewById(R.id.name);
         final EditText amount = (EditText) convertView.findViewById(R.id.number);
+
         name.setText(list.get(position).first);
         amount.setText(list.get(position).second);
 
@@ -74,27 +77,17 @@ public class ListviewAdapter extends BaseAdapter {
     }
 
     @Override
-    public int getCount() {
-        // TODO Auto-generated method stub
-        return list.size();
-    }
+    public int getCount() {return list.size();}
 
     @Override
-    public Object getItem(int arg0) {
-        // TODO Auto-generated method stub
-        return arg0;
-    }
+    public Object getItem(int arg0) {return arg0;}
 
     @Override
-    public long getItemId(int arg0) {
-        // TODO Auto-generated method stub
-        return arg0;
-    }
+    public long getItemId(int arg0) {return arg0;}
 
     public boolean getEmpty(){
-        for(Pair<String,String> entry: list){
+        for(Pair<String,String> entry: list)
             if(!entry.first.equals("") && !entry.second.equals("")) return true;
-        }
         return false;
     }
 
@@ -103,6 +96,4 @@ public class ListviewAdapter extends BaseAdapter {
     }
 }
 
-class ViewHolder {
-    EditText caption;
-}
+class ViewHolder {EditText caption;}
