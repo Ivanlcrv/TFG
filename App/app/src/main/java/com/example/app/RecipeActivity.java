@@ -31,13 +31,7 @@ public class RecipeActivity extends AppCompatActivity {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot recipeSnapshot: snapshot.getChildren()) {
-                    String name_recipe = recipeSnapshot.getKey();
-                    if (name_recipe.equals(name)) {
-                        binding.nameRecipeFill.setHint(name);
-                        binding.amountRecipeFill.setHint(recipeSnapshot.getValue(String.class));
-                    }
-                }
+
             }
 
             @Override

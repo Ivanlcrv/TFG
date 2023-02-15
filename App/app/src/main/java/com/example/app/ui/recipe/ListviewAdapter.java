@@ -31,7 +31,6 @@ public class ListviewAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup arg2) {
         final ViewHolder holder = new ViewHolder();
-        final ViewHolder holder2 = new ViewHolder();
 
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         convertView = mInflater.inflate(R.layout.listview_adapter, null);
@@ -42,24 +41,24 @@ public class ListviewAdapter extends BaseAdapter {
         name.setText(list.get(position).first);
         amount.setText(list.get(position).second);
 
-        holder.caption = amount;
-        holder.caption.setTag(position);
+        holder.amount = amount;
+        holder.amount.setTag(position);
         convertView.setTag(holder);
-        int tag_position=(Integer) holder.caption.getTag();
-        holder.caption.setId(tag_position);
+        int tag_position=(Integer) holder.amount.getTag();
+        holder.amount.setId(tag_position);
 
-        holder2.caption = name;
-        holder2.caption.setTag(position);
-        convertView.setTag(holder2);
-        int tag_position2=(Integer) holder2.caption.getTag();
-        holder2.caption.setId(tag_position2);
+        holder.name = name;
+        holder.name.setTag(position);
+        convertView.setTag(holder);
+        int tag_position2=(Integer) holder.name.getTag();
+        holder.name.setId(tag_position2);
 
 
         TextWatcher afterTextChangedListener = new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                final int position = holder.caption.getId();
-                Pair<String, String> pair = new Pair<>(holder2.caption.getText().toString(), holder.caption.getText().toString());
+                final int position = holder.amount.getId();
+                Pair<String, String> pair = new Pair<>(holder.name.getText().toString(), holder.amount.getText().toString());
                 list.set(position,pair);
             }
 
@@ -96,4 +95,7 @@ public class ListviewAdapter extends BaseAdapter {
     }
 }
 
-class ViewHolder {EditText caption;}
+class ViewHolder {
+    EditText amount;
+    EditText name;
+}

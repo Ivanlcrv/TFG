@@ -78,4 +78,6 @@
     <string name="pair_ingredient">Ingredient</string>
     <string name="title_pair">Add ingredients and their amount to the recipe</string>
     <string name="removeimage">removeImage</string>
+    <string name="list_ingredients">List of ingredients of the recipe</string>
+    <string name="change_image">Click here to change the image</string>
 </resources>
