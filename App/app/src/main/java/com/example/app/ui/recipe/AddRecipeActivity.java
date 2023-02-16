@@ -62,7 +62,7 @@ public class AddRecipeActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         list = new ArrayList<>();
-        listView = (ListView)findViewById(R.id.listview);
+        listView = findViewById(R.id.listview);
         listView.setItemsCanFocus(true);
 
         Pair<String, String> p = new Pair<>("","");

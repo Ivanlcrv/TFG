@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.app.R;
 import com.example.app.Recipe;
 import com.example.app.RecipeActivity;
+import com.example.app.RecipeViewActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
@@ -52,9 +53,10 @@ public class RecipeAdapter  extends RecyclerView.Adapter<RecipeAdapter.RecipeVie
         public final ImageView imageRecipeView;
         final RecipeAdapter mAdapter;
         private boolean public_type;
-
+        boolean permission;
         public RecipeViewHolder(@NonNull View itemView, RecipeAdapter recipeAdapter) {
             super(itemView);
+            permission = false;
             recipeItemView = itemView.findViewById(R.id.recipe_list);
             imageRecipeView = itemView.findViewById(R.id.image_recipe);
             recipeCardView = itemView.findViewById(R.id.bin_recipe);
@@ -70,26 +72,8 @@ public class RecipeAdapter  extends RecyclerView.Adapter<RecipeAdapter.RecipeVie
                         Toast.makeText(context, recipeItemView.getText().toString() + " has been remove from the database", Toast.LENGTH_SHORT).show();
                     })
                     .setNegativeButton(android.R.string.no, null).show());
-
-            mAdapter = recipeAdapter;
-            recipeItemView.setOnClickListener(this);
-            recipeItemView.setOnLongClickListener(this);
-        }
-
-        @Override
-        public void onClick(View v) {
-            Intent intent = new Intent(context, RecipeActivity.class);
-            int mPosition = getLayoutPosition();
-            Recipe actual_recipe = recipeList.get(mPosition);
-            intent.putExtra("recipe", actual_recipe.getName());
-            context.startActivity(intent);
-        }
-
-        @Override
-        public boolean onLongClick(View v) {
             myRef.child("recipes").get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
-                    boolean permission = false;
                     for (DataSnapshot idSnapshot: task.getResult().getChildren()) {
                         if(Objects.equals(idSnapshot.getKey(), "public")){
                             for(DataSnapshot recipeSnapshot: idSnapshot.getChildren())
@@ -106,10 +90,36 @@ public class RecipeAdapter  extends RecyclerView.Adapter<RecipeAdapter.RecipeVie
                                     public_type = false;
                                 }
                     }
-                    if(permission)recipeCardView.setVisibility(CardView.VISIBLE);
-                    else Toast.makeText(context, "You can't delete a recipe that's not yours", Toast.LENGTH_SHORT).show();
                 }
             });
+            mAdapter = recipeAdapter;
+            recipeItemView.setOnClickListener(this);
+            recipeItemView.setOnLongClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            if(permission){
+                Intent intent = new Intent(context, RecipeActivity.class);
+                int mPosition = getLayoutPosition();
+                Recipe actual_recipe = recipeList.get(mPosition);
+                intent.putExtra("recipe", actual_recipe.getName());
+                context.startActivity(intent);
+            }
+            else{
+                Intent intent = new Intent(context, RecipeViewActivity.class);
+                int mPosition = getLayoutPosition();
+                Recipe actual_recipe = recipeList.get(mPosition);
+                intent.putExtra("recipe", actual_recipe.getName());
+                context.startActivity(intent);
+            }
+
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            if(permission)recipeCardView.setVisibility(CardView.VISIBLE);
+            else Toast.makeText(context, "You can't delete a recipe that's not yours", Toast.LENGTH_SHORT).show();
             return true;
         }
     }
@@ -135,4 +145,17 @@ public class RecipeAdapter  extends RecyclerView.Adapter<RecipeAdapter.RecipeVie
 
     @Override
     public int getItemCount() {return recipeList.size();}
+    /*
+    public void loadImages() {
+        for(Recipe r: recipeList){
+            StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(r.getName());
+            final long ONE_MEGABYTE = 1024 * 1024;
+            storageReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(bytes -> {
+                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0,bytes.length);
+                holder.imageRecipeView.setImageBitmap(bitmap);
+            }).addOnFailureListener(exception -> {
+            });
+        }
+    }
+     */
 }
