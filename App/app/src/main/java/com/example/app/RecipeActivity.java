@@ -1,27 +1,42 @@
 package com.example.app;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Pair;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.example.app.databinding.ActivityRecipeBinding;
 import com.example.app.ui.recipe.ListviewAdapter;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -32,6 +47,9 @@ public class RecipeActivity extends AppCompatActivity {
     private List<Pair<String, String>> list;
     private ListView listView;
     private ListviewAdapter adapter;
+    private Bitmap selectedImageBitmap;
+    private String checked;
+    private String type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,9 +79,14 @@ public class RecipeActivity extends AppCompatActivity {
                                     if (Objects.equals(r.child("name").getValue(String.class), name)) {
                                         binding.nameRecipeFill.setHint(r.child("name").getValue(String.class));
                                         binding.descriptionRecipeFill.setHint(r.child("description").getValue(String.class));
-                                        if (r.child("type").getValue(String.class).equals("public"))
+                                        if (r.child("type").getValue(String.class).equals("public")){
                                             binding.radioPublic.setChecked(true);
-                                        else binding.radioPrivate.setChecked(true);
+                                            checked = type = "public";
+                                        }
+                                        else {
+                                            binding.radioPrivate.setChecked(true);
+                                            checked = type = "private";
+                                        }
                                         for (HashMap<String, String> m : (ArrayList<HashMap<String, String>>) r.child("list").getValue()) {
                                             String n, a;
                                             n = a = "";
@@ -96,6 +119,15 @@ public class RecipeActivity extends AppCompatActivity {
                                         }
                                         adapter = new ListviewAdapter(getApplicationContext(), list);
                                         listView.setAdapter(adapter);
+
+                                        StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(Objects.requireNonNull(r.child("name").getValue(String.class)));
+                                        final long ONE_MEGABYTE = 1024 * 1024;
+                                        storageReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(bytes -> {
+                                            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0,bytes.length);
+                                            binding.iconRecipe.setImageBitmap(bitmap);
+                                            selectedImageBitmap = bitmap;
+                                        }).addOnFailureListener(exception -> {
+                                        });
                                     }
                                 }
                     }
@@ -107,9 +139,15 @@ public class RecipeActivity extends AppCompatActivity {
                                             (List<Pair<String, String>>) r.child("list").getValue(), r.child("type").getValue(String.class));
                                     binding.nameRecipeFill.setHint(recipe.getName());
                                     binding.descriptionRecipeFill.setHint(recipe.getDescription());
-                                    if(recipe.getType().equals("public")) binding.radioPublic.setChecked(true);
-                                    else binding.radioPrivate.setChecked(true);
-                                    for(HashMap<String, String> m : (ArrayList<HashMap<String, String>>)r.child("list").getValue()){
+                                    if (r.child("type").getValue(String.class).equals("public")){
+                                        binding.radioPublic.setChecked(true);
+                                        checked = type = "public";
+                                    }
+                                    else {
+                                        binding.radioPrivate.setChecked(true);
+                                        checked = type = "private";
+                                    }
+                                    for(HashMap<String, String> m : (ArrayList<HashMap<String, String>>) Objects.requireNonNull(r.child("list").getValue())){
                                         String n, a;
                                         n = a = "";
                                         boolean x = false;
@@ -143,6 +181,15 @@ public class RecipeActivity extends AppCompatActivity {
                                     }
                                     adapter = new ListviewAdapter(getApplicationContext(),list);
                                     listView.setAdapter(adapter);
+
+                                    StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(Objects.requireNonNull(r.child("name").getValue(String.class)));
+                                    final long ONE_MEGABYTE = 1024 * 1024;
+                                    storageReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(bytes -> {
+                                        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0,bytes.length);
+                                        binding.iconRecipe.setImageBitmap(bitmap);
+                                        selectedImageBitmap = bitmap;
+                                    }).addOnFailureListener(exception -> {
+                                    });
                                 }
                             }
                     }
@@ -152,6 +199,21 @@ public class RecipeActivity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(getApplicationContext(), "Error loading recipe information.", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        ActivityResultLauncher<Intent> launchSomeActivity = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result.getResultCode() == Activity.RESULT_OK) {
+                Intent data = result.getData();
+                if (data != null && data.getData() != null) {
+                    Uri selectedImageUri = data.getData();
+                    try {
+                        selectedImageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImageUri);
+                        binding.iconRecipe.setImageBitmap(selectedImageBitmap);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         });
 
@@ -199,11 +261,68 @@ public class RecipeActivity extends AppCompatActivity {
             listView.setAdapter(adapter);
         });
 
+        binding.upload.setOnClickListener(v -> {
+            Intent i = new Intent();
+            i.setType("image/*");
+            i.setAction(Intent.ACTION_GET_CONTENT);
+            launchSomeActivity.launch(i);
+        });
+
+        binding.radioType.setOnCheckedChangeListener((group, checkedId) -> {
+            RadioButton check = group.findViewById(checkedId);
+            checked = check.getText().toString();
+        });
+
         binding.saveRecipe.setOnClickListener(v -> new AlertDialog.Builder(this)
                 .setTitle("Update recipe info")
                 .setMessage("Do you really want to update information about this recipe")
                 .setIcon(R.drawable.ic_warning)
                 .setPositiveButton(android.R.string.yes, (dialog, whichButton) -> {
+                    Recipe recipe = new Recipe(binding.nameRecipeFill.getText().toString().equals("") ? binding.nameRecipeFill.getHint().toString() : binding.nameRecipeFill.getText().toString(),
+                            binding.descriptionRecipeFill.getText().toString().equals("") ? binding.descriptionRecipeFill.getHint().toString() : binding.descriptionRecipeFill.getText().toString()
+                            ,  adapter.getList(), checked.toLowerCase(Locale.ROOT));
+
+                    DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
+                    StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+                    StorageReference recipeRef = storageRef.child(recipe.getName());
+
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    selectedImageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                    byte[] data = baos.toByteArray();
+
+
+                    if(type.equals("public")){
+                        if(checked.equals("public") && recipe.getName().equals(name)){
+                            myRef.child("recipes").child("public").child(uid).child(recipe.getName()).setValue(recipe);
+                        }
+                        else if(checked.equals("public")){
+                            myRef.child("recipes").child("public").child(uid).child(name).removeValue();
+                            myRef.child("recipes").child("public").child(uid).child(recipe.getName()).setValue(recipe);
+                            storageRef.child(name).delete();
+                        }
+                        else{
+                            myRef.child("recipes").child("public").child(uid).child(name).removeValue();
+                            myRef.child("recipes").child(uid).child(recipe.getName()).setValue(recipe);
+                            if(!recipe.getName().equals(name)) storageRef.child(name).delete();
+                        }
+                        recipeRef.putBytes(data);
+                    }
+                    else {
+                        if(checked.equals("private") && recipe.getName().equals(name)){
+                            myRef.child("recipes").child(uid).child(recipe.getName()).setValue(recipe);
+                        }
+                        else if(checked.equals("private")){
+                            myRef.child("recipes").child(uid).child(name).removeValue();
+                            myRef.child("recipes").child(uid).child(recipe.getName()).setValue(recipe);
+                            storageRef.child(name).delete();
+                        }
+                        else{
+                            myRef.child("recipes").child(uid).child(name).removeValue();
+                            myRef.child("recipes").child("public").child(uid).child(recipe.getName()).setValue(recipe);
+                            if(!recipe.getName().equals(name)) storageRef.child(name).delete();
+                        }
+                        recipeRef.putBytes(data);
+                    }
 
                     finish();
                 })

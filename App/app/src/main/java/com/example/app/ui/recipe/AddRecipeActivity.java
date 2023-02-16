@@ -174,7 +174,8 @@ public class AddRecipeActivity extends AppCompatActivity {
 
         addButton.setOnClickListener(v -> {
 
-            Recipe recipe = new Recipe(nameEditText.getText().toString(), descriptionEditText.getText().toString(),  adapter.getList(), checked.toLowerCase(Locale.ROOT));
+            Recipe recipe = new Recipe(nameEditText.getText().toString(), descriptionEditText.getText().toString(),
+                    adapter.getList(), checked.toLowerCase(Locale.ROOT));
 
             DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
             FirebaseUser user = mAuth.getCurrentUser();

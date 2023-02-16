@@ -145,17 +145,5 @@ public class RecipeAdapter  extends RecyclerView.Adapter<RecipeAdapter.RecipeVie
 
     @Override
     public int getItemCount() {return recipeList.size();}
-    /*
-    public void loadImages() {
-        for(Recipe r: recipeList){
-            StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(r.getName());
-            final long ONE_MEGABYTE = 1024 * 1024;
-            storageReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(bytes -> {
-                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0,bytes.length);
-                holder.imageRecipeView.setImageBitmap(bitmap);
-            }).addOnFailureListener(exception -> {
-            });
-        }
-    }
-     */
+
 }
