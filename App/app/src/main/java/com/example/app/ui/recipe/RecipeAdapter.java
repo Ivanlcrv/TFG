@@ -76,12 +76,20 @@ public class RecipeAdapter  extends RecyclerView.Adapter<RecipeAdapter.RecipeVie
                 if (task.isSuccessful()) {
                     for (DataSnapshot idSnapshot: task.getResult().getChildren()) {
                         if(Objects.equals(idSnapshot.getKey(), "public")){
-                            for(DataSnapshot recipeSnapshot: idSnapshot.getChildren())
-                                for(DataSnapshot r: recipeSnapshot.getChildren())
-                                    if(Objects.equals(r.child("name").getValue(String.class), recipeItemView.getText().toString())) {
-                                        permission = true;
-                                        public_type = true;
+                            for(DataSnapshot recipeSnapshot: idSnapshot.getChildren()) {
+                                if (user.equals(recipeSnapshot.getKey()))
+                                    for (DataSnapshot r : recipeSnapshot.getChildren()) {
+                                        if (Objects.equals(r.child("name").getValue(String.class), recipeItemView.getText().toString())) {
+                                            permission = true;
+                                            public_type = true;
+                                        }
                                     }
+                                else
+                                    for (DataSnapshot r : recipeSnapshot.getChildren())
+                                        if (Objects.equals(r.child("name").getValue(String.class), recipeItemView.getText().toString())) {
+                                            public_type = true;
+                                        }
+                            }
                         }
                         else if (Objects.equals(idSnapshot.getKey(), user))
                             for(DataSnapshot r: idSnapshot.getChildren())

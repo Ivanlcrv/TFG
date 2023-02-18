@@ -6,28 +6,26 @@
     android:padding="5dp">
 
 
-    <EditText
+    <TextView
         android:id="@+id/name"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:hint="@string/pair_ingredient"
+        android:layout_weight="0.5"
         android:fontFamily="@font/calistoga"
         android:gravity="center_vertical"
         android:textColor="@color/text_primary"
         android:textSize="16sp"
-        android:textStyle="bold"
-        android:layout_weight="0.5"/>
+        android:textStyle="bold" />
 
-    <EditText
+    <TextView
         android:id="@+id/number"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:ems="10"
-        android:hint="@string/pair_amount"
         android:layout_weight="1.5"
+        android:ems="10"
         android:fontFamily="@font/calistoga"
         android:textColor="@color/text_primary"
         android:textSize="16sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 
 </LinearLayout>

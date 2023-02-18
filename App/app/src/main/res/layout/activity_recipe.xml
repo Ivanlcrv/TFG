@@ -248,12 +248,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
+        android:layout_marginTop="85dp"
         android:layout_marginEnd="10dp"
-        android:layout_marginBottom="15dp"
         android:text="@string/save_your_recipe"
         android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/upload" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

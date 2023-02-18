@@ -101,6 +101,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="35dp"
+            android:layout_marginTop="10dp"
             android:fontFamily="@font/calistoga"
             android:text="@string/prompt_description"
             android:textSize="16sp"
@@ -135,9 +136,11 @@
         app:layout_constraintTop_toBottomOf="@+id/constraint_description_recipe" />
 
     <ListView
-        android:id="@+id/listview"
+        android:id="@+id/listviewpublic"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="10dp"
         android:animationCache="false"
         android:scrollingCache="false"
         android:smoothScrollbar="true"
@@ -147,81 +150,27 @@
 
     </ListView>
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/add_pair"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:elevation="12dp"
-        android:innerRadius="0dp"
-        android:shape="ring"
-        android:thicknessRatio="1.9"
-        app:cardCornerRadius="40dp"
-        app:layout_constraintEnd_toStartOf="@+id/remove_pair"
-        app:layout_constraintTop_toBottomOf="@+id/listview">
-
-        <ImageView
-            android:id="@+id/imageadd"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:background="@color/primary_blue"
-            android:backgroundTint="@color/white"
-            android:contentDescription="@string/addimage"
-            android:src="@drawable/ic_add" />
-
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/remove_pair"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="5dp"
-        android:elevation="12dp"
-        android:innerRadius="0dp"
-        android:shape="ring"
-        android:thicknessRatio="1.9"
-        app:cardCornerRadius="40dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/listview">
-
-        <ImageView
-            android:id="@+id/imageremove"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:background="@color/primary_blue"
-            android:backgroundTint="@color/white"
-            android:contentDescription="@string/removeimage"
-            android:src="@drawable/ic_remove" />
-
-    </androidx.cardview.widget.CardView>
-
 
     <RadioButton
         android:id="@+id/radio_private"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="5dp"
         android:fontFamily="@font/calistoga"
         android:text="@string/type_private"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_pair"
-        android:visibility="invisible"/>
+        app:layout_constraintTop_toBottomOf="@+id/listviewpublic" />
 
     <RadioButton
         android:id="@+id/radio_public"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="5dp"
         android:fontFamily="@font/calistoga"
         android:text="@string/type_public"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="@+id/radio_private"
-        app:layout_constraintTop_toBottomOf="@+id/add_pair"
-        android:visibility="invisible" />
+        app:layout_constraintTop_toBottomOf="@+id/listviewpublic" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
