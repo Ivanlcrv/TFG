@@ -80,4 +80,15 @@
     <string name="removeimage">removeImage</string>
     <string name="list_ingredients">List of ingredients of the recipe</string>
     <string name="change_image">Click here to change the image</string>
+    <string name="prompt_search_item">Search for an item in your shopping list</string>
+    <string name="add_item">Add item</string>
+    <string name="action_add_item">Add item</string>
+    <string name="add_item_title">Shopping list</string>
+    <string name="item_text">Add item to shopping list</string>
+    <string name="details_item">Details item</string>
+    <string name="icon_item">item\'s icon</string>
+    <string name="information_item">Item information</string>
+    <string name="prompt_itemname">Name:</string>
+    <string name="save_your_item">Save item info</string>
+    <string name="title_activity_add_item">Add item</string>
 </resources>

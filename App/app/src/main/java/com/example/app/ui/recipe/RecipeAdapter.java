@@ -20,6 +20,8 @@ import com.example.app.R;
 import com.example.app.Recipe;
 import com.example.app.RecipeActivity;
 import com.example.app.RecipeViewActivity;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
@@ -66,10 +68,20 @@ public class RecipeAdapter  extends RecyclerView.Adapter<RecipeAdapter.RecipeVie
                     .setIcon(R.drawable.ic_warning)
                     .setPositiveButton(android.R.string.yes, (dialog, whichButton) -> {
                         StorageReference storageRef = FirebaseStorage.getInstance().getReference().child(recipeItemView.getText().toString());
-                        storageRef.delete();
-                        if(public_type) myRef.child("recipes").child("public").child(user).child(recipeItemView.getText().toString()).removeValue();
-                        else myRef.child("recipes").child(user).child(recipeItemView.getText().toString()).removeValue();
-                        Toast.makeText(context, recipeItemView.getText().toString() + " has been remove from the database", Toast.LENGTH_SHORT).show();
+                        storageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                if(public_type) myRef.child("recipes").child("public").child(user).child(recipeItemView.getText().toString()).removeValue();
+                                else myRef.child("recipes").child(user).child(recipeItemView.getText().toString()).removeValue();
+                                Toast.makeText(context, recipeItemView.getText().toString() + " has been removed from the database", Toast.LENGTH_SHORT).show();
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+                                Toast.makeText(context, "An error has occurred while deleting the recipe", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
                     })
                     .setNegativeButton(android.R.string.no, null).show());
             myRef.child("recipes").get().addOnCompleteListener(task -> {

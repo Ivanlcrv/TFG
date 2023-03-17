@@ -1,4 +1,4 @@
-package com.example.app.ui.pantry;
+package com.example.app.ui.shopping;
 
 import android.os.Bundle;
 import android.text.Editable;
@@ -10,16 +10,14 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.app.Food;
-import com.example.app.User;
-import com.example.app.databinding.ActivityAddFoodBinding;
+import com.example.app.Item;
+import com.example.app.databinding.ActivityAddItemBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class AddFoodActivity extends AppCompatActivity {
-
+public class AddItemActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
 
     @Override
@@ -27,10 +25,10 @@ public class AddFoodActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         mAuth = FirebaseAuth.getInstance();
-        com.example.app.databinding.ActivityAddFoodBinding binding = ActivityAddFoodBinding.inflate(getLayoutInflater());
+        com.example.app.databinding.ActivityAddItemBinding binding = ActivityAddItemBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        final EditText nameEditText = binding.editNameFood;
+        final EditText nameEditText = binding.editNameItem;
         final EditText amountEditText = binding.editAmount;
         final Button addButton = binding.add;
 
@@ -60,9 +58,9 @@ public class AddFoodActivity extends AppCompatActivity {
             public void onClick(View v) {
                 DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
                 FirebaseUser user = mAuth.getCurrentUser();
-                Food food = new Food(nameEditText.getText().toString(), amountEditText.getText().toString());
-                myRef.child("pantry").child(user.getUid()).child(food.getName()).setValue(food.getAmount());
-                Toast.makeText(getApplicationContext(), "Se ha añadido " + food.getAmount() + " de " + food.getName(), Toast.LENGTH_SHORT).show();
+                Item item = new Item(nameEditText.getText().toString(), amountEditText.getText().toString());
+                myRef.child("shopping").child(user.getUid()).child(item.getName()).setValue(item.getAmount());
+                Toast.makeText(getApplicationContext(), "Se ha añadido " + item.getAmount() + " de " + item.getName(), Toast.LENGTH_SHORT).show();
                 finish();
             }
         });

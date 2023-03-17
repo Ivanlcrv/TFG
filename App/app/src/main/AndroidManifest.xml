@@ -18,6 +18,11 @@
             android:parentActivityName=".MainActivityUser">
         </activity>
         <activity
+            android:name=".ItemActivity"
+            android:exported="false"
+            android:parentActivityName=".MainActivityUser">
+        </activity>
+        <activity
             android:name=".RecipeActivity"
             android:exported="false"
             android:parentActivityName=".MainActivityUser">
@@ -61,6 +66,11 @@
             android:name=".ui.pantry.AddFoodActivity"
             android:exported="false"
             android:label="@string/title_activity_add_food"
+            android:parentActivityName=".MainActivityUser" />
+        <activity
+            android:name=".ui.shopping.AddItemActivity"
+            android:exported="false"
+            android:label="@string/title_activity_add_item"
             android:parentActivityName=".MainActivityUser" />
         <activity
             android:name=".ui.recipe.AddRecipeActivity"

@@ -38,7 +38,6 @@ public class PantryFragment extends Fragment {
     private FragmentPantryBinding binding;
     private Context context;
     private DatabaseReference myRef;
-    private FirebaseAuth mAuth;
     private final LinkedList<Food> foodList = new LinkedList<Food>();
     private RecyclerView recyclerView;
     private FoodAdapter mAdapter;
@@ -58,13 +57,13 @@ public class PantryFragment extends Fragment {
         });
 
         myRef = FirebaseDatabase.getInstance().getReference();
-        mAuth = FirebaseAuth.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         recyclerView = binding.recyclerViewPantry;
 
         myRef.child("pantry").child(user.getUid()).addValueEventListener(new ValueEventListener(){
             @Override
-            public void onDataChange(DataSnapshot snapshot) {
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
                 foodList.clear();
                 for (DataSnapshot foodSnapshot: snapshot.getChildren()) {
                     String name = foodSnapshot.getKey();

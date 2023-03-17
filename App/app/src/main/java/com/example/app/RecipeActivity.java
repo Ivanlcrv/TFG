@@ -21,6 +21,8 @@ import android.widget.Toast;
 
 import com.example.app.databinding.ActivityRecipeBinding;
 import com.example.app.ui.recipe.ListviewAdapter;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -30,6 +32,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -292,38 +295,53 @@ public class RecipeActivity extends AppCompatActivity {
 
 
                     if(type.equals("public")){
-                        if(checked.equals("public") && recipe.getName().equals(name)){
-                            myRef.child("recipes").child("public").child(uid).child(recipe.getName()).setValue(recipe);
-                        }
-                        else if(checked.equals("public")){
-                            myRef.child("recipes").child("public").child(uid).child(name).removeValue();
-                            myRef.child("recipes").child("public").child(uid).child(recipe.getName()).setValue(recipe);
-                            storageRef.child(name).delete();
-                        }
-                        else{
-                            myRef.child("recipes").child("public").child(uid).child(name).removeValue();
-                            myRef.child("recipes").child(uid).child(recipe.getName()).setValue(recipe);
-                            if(!recipe.getName().equals(name)) storageRef.child(name).delete();
-                        }
-                        recipeRef.putBytes(data);
+                        UploadTask uploadTask = recipeRef.putBytes(data);
+                        uploadTask.addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {Toast.makeText(getApplicationContext(), "An error has occurred while updating the recipe ", Toast.LENGTH_SHORT).show();}
+                        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                if(checked.equals("public") && recipe.getName().equals(name)){
+                                    myRef.child("recipes").child("public").child(uid).child(recipe.getName()).setValue(recipe);
+                                }
+                                else if(checked.equals("public")){
+                                    myRef.child("recipes").child("public").child(uid).child(name).removeValue();
+                                    myRef.child("recipes").child("public").child(uid).child(recipe.getName()).setValue(recipe);
+                                    storageRef.child(name).delete();
+                                }
+                                else{
+                                    myRef.child("recipes").child("public").child(uid).child(name).removeValue();
+                                    myRef.child("recipes").child(uid).child(recipe.getName()).setValue(recipe);
+                                    if(!recipe.getName().equals(name)) storageRef.child(name).delete();
+                                }
+                            }
+                        });
                     }
                     else {
-                        if(checked.equals("private") && recipe.getName().equals(name)){
-                            myRef.child("recipes").child(uid).child(recipe.getName()).setValue(recipe);
-                        }
-                        else if(checked.equals("private")){
-                            myRef.child("recipes").child(uid).child(name).removeValue();
-                            myRef.child("recipes").child(uid).child(recipe.getName()).setValue(recipe);
-                            storageRef.child(name).delete();
-                        }
-                        else{
-                            myRef.child("recipes").child(uid).child(name).removeValue();
-                            myRef.child("recipes").child("public").child(uid).child(recipe.getName()).setValue(recipe);
-                            if(!recipe.getName().equals(name)) storageRef.child(name).delete();
-                        }
-                        recipeRef.putBytes(data);
+                        UploadTask uploadTask = recipeRef.putBytes(data);
+                        uploadTask.addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {Toast.makeText(getApplicationContext(), "An error has occurred while updating the recipe ", Toast.LENGTH_SHORT).show();}
+                        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                if(checked.equals("private") && recipe.getName().equals(name)){
+                                    myRef.child("recipes").child(uid).child(recipe.getName()).setValue(recipe);
+                                }
+                                else if(checked.equals("private")){
+                                    myRef.child("recipes").child(uid).child(name).removeValue();
+                                    myRef.child("recipes").child(uid).child(recipe.getName()).setValue(recipe);
+                                    storageRef.child(name).delete();
+                                }
+                                else{
+                                    myRef.child("recipes").child(uid).child(name).removeValue();
+                                    myRef.child("recipes").child("public").child(uid).child(recipe.getName()).setValue(recipe);
+                                    if(!recipe.getName().equals(name)) storageRef.child(name).delete();
+                                }
+                            }
+                        });
                     }
-
                     finish();
                 })
                 .setNegativeButton(android.R.string.no, null).show());

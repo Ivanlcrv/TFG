@@ -25,6 +25,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.app.R;
 import com.example.app.Recipe;
 import com.example.app.databinding.ActivityAddRecipeBinding;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -34,9 +36,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -199,9 +205,20 @@ public class AddRecipeActivity extends AppCompatActivity {
                             }
                         }
                         if(!recipesList.contains(recipe.getName())) {
-                            recipeRef.putBytes(data);
-                            assert user != null;
-                            myRef.child("recipes").child("public").child(user.getUid()).child(recipe.getName()).setValue(recipe);
+                            UploadTask uploadTask = recipeRef.putBytes(data);
+                            uploadTask.addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception exception) {Toast.makeText(getApplicationContext(), "An error has occurred while uploading the recipe ", Toast.LENGTH_SHORT).show();}
+                            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    assert user != null;
+                                    myRef.child("recipes").child("public").child(user.getUid()).child(recipe.getName()).setValue(recipe);
+                                    Toast.makeText(getApplicationContext(), "The recipe: " + recipe.getName() + " has been added successfully", Toast.LENGTH_SHORT).show();
+                                    finish();
+                                }
+                            });
+
                         }
                         else  Toast.makeText(getApplicationContext(), "The recipe: " + recipe.getName() + " already exists", Toast.LENGTH_SHORT).show();
 
@@ -223,19 +240,25 @@ public class AddRecipeActivity extends AppCompatActivity {
                             recipesList.add(recipe);
                         }
                         if (!recipesList.contains(recipe.getName())) {
-                            recipeRef.putBytes(data);
-                            myRef.child("recipes").child(user.getUid()).child(recipe.getName()).setValue(recipe);
-                        } else
-                            Toast.makeText(getApplicationContext(), "The recipe: " + recipe.getName() + " already exists", Toast.LENGTH_SHORT).show();
-
+                            UploadTask uploadTask = recipeRef.putBytes(data);
+                            uploadTask.addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception exception) {Toast.makeText(getApplicationContext(), "An error has occurred while uploading the recipe ", Toast.LENGTH_SHORT).show();}
+                            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    myRef.child("recipes").child(user.getUid()).child(recipe.getName()).setValue(recipe);
+                                    Toast.makeText(getApplicationContext(), "The recipe: " + recipe.getName() + " has been added successfully", Toast.LENGTH_SHORT).show();
+                                    finish();
+                                }
+                            });
+                        } else Toast.makeText(getApplicationContext(), "The recipe: " + recipe.getName() + " already exists", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {}
                 });
             }
-            Toast.makeText(getApplicationContext(), "The recipe: " + recipe.getName() + " has been added successfully", Toast.LENGTH_SHORT).show();
-            finish();
         });
     }
 }
