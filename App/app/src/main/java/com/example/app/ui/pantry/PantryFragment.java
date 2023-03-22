@@ -32,6 +32,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.LinkedList;
 import java.util.Locale;
+import java.util.Objects;
 
 public class PantryFragment extends Fragment {
 
@@ -102,7 +103,7 @@ public class PantryFragment extends Fragment {
                                 String name = foodSnapshot.getKey();
                                 String amount = foodSnapshot.getValue(String.class);
                                 Food food = new Food(name, amount);
-                                if(!foodList.contains(food) && food.getName().toLowerCase(Locale.ROOT).contains(binding.editSearch.getText().toString().toLowerCase(Locale.ROOT))) {
+                                if(!foodList.contains(food) && food.getName().toLowerCase(Locale.ROOT).contains(Objects.requireNonNull(binding.editSearch.getText()).toString().toLowerCase(Locale.ROOT))) {
                                     foodList.addLast(food);
                                 }
                             }

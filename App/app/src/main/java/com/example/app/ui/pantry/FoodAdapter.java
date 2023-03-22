@@ -33,11 +33,15 @@ public class FoodAdapter  extends RecyclerView.Adapter<FoodAdapter.FoodViewHolde
     private final LinkedList<Food> foodList;
     private final LayoutInflater mInflater;
     private final Context context;
+    private final FirebaseUser user;
+    private final DatabaseReference myRef;
 
     public FoodAdapter(Context pantryFragment, LinkedList<Food> foodList) {
         mInflater = LayoutInflater.from(pantryFragment);
         this.foodList = foodList;
         context = pantryFragment;
+        myRef = FirebaseDatabase.getInstance().getReference();
+        user = FirebaseAuth.getInstance().getCurrentUser();
     }
 
     class FoodViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
@@ -46,21 +50,19 @@ public class FoodAdapter  extends RecyclerView.Adapter<FoodAdapter.FoodViewHolde
         public final CardView foodCardView;
         private String amount;
         private String name;
-        private FirebaseUser user;
-        private DatabaseReference myRef;
         final FoodAdapter mAdapter;
 
         public FoodViewHolder(@NonNull View itemView, FoodAdapter foodAdapter) {
             super(itemView);
             foodItemView = itemView.findViewById(R.id.food_list);
             foodCardView = itemView.findViewById(R.id.bin);
-            myRef = FirebaseDatabase.getInstance().getReference();
-            user = FirebaseAuth.getInstance().getCurrentUser();
+
             foodCardView.setOnClickListener(v -> new AlertDialog.Builder(context)
                     .setTitle("Delete food")
                     .setMessage("Do you really want to remove " + foodItemView.getText().toString() + " from your pantry")
                     .setIcon(R.drawable.ic_warning)
                     .setPositiveButton(android.R.string.yes, (dialog, whichButton) -> {
+                        assert user != null;
                         myRef.child("pantry").child(user.getUid()).child(name).removeValue();
                         Toast.makeText(context, foodItemView.getText().toString() + " has been removed from your pantry", Toast.LENGTH_SHORT).show();
                         new AlertDialog.Builder(context)

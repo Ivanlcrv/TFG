@@ -113,8 +113,8 @@ public class RecipeFragment extends Fragment {
                             if(Objects.equals(idSnapshot.getKey(), "public"))
                                 for(DataSnapshot recipeSnapshot: idSnapshot.getChildren())
                                     for(DataSnapshot r: recipeSnapshot.getChildren()){
-                                        Recipe recipe = new Recipe(idSnapshot.child("name").getValue(String.class), idSnapshot.child("description").getValue(String.class),
-                                                (List<Pair<String, String>>) idSnapshot.child("list").getValue(), idSnapshot.child("type").getValue(String.class));
+                                        Recipe recipe = new Recipe(r.child("name").getValue(String.class), r.child("description").getValue(String.class),
+                                                (List<Pair<String, String>>) r.child("list").getValue(), r.child("type").getValue(String.class));
                                         if(!recipeList.contains(recipe) && Objects.requireNonNull(r.getKey()).toLowerCase(Locale.ROOT).contains(Objects.requireNonNull(binding.editSearchRecipe.getText()).toString().toLowerCase(Locale.ROOT)))
                                             recipeList.add(recipe);
                                     }
@@ -122,8 +122,8 @@ public class RecipeFragment extends Fragment {
                                 assert user != null;
                                 if (Objects.equals(idSnapshot.getKey(), user.getUid()))
                                     for(DataSnapshot r: idSnapshot.getChildren()){
-                                        Recipe recipe = new Recipe(idSnapshot.child("name").getValue(String.class), idSnapshot.child("description").getValue(String.class),
-                                                (List<Pair<String, String>>) idSnapshot.child("list").getValue(), idSnapshot.child("type").getValue(String.class));
+                                        Recipe recipe = new Recipe(r.child("name").getValue(String.class), r.child("description").getValue(String.class),
+                                                (List<Pair<String, String>>) r.child("list").getValue(), r.child("type").getValue(String.class));
                                         if(!recipeList.contains(recipe) && Objects.requireNonNull(r.getKey()).toLowerCase(Locale.ROOT).contains(Objects.requireNonNull(binding.editSearchRecipe.getText()).toString().toLowerCase(Locale.ROOT)))
                                             recipeList.add(recipe);
                                     }

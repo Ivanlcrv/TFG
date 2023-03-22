@@ -25,8 +25,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.app.R;
 import com.example.app.Recipe;
 import com.example.app.databinding.ActivityAddRecipeBinding;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -193,11 +195,11 @@ public class AddRecipeActivity extends AppCompatActivity {
             byte[] data = baos.toByteArray();
 
             if(checked.equals("Public")){
-                myRef.child("recipes").child("public").addValueEventListener(new ValueEventListener(){
+                myRef.child("recipes").child("public").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                     @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    public void onComplete(@NonNull Task<DataSnapshot> task) {
                         List<Recipe> recipesList = new ArrayList<>();
-                        for(DataSnapshot userSnapshot: snapshot.getChildren()){
+                        for(DataSnapshot userSnapshot: task.getResult().getChildren()){
                             for (DataSnapshot recipeSnapshot: userSnapshot.getChildren()) {
                                 Recipe recipe = new Recipe(recipeSnapshot.child("name").getValue(String.class), recipeSnapshot.child("description").getValue(String.class),
                                         (List<Pair<String, String>>) recipeSnapshot.child("list").getValue(), recipeSnapshot.child("type").getValue(String.class));
@@ -221,20 +223,16 @@ public class AddRecipeActivity extends AppCompatActivity {
 
                         }
                         else  Toast.makeText(getApplicationContext(), "The recipe: " + recipe.getName() + " already exists", Toast.LENGTH_SHORT).show();
-
                     }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {}
                 });
-
             }
             else {
                 assert user != null;
-                myRef.child("recipes").child(user.getUid()).addValueEventListener(new ValueEventListener() {
+                myRef.child("recipes").child(user.getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                     @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    public void onComplete(@NonNull Task<DataSnapshot> task) {
                         List<Recipe> recipesList = new ArrayList<>();
-                        for (DataSnapshot recipeSnapshot : snapshot.getChildren()) {
+                        for (DataSnapshot recipeSnapshot : task.getResult().getChildren()) {
                             Recipe recipe = new Recipe(recipeSnapshot.child("name").getValue(String.class), recipeSnapshot.child("description").getValue(String.class),
                                     (List<Pair<String, String>>) recipeSnapshot.child("list").getValue(), recipeSnapshot.child("type").getValue(String.class));
                             recipesList.add(recipe);
@@ -252,11 +250,9 @@ public class AddRecipeActivity extends AppCompatActivity {
                                     finish();
                                 }
                             });
-                        } else Toast.makeText(getApplicationContext(), "The recipe: " + recipe.getName() + " already exists", Toast.LENGTH_SHORT).show();
+                        }
+                        else Toast.makeText(getApplicationContext(), "The recipe: " + recipe.getName() + " already exists", Toast.LENGTH_SHORT).show();
                     }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {}
                 });
             }
         });

@@ -62,7 +62,7 @@ public class AddFoodActivity extends AppCompatActivity {
                 FirebaseUser user = mAuth.getCurrentUser();
                 Food food = new Food(nameEditText.getText().toString(), amountEditText.getText().toString());
                 myRef.child("pantry").child(user.getUid()).child(food.getName()).setValue(food.getAmount());
-                Toast.makeText(getApplicationContext(), "Se ha añadido " + food.getAmount() + " de " + food.getName(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Has been added " + food.getAmount() + " of " + food.getName(), Toast.LENGTH_SHORT).show();
                 finish();
             }
         });

@@ -56,12 +56,14 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
         final RecipeAdapter mAdapter;
         private boolean public_type;
         boolean permission;
+
         public RecipeViewHolder(@NonNull View itemView, RecipeAdapter recipeAdapter) {
             super(itemView);
             permission = false;
             recipeItemView = itemView.findViewById(R.id.recipe_list);
             imageRecipeView = itemView.findViewById(R.id.image_recipe);
             recipeCardView = itemView.findViewById(R.id.bin_recipe);
+
             recipeCardView.setOnClickListener(v -> new AlertDialog.Builder(context)
                     .setTitle("Delete recipe")
                     .setMessage("Do you really want to remove this recipe: " + recipeItemView.getText().toString())
@@ -75,12 +77,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
                                 else myRef.child("recipes").child(user).child(recipeItemView.getText().toString()).removeValue();
                                 Toast.makeText(context, recipeItemView.getText().toString() + " has been removed from the database", Toast.LENGTH_SHORT).show();
                             }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception exception) {
-                                Toast.makeText(context, "An error has occurred while deleting the recipe", Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                        }).addOnFailureListener(exception -> Toast.makeText(context, "An error has occurred while deleting the recipe", Toast.LENGTH_SHORT).show());
 
                     })
                     .setNegativeButton(android.R.string.no, null).show());
@@ -114,7 +111,9 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
             });
             mAdapter = recipeAdapter;
             recipeItemView.setOnClickListener(this);
+            imageRecipeView.setOnClickListener(this);
             recipeItemView.setOnLongClickListener(this);
+            imageRecipeView.setOnLongClickListener(this);
         }
 
         @Override
