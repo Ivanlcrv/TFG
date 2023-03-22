@@ -22,29 +22,30 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.LinkedList;
 
-public class AdminFragment extends Fragment  {
+public class AdminFragment extends Fragment {
 
+    private static final String TAG = "MyActivity";
+    public static Fragment f;
+    private final LinkedList<User> userList = new LinkedList<User>();
     private FirebaseAuth mAuth;
     private DatabaseReference myRef;
-    private final LinkedList<User> userList = new LinkedList<User>();
-    private static final String TAG = "MyActivity";
     private FragmentAdminBinding binding;
     private RecyclerView recyclerView;
     private UserAdapter mAdapter;
-    public static Fragment f;
+
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         f = this;
         binding = FragmentAdminBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         myRef = FirebaseDatabase.getInstance().getReference();
 
-        myRef.child("users").addValueEventListener(new ValueEventListener(){
+        myRef.child("users").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 userList.clear();
-                for (DataSnapshot userSnapshot: snapshot.getChildren()) {
+                for (DataSnapshot userSnapshot : snapshot.getChildren()) {
                     User user = userSnapshot.getValue(User.class);
-                    if(!user.getAdmin() && !userList.contains(user)) {
+                    if (!user.getAdmin() && !userList.contains(user)) {
                         userList.addLast(user);
                     }
                 }

@@ -10,9 +10,11 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
+
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
+
 import com.example.app.R;
 import com.example.app.databinding.ActivityRegisterBinding;
 
@@ -26,6 +28,7 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText UsernameEditText;
     private EditText emailEditText;
     private EditText passwordEditText;
+
     @Override
 
     public void onCreate(Bundle savedInstanceState) {
@@ -45,13 +48,17 @@ public class RegisterActivity extends AppCompatActivity {
         registerViewModel.getRegisterFormState().observe(this, registerFormState -> {
             if (registerFormState == null) return;
             registerButton.setEnabled(registerFormState.isDataValid());
-            if (registerFormState.getUsernameError() != null) binding.usernameLayout.setError(getString(registerFormState.getUsernameError()));
+            if (registerFormState.getUsernameError() != null)
+                binding.usernameLayout.setError(getString(registerFormState.getUsernameError()));
             else binding.usernameLayout.setError(null);
-            if (registerFormState.getPasswordError() != null) binding.passwordLayout.setError(getString(registerFormState.getPasswordError()));
+            if (registerFormState.getPasswordError() != null)
+                binding.passwordLayout.setError(getString(registerFormState.getPasswordError()));
             else binding.passwordLayout.setError(null);
-            if (registerFormState.getEmailError() != null) binding.emailLayout.setError(getString(registerFormState.getEmailError()));
+            if (registerFormState.getEmailError() != null)
+                binding.emailLayout.setError(getString(registerFormState.getEmailError()));
             else binding.emailLayout.setError(null);
-            if (registerFormState.getGenreError() != null) binding.genreTitle.setError(getString(registerFormState.getGenreError()));
+            if (registerFormState.getGenreError() != null)
+                binding.genreTitle.setError(getString(registerFormState.getGenreError()));
             else binding.genreTitle.setError(null);
         });
 
@@ -110,9 +117,9 @@ public class RegisterActivity extends AppCompatActivity {
     public void processDatePickerResult(int year, int month, int day) {
         String day_string;
         String month_string;
-        if(day < 9) day_string = "0"+Integer.toString(day);
+        if (day < 9) day_string = "0" + Integer.toString(day);
         else day_string = Integer.toString(day);
-        if(month < 9) month_string = "0"+Integer.toString(month + 1);
+        if (month < 9) month_string = "0" + Integer.toString(month + 1);
         else month_string = Integer.toString(month + 1);
         String year_string = Integer.toString(year);
         date.setText(day_string + "/" + month_string + "/" + year_string);

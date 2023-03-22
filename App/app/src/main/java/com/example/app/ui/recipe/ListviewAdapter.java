@@ -22,7 +22,7 @@ public class ListviewAdapter extends BaseAdapter {
     LayoutInflater mInflater;
 
 
-    public ListviewAdapter(Context context, List<Pair<String, String>> list){
+    public ListviewAdapter(Context context, List<Pair<String, String>> list) {
         this.context = context;
         this.list = list;
     }
@@ -44,13 +44,13 @@ public class ListviewAdapter extends BaseAdapter {
         holder.amount = amount;
         holder.amount.setTag(position);
         convertView.setTag(holder);
-        int tag_position=(Integer) holder.amount.getTag();
+        int tag_position = (Integer) holder.amount.getTag();
         holder.amount.setId(tag_position);
 
         holder.name = name;
         holder.name.setTag(position);
         convertView.setTag(holder);
-        int tag_position2=(Integer) holder.name.getTag();
+        int tag_position2 = (Integer) holder.name.getTag();
         holder.name.setId(tag_position2);
 
 
@@ -59,14 +59,16 @@ public class ListviewAdapter extends BaseAdapter {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 final int position = holder.amount.getId();
                 Pair<String, String> pair = new Pair<>(holder.name.getText().toString(), holder.amount.getText().toString());
-                list.set(position,pair);
+                list.set(position, pair);
             }
 
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+            }
 
         };
 
@@ -76,17 +78,23 @@ public class ListviewAdapter extends BaseAdapter {
     }
 
     @Override
-    public int getCount() {return list.size();}
+    public int getCount() {
+        return list.size();
+    }
 
     @Override
-    public Object getItem(int arg0) {return arg0;}
+    public Object getItem(int arg0) {
+        return arg0;
+    }
 
     @Override
-    public long getItemId(int arg0) {return arg0;}
+    public long getItemId(int arg0) {
+        return arg0;
+    }
 
-    public boolean getEmpty(){
-        for(Pair<String,String> entry: list)
-            if(!entry.first.equals("") && !entry.second.equals("")) return true;
+    public boolean getEmpty() {
+        for (Pair<String, String> entry : list)
+            if (!entry.first.equals("") && !entry.second.equals("")) return true;
         return false;
     }
 

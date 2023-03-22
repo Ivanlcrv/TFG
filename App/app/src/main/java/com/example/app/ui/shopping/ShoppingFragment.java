@@ -32,9 +32,9 @@ import java.util.Objects;
 
 public class ShoppingFragment extends Fragment {
 
+    private final LinkedList<Item> itemList = new LinkedList<>();
     private Context context;
     private DatabaseReference myRef;
-    private final LinkedList<Item> itemList = new LinkedList<>();
     private RecyclerView recyclerView;
     private ItemAdapter mAdapter;
 
@@ -55,15 +55,15 @@ public class ShoppingFragment extends Fragment {
         FirebaseUser user = mAuth.getCurrentUser();
         recyclerView = binding.recyclerViewShopping;
 
-        myRef.child("shopping").child(user.getUid()).addValueEventListener(new ValueEventListener(){
+        myRef.child("shopping").child(user.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 itemList.clear();
-                for (DataSnapshot itemSnapshot: snapshot.getChildren()) {
+                for (DataSnapshot itemSnapshot : snapshot.getChildren()) {
                     String name = itemSnapshot.getKey();
                     String amount = itemSnapshot.getValue(String.class);
                     Item item = new Item(name, amount);
-                    if(!itemList.contains(item)) {
+                    if (!itemList.contains(item)) {
                         itemList.addLast(item);
                     }
                 }
@@ -73,7 +73,8 @@ public class ShoppingFragment extends Fragment {
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {}
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
         });
 
         TextWatcher afterTextChangedListener = new TextWatcher() {
@@ -92,11 +93,11 @@ public class ShoppingFragment extends Fragment {
                     public void onComplete(@NonNull Task<DataSnapshot> task) {
                         if (task.isSuccessful()) {
                             itemList.clear();
-                            for (DataSnapshot itemSnapshot: task.getResult().getChildren()) {
+                            for (DataSnapshot itemSnapshot : task.getResult().getChildren()) {
                                 String name = itemSnapshot.getKey();
                                 String amount = itemSnapshot.getValue(String.class);
                                 Item item = new Item(name, amount);
-                                if(!itemList.contains(item) && item.getName().toLowerCase(Locale.ROOT).contains(Objects.requireNonNull(binding.editSearch.getText()).toString().toLowerCase(Locale.ROOT))) {
+                                if (!itemList.contains(item) && item.getName().toLowerCase(Locale.ROOT).contains(Objects.requireNonNull(binding.editSearch.getText()).toString().toLowerCase(Locale.ROOT))) {
                                     itemList.addLast(item);
                                 }
                             }

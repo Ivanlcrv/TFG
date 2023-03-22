@@ -20,7 +20,6 @@ import com.example.app.R;
 import com.example.app.Recipe;
 import com.example.app.RecipeActivity;
 import com.example.app.RecipeViewActivity;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -48,14 +47,39 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
         user = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
     }
 
+    @NonNull
+    @Override
+    public RecipeAdapter.RecipeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View mItemView = mInflater.inflate(R.layout.recipe_item, parent, false);
+        return new RecipeAdapter.RecipeViewHolder(mItemView, this);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull RecipeAdapter.RecipeViewHolder holder, int position) {
+        String mCurrent = recipeList.get(position).getName();
+        holder.recipeItemView.setText(mCurrent);
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(mCurrent);
+        final long ONE_MEGABYTE = 1024 * 1024;
+        storageReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(bytes -> {
+            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            holder.imageRecipeView.setImageBitmap(bitmap);
+        }).addOnFailureListener(exception -> {
+        });
+    }
+
+    @Override
+    public int getItemCount() {
+        return recipeList.size();
+    }
+
     class RecipeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
         public final TextView recipeItemView;
         public final CardView recipeCardView;
         public final ImageView imageRecipeView;
         final RecipeAdapter mAdapter;
-        private boolean public_type;
         boolean permission;
+        private boolean public_type;
 
         public RecipeViewHolder(@NonNull View itemView, RecipeAdapter recipeAdapter) {
             super(itemView);
@@ -73,8 +97,10 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
                         storageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                if(public_type) myRef.child("recipes").child("public").child(user).child(recipeItemView.getText().toString()).removeValue();
-                                else myRef.child("recipes").child(user).child(recipeItemView.getText().toString()).removeValue();
+                                if (public_type)
+                                    myRef.child("recipes").child("public").child(user).child(recipeItemView.getText().toString()).removeValue();
+                                else
+                                    myRef.child("recipes").child(user).child(recipeItemView.getText().toString()).removeValue();
                                 Toast.makeText(context, recipeItemView.getText().toString() + " has been removed from the database", Toast.LENGTH_SHORT).show();
                             }
                         }).addOnFailureListener(exception -> Toast.makeText(context, "An error has occurred while deleting the recipe", Toast.LENGTH_SHORT).show());
@@ -83,9 +109,9 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
                     .setNegativeButton(android.R.string.no, null).show());
             myRef.child("recipes").get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
-                    for (DataSnapshot idSnapshot: task.getResult().getChildren()) {
-                        if(Objects.equals(idSnapshot.getKey(), "public")){
-                            for(DataSnapshot recipeSnapshot: idSnapshot.getChildren()) {
+                    for (DataSnapshot idSnapshot : task.getResult().getChildren()) {
+                        if (Objects.equals(idSnapshot.getKey(), "public")) {
+                            for (DataSnapshot recipeSnapshot : idSnapshot.getChildren()) {
                                 if (user.equals(recipeSnapshot.getKey()))
                                     for (DataSnapshot r : recipeSnapshot.getChildren()) {
                                         if (Objects.equals(r.child("name").getValue(String.class), recipeItemView.getText().toString())) {
@@ -99,10 +125,9 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
                                             public_type = true;
                                         }
                             }
-                        }
-                        else if (Objects.equals(idSnapshot.getKey(), user))
-                            for(DataSnapshot r: idSnapshot.getChildren())
-                                if(Objects.equals(r.child("name").getValue(String.class), recipeItemView.getText().toString())){
+                        } else if (Objects.equals(idSnapshot.getKey(), user))
+                            for (DataSnapshot r : idSnapshot.getChildren())
+                                if (Objects.equals(r.child("name").getValue(String.class), recipeItemView.getText().toString())) {
                                     permission = true;
                                     public_type = false;
                                 }
@@ -121,7 +146,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
             Intent intent;
             int mPosition = getLayoutPosition();
             Recipe actual_recipe = recipeList.get(mPosition);
-            if(permission) intent = new Intent(context, RecipeActivity.class);
+            if (permission) intent = new Intent(context, RecipeActivity.class);
             else intent = new Intent(context, RecipeViewActivity.class);
             intent.putExtra("recipe", actual_recipe.getName());
             context.startActivity(intent);
@@ -130,32 +155,11 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
 
         @Override
         public boolean onLongClick(View v) {
-            if(permission)recipeCardView.setVisibility(CardView.VISIBLE);
-            else Toast.makeText(context, "You can't delete a recipe that's not yours", Toast.LENGTH_SHORT).show();
+            if (permission) recipeCardView.setVisibility(CardView.VISIBLE);
+            else
+                Toast.makeText(context, "You can't delete a recipe that's not yours", Toast.LENGTH_SHORT).show();
             return true;
         }
     }
-    @NonNull
-    @Override
-    public RecipeAdapter.RecipeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View mItemView = mInflater.inflate(R.layout.recipe_item, parent, false);
-        return new RecipeAdapter.RecipeViewHolder(mItemView,this);
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull RecipeAdapter.RecipeViewHolder holder, int position) {
-        String mCurrent = recipeList.get(position).getName();
-        holder.recipeItemView.setText(mCurrent);
-        StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(mCurrent);
-        final long ONE_MEGABYTE = 1024 * 1024;
-        storageReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(bytes -> {
-            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0,bytes.length);
-            holder.imageRecipeView.setImageBitmap(bitmap);
-        }).addOnFailureListener(exception -> {
-        });
-    }
-
-    @Override
-    public int getItemCount() {return recipeList.size();}
 
 }

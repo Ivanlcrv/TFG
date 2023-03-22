@@ -1,14 +1,12 @@
 package com.example.app;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import com.example.app.databinding.ActivityMainAdminBinding;
+import androidx.annotation.NonNull;
+
 import com.example.app.databinding.ActivityMainBinding;
 import com.example.app.ui.login.LoginActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -23,6 +21,7 @@ public class MainActivity extends Activity {
 
     private FirebaseAuth mAuth;
     private ActivityMainBinding binding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,15 +29,15 @@ public class MainActivity extends Activity {
         setContentView(binding.getRoot());
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
-        if (user == null){
+        if (user == null) {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
 
-        }
-        else{
+        } else {
             checkUser(user.getUid());
         }
     }
+
     private void checkUser(String uid) {
         DatabaseReference myRef;
         myRef = FirebaseDatabase.getInstance().getReference();
@@ -49,19 +48,17 @@ public class MainActivity extends Activity {
                     Toast.makeText(getApplicationContext(), "Account delete.", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                     startActivity(intent);
-                }
-                else {
-                    if(task.getResult().getValue() == null) {
+                } else {
+                    if (task.getResult().getValue() == null) {
                         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                         startActivity(intent);
 
                     }
-                    if((Boolean)task.getResult().getValue()){
+                    if ((Boolean) task.getResult().getValue()) {
                         Intent intent_amin = new Intent(getApplicationContext(), MainActivityAdmin.class);
                         startActivity(intent_amin);
 
-                    }
-                    else {
+                    } else {
                         Intent intent_user = new Intent(getApplicationContext(), MainActivityUser.class);
                         startActivity(intent_user);
 

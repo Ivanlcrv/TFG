@@ -25,10 +25,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.LinkedList;
-import java.util.Objects;
-import java.util.concurrent.atomic.AtomicReference;
 
-public class FoodAdapter  extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder> {
+public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder> {
 
     private final LinkedList<Food> foodList;
     private final LayoutInflater mInflater;
@@ -44,13 +42,32 @@ public class FoodAdapter  extends RecyclerView.Adapter<FoodAdapter.FoodViewHolde
         user = FirebaseAuth.getInstance().getCurrentUser();
     }
 
+    @NonNull
+    @Override
+    public FoodAdapter.FoodViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View mItemView = mInflater.inflate(R.layout.food_item, parent, false);
+        return new FoodAdapter.FoodViewHolder(mItemView, this);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull FoodAdapter.FoodViewHolder holder, int position) {
+        String mCurrent = foodList.get(position).getName();
+        holder.foodItemView.setText(mCurrent);
+        holder.fill();
+    }
+
+    @Override
+    public int getItemCount() {
+        return foodList.size();
+    }
+
     class FoodViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
         public final TextView foodItemView;
         public final CardView foodCardView;
+        final FoodAdapter mAdapter;
         private String amount;
         private String name;
-        final FoodAdapter mAdapter;
 
         public FoodViewHolder(@NonNull View itemView, FoodAdapter foodAdapter) {
             super(itemView);
@@ -74,7 +91,7 @@ public class FoodAdapter  extends RecyclerView.Adapter<FoodAdapter.FoodViewHolde
                                     Toast.makeText(context, foodItemView.getText().toString() + " has been added to your shopping list", Toast.LENGTH_SHORT).show();
                                 })
                                 .setNegativeButton("No", null).show();
-                        })
+                    })
                     .setNegativeButton(android.R.string.no, null).show());
 
             mAdapter = foodAdapter;
@@ -82,7 +99,7 @@ public class FoodAdapter  extends RecyclerView.Adapter<FoodAdapter.FoodViewHolde
             foodItemView.setOnLongClickListener(this);
         }
 
-        private void fill(){
+        private void fill() {
             name = foodItemView.getText().toString();
             myRef.child("pantry").child(user.getUid()).child(name).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                 @Override
@@ -93,6 +110,7 @@ public class FoodAdapter  extends RecyclerView.Adapter<FoodAdapter.FoodViewHolde
                 }
             });
         }
+
         @Override
         public void onClick(View v) {
             Intent intent = new Intent(context, FoodActivity.class);
@@ -107,23 +125,5 @@ public class FoodAdapter  extends RecyclerView.Adapter<FoodAdapter.FoodViewHolde
             foodCardView.setVisibility(CardView.VISIBLE);
             return true;
         }
-    }
-    @NonNull
-    @Override
-    public FoodAdapter.FoodViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View mItemView = mInflater.inflate(R.layout.food_item, parent, false);
-        return new FoodAdapter.FoodViewHolder(mItemView,this);
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull FoodAdapter.FoodViewHolder holder, int position) {
-        String mCurrent = foodList.get(position).getName();
-        holder.foodItemView.setText(mCurrent);
-        holder.fill();
-    }
-
-    @Override
-    public int getItemCount() {
-        return foodList.size();
     }
 }

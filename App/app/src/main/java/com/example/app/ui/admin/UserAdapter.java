@@ -29,6 +29,24 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         context = adminFragment;
     }
 
+    @NonNull
+    @Override
+    public UserAdapter.UserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View mItemView = mInflater.inflate(R.layout.user_item, parent, false);
+        return new UserViewHolder(mItemView, this);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull UserAdapter.UserViewHolder holder, int position) {
+        String mCurrent = userList.get(position).getUsername();
+        holder.userItemView.setText(mCurrent);
+    }
+
+    @Override
+    public int getItemCount() {
+        return userList.size();
+    }
+
     class UserViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public final TextView userItemView;
@@ -50,22 +68,5 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
             context.startActivity(intent);
 
         }
-    }
-    @NonNull
-    @Override
-    public UserAdapter.UserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View mItemView = mInflater.inflate(R.layout.user_item, parent, false);
-        return new UserViewHolder(mItemView,this);
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull UserAdapter.UserViewHolder holder, int position) {
-        String mCurrent = userList.get(position).getUsername();
-        holder.userItemView.setText(mCurrent);
-    }
-
-    @Override
-    public int getItemCount() {
-        return userList.size();
     }
 }

@@ -32,9 +32,9 @@ import com.google.firebase.database.FirebaseDatabase;
 public class LoginActivity extends AppCompatActivity {
 
 
+    public static final int TEXT_REQUEST = 1;
     private LoginViewModel loginViewModel;
     private ActivityLoginBinding binding;
-    public static final int TEXT_REQUEST = 1;
     private FirebaseAuth mAuth;
 
     @Override
@@ -119,7 +119,9 @@ public class LoginActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
     }
 
-    private void showLoginFailed(@StringRes Integer errorString) {Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();}
+    private void showLoginFailed(@StringRes Integer errorString) {
+        Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
+    }
 
     public void register(View view) {
         Intent registerIntent = new Intent(this, RegisterActivity.class);
@@ -133,15 +135,15 @@ public class LoginActivity extends AppCompatActivity {
         myRef.child("users").child(uid).child("admin").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) Toast.makeText(getApplicationContext(), "Account delete.", Toast.LENGTH_LONG).show();
+                if (!task.isSuccessful())
+                    Toast.makeText(getApplicationContext(), "Account delete.", Toast.LENGTH_LONG).show();
                 else {
-                    if(task.getResult().getValue() == null) register(null);
-                    if((Boolean)task.getResult().getValue()){
+                    if (task.getResult().getValue() == null) register(null);
+                    if ((Boolean) task.getResult().getValue()) {
                         Intent intent_amin = new Intent(getApplicationContext(), MainActivityAdmin.class);
                         startActivity(intent_amin);
                         finish();
-                    }
-                    else {
+                    } else {
                         Intent intent_user = new Intent(getApplicationContext(), MainActivityUser.class);
                         startActivity(intent_user);
                         finish();

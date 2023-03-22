@@ -1,13 +1,12 @@
 package com.example.app.ui.register;
 
-import androidx.fragment.app.DialogFragment;
-
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.widget.DatePicker;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
 
 public class DatePickerRegisterFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 

@@ -34,12 +34,13 @@ import java.util.Objects;
 
 public class RecipeFragment extends Fragment {
 
+    private final LinkedList<Recipe> recipeList = new LinkedList<>();
     private FragmentRecipeBinding binding;
     private Context context;
     private DatabaseReference myRef;
-    private final LinkedList<Recipe> recipeList = new LinkedList<>();
     private RecyclerView recyclerView;
     private RecipeAdapter mAdapter;
+
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         binding = FragmentRecipeBinding.inflate(inflater, container, false);
@@ -55,14 +56,14 @@ public class RecipeFragment extends Fragment {
         FirebaseUser user = mAuth.getCurrentUser();
         recyclerView = binding.recyclerViewRecipe;
 
-        myRef.child("recipes").addValueEventListener(new ValueEventListener(){
+        myRef.child("recipes").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 List<Recipe> list_aux = new ArrayList<>();
-                for (DataSnapshot idSnapshot: snapshot.getChildren()) {
-                    if(Objects.equals(idSnapshot.getKey(), "public"))
-                        for(DataSnapshot recipeSnapshot: idSnapshot.getChildren())
-                            for(DataSnapshot r: recipeSnapshot.getChildren()){
+                for (DataSnapshot idSnapshot : snapshot.getChildren()) {
+                    if (Objects.equals(idSnapshot.getKey(), "public"))
+                        for (DataSnapshot recipeSnapshot : idSnapshot.getChildren())
+                            for (DataSnapshot r : recipeSnapshot.getChildren()) {
                                 Recipe recipe = new Recipe(r.child("name").getValue(String.class), r.child("description").getValue(String.class),
                                         (List<Pair<String, String>>) r.child("list").getValue(), r.child("type").getValue(String.class));
                                 list_aux.add(recipe);
@@ -70,7 +71,7 @@ public class RecipeFragment extends Fragment {
                     else {
                         assert user != null;
                         if (Objects.equals(idSnapshot.getKey(), user.getUid()))
-                            for(DataSnapshot r: idSnapshot.getChildren()){
+                            for (DataSnapshot r : idSnapshot.getChildren()) {
                                 Recipe recipe = new Recipe(r.child("name").getValue(String.class), r.child("description").getValue(String.class),
                                         (List<Pair<String, String>>) r.child("list").getValue(), r.child("type").getValue(String.class));
                                 list_aux.add(recipe);
@@ -78,14 +79,14 @@ public class RecipeFragment extends Fragment {
                     }
                 }
 
-                for(Recipe r: list_aux)
-                    if(!recipeList.contains(r))recipeList.add(r);
+                for (Recipe r : list_aux)
+                    if (!recipeList.contains(r)) recipeList.add(r);
 
                 Iterator<Recipe> iterator = recipeList.iterator();
 
-                while (iterator.hasNext()){
+                while (iterator.hasNext()) {
                     Recipe r = iterator.next();
-                    if(r.getType().equals("private") && !list_aux.contains(r))iterator.remove();
+                    if (r.getType().equals("private") && !list_aux.contains(r)) iterator.remove();
                 }
 
                 mAdapter = new RecipeAdapter(context, recipeList);
@@ -94,37 +95,40 @@ public class RecipeFragment extends Fragment {
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {}
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
         });
 
         TextWatcher afterTextChangedListener = new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
 
             @Override
             public void afterTextChanged(Editable s) {
                 myRef.child("recipes").get().addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         recipeList.clear();
-                        for (DataSnapshot idSnapshot: task.getResult().getChildren()) {
-                            if(Objects.equals(idSnapshot.getKey(), "public"))
-                                for(DataSnapshot recipeSnapshot: idSnapshot.getChildren())
-                                    for(DataSnapshot r: recipeSnapshot.getChildren()){
+                        for (DataSnapshot idSnapshot : task.getResult().getChildren()) {
+                            if (Objects.equals(idSnapshot.getKey(), "public"))
+                                for (DataSnapshot recipeSnapshot : idSnapshot.getChildren())
+                                    for (DataSnapshot r : recipeSnapshot.getChildren()) {
                                         Recipe recipe = new Recipe(r.child("name").getValue(String.class), r.child("description").getValue(String.class),
                                                 (List<Pair<String, String>>) r.child("list").getValue(), r.child("type").getValue(String.class));
-                                        if(!recipeList.contains(recipe) && Objects.requireNonNull(r.getKey()).toLowerCase(Locale.ROOT).contains(Objects.requireNonNull(binding.editSearchRecipe.getText()).toString().toLowerCase(Locale.ROOT)))
+                                        if (!recipeList.contains(recipe) && Objects.requireNonNull(r.getKey()).toLowerCase(Locale.ROOT).contains(Objects.requireNonNull(binding.editSearchRecipe.getText()).toString().toLowerCase(Locale.ROOT)))
                                             recipeList.add(recipe);
                                     }
                             else {
                                 assert user != null;
                                 if (Objects.equals(idSnapshot.getKey(), user.getUid()))
-                                    for(DataSnapshot r: idSnapshot.getChildren()){
+                                    for (DataSnapshot r : idSnapshot.getChildren()) {
                                         Recipe recipe = new Recipe(r.child("name").getValue(String.class), r.child("description").getValue(String.class),
                                                 (List<Pair<String, String>>) r.child("list").getValue(), r.child("type").getValue(String.class));
-                                        if(!recipeList.contains(recipe) && Objects.requireNonNull(r.getKey()).toLowerCase(Locale.ROOT).contains(Objects.requireNonNull(binding.editSearchRecipe.getText()).toString().toLowerCase(Locale.ROOT)))
+                                        if (!recipeList.contains(recipe) && Objects.requireNonNull(r.getKey()).toLowerCase(Locale.ROOT).contains(Objects.requireNonNull(binding.editSearchRecipe.getText()).toString().toLowerCase(Locale.ROOT)))
                                             recipeList.add(recipe);
                                     }
                             }

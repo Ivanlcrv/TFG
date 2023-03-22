@@ -10,15 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.app.Food;
-
-import com.example.app.MainActivityUser;
 import com.example.app.databinding.FragmentPantryBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -36,10 +33,10 @@ import java.util.Objects;
 
 public class PantryFragment extends Fragment {
 
+    private final LinkedList<Food> foodList = new LinkedList<Food>();
     private FragmentPantryBinding binding;
     private Context context;
     private DatabaseReference myRef;
-    private final LinkedList<Food> foodList = new LinkedList<Food>();
     private RecyclerView recyclerView;
     private FoodAdapter mAdapter;
 
@@ -62,15 +59,15 @@ public class PantryFragment extends Fragment {
         FirebaseUser user = mAuth.getCurrentUser();
         recyclerView = binding.recyclerViewPantry;
 
-        myRef.child("pantry").child(user.getUid()).addValueEventListener(new ValueEventListener(){
+        myRef.child("pantry").child(user.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 foodList.clear();
-                for (DataSnapshot foodSnapshot: snapshot.getChildren()) {
+                for (DataSnapshot foodSnapshot : snapshot.getChildren()) {
                     String name = foodSnapshot.getKey();
                     String amount = foodSnapshot.getValue(String.class);
                     Food food = new Food(name, amount);
-                    if(!foodList.contains(food)) {
+                    if (!foodList.contains(food)) {
                         foodList.addLast(food);
                     }
                 }
@@ -80,7 +77,8 @@ public class PantryFragment extends Fragment {
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {}
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
         });
 
         TextWatcher afterTextChangedListener = new TextWatcher() {
@@ -99,11 +97,11 @@ public class PantryFragment extends Fragment {
                     public void onComplete(@NonNull Task<DataSnapshot> task) {
                         if (task.isSuccessful()) {
                             foodList.clear();
-                            for (DataSnapshot foodSnapshot: task.getResult().getChildren()) {
+                            for (DataSnapshot foodSnapshot : task.getResult().getChildren()) {
                                 String name = foodSnapshot.getKey();
                                 String amount = foodSnapshot.getValue(String.class);
                                 Food food = new Food(name, amount);
-                                if(!foodList.contains(food) && food.getName().toLowerCase(Locale.ROOT).contains(Objects.requireNonNull(binding.editSearch.getText()).toString().toLowerCase(Locale.ROOT))) {
+                                if (!foodList.contains(food) && food.getName().toLowerCase(Locale.ROOT).contains(Objects.requireNonNull(binding.editSearch.getText()).toString().toLowerCase(Locale.ROOT))) {
                                     foodList.addLast(food);
                                 }
                             }

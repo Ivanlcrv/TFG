@@ -1,11 +1,5 @@
 package com.example.app;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -19,12 +13,17 @@ import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.app.databinding.ActivityRecipeBinding;
 import com.example.app.ui.recipe.ListviewAdapter;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -67,26 +66,25 @@ public class RecipeActivity extends AppCompatActivity {
         listView = findViewById(R.id.listview);
         listView.setItemsCanFocus(true);
 
-        adapter = new ListviewAdapter(this,list);
+        adapter = new ListviewAdapter(this, list);
         listView.setAdapter(adapter);
 
-        myRef.child("recipes").addValueEventListener(new ValueEventListener(){
+        myRef.child("recipes").addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot idSnapshot: snapshot.getChildren()) {
-                    if(Objects.equals(idSnapshot.getKey(), "public")) {
+                for (DataSnapshot idSnapshot : snapshot.getChildren()) {
+                    if (Objects.equals(idSnapshot.getKey(), "public")) {
                         for (DataSnapshot recipeSnapshot : idSnapshot.getChildren())
                             if (uid.equals(recipeSnapshot.getKey()))
                                 for (DataSnapshot r : recipeSnapshot.getChildren()) {
                                     if (Objects.equals(r.child("name").getValue(String.class), name)) {
                                         binding.nameRecipeFill.setHint(r.child("name").getValue(String.class));
                                         binding.descriptionRecipeFill.setHint(r.child("description").getValue(String.class));
-                                        if (r.child("type").getValue(String.class).equals("public")){
+                                        if (r.child("type").getValue(String.class).equals("public")) {
                                             binding.radioPublic.setChecked(true);
                                             checked = type = "public";
-                                        }
-                                        else {
+                                        } else {
                                             binding.radioPrivate.setChecked(true);
                                             checked = type = "private";
                                         }
@@ -126,36 +124,34 @@ public class RecipeActivity extends AppCompatActivity {
                                         StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(Objects.requireNonNull(r.child("name").getValue(String.class)));
                                         final long ONE_MEGABYTE = 1024 * 1024;
                                         storageReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(bytes -> {
-                                            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0,bytes.length);
+                                            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                                             binding.iconRecipe.setImageBitmap(bitmap);
                                             selectedImageBitmap = bitmap;
                                         }).addOnFailureListener(exception -> {
                                         });
                                     }
                                 }
-                    }
-                    else {
+                    } else {
                         if (Objects.equals(idSnapshot.getKey(), uid))
-                            for(DataSnapshot r: idSnapshot.getChildren()){
-                                if(Objects.equals(r.child("name").getValue(String.class), name)){
+                            for (DataSnapshot r : idSnapshot.getChildren()) {
+                                if (Objects.equals(r.child("name").getValue(String.class), name)) {
                                     Recipe recipe = new Recipe(r.child("name").getValue(String.class), r.child("description").getValue(String.class),
                                             (List<Pair<String, String>>) r.child("list").getValue(), r.child("type").getValue(String.class));
                                     binding.nameRecipeFill.setHint(recipe.getName());
                                     binding.descriptionRecipeFill.setHint(recipe.getDescription());
-                                    if (r.child("type").getValue(String.class).equals("public")){
+                                    if (r.child("type").getValue(String.class).equals("public")) {
                                         binding.radioPublic.setChecked(true);
                                         checked = type = "public";
-                                    }
-                                    else {
+                                    } else {
                                         binding.radioPrivate.setChecked(true);
                                         checked = type = "private";
                                     }
-                                    for(HashMap<String, String> m : (ArrayList<HashMap<String, String>>) Objects.requireNonNull(r.child("list").getValue())){
+                                    for (HashMap<String, String> m : (ArrayList<HashMap<String, String>>) Objects.requireNonNull(r.child("list").getValue())) {
                                         String n, a;
                                         n = a = "";
                                         boolean x = false;
-                                        for(Map.Entry<String, String> aux: m.entrySet()){
-                                            if(x) a = aux.getValue();
+                                        for (Map.Entry<String, String> aux : m.entrySet()) {
+                                            if (x) a = aux.getValue();
                                             else {
                                                 n = aux.getValue();
                                                 x = true;
@@ -164,31 +160,29 @@ public class RecipeActivity extends AppCompatActivity {
                                         list.add(new Pair<>(n, a));
 
                                     }
-                                    if(list.size() > 2){
+                                    if (list.size() > 2) {
                                         ViewGroup.LayoutParams params = listView.getLayoutParams();
                                         params.height = 450;
                                         listView.setLayoutParams(params);
                                         listView.requestLayout();
-                                    }
-                                    else if(list.size() == 2){
+                                    } else if (list.size() == 2) {
                                         ViewGroup.LayoutParams params = listView.getLayoutParams();
                                         params.height = 300;
                                         listView.setLayoutParams(params);
                                         listView.requestLayout();
-                                    }
-                                    else {
+                                    } else {
                                         ViewGroup.LayoutParams params = listView.getLayoutParams();
                                         params.height = 150;
                                         listView.setLayoutParams(params);
                                         listView.requestLayout();
                                     }
-                                    adapter = new ListviewAdapter(getApplicationContext(),list);
+                                    adapter = new ListviewAdapter(getApplicationContext(), list);
                                     listView.setAdapter(adapter);
 
                                     StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(Objects.requireNonNull(r.child("name").getValue(String.class)));
                                     final long ONE_MEGABYTE = 1024 * 1024;
                                     storageReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(bytes -> {
-                                        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0,bytes.length);
+                                        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                                         binding.iconRecipe.setImageBitmap(bitmap);
                                         selectedImageBitmap = bitmap;
                                     }).addOnFailureListener(exception -> {
@@ -222,45 +216,42 @@ public class RecipeActivity extends AppCompatActivity {
 
         binding.imageadd.setOnClickListener(v -> {
             list = adapter.getList();
-            Pair<String, String> pair = new Pair<>("","");
+            Pair<String, String> pair = new Pair<>("", "");
             list.add(pair);
-            if(list.size() > 2){
+            if (list.size() > 2) {
                 ViewGroup.LayoutParams params = listView.getLayoutParams();
                 params.height = 450;
                 listView.setLayoutParams(params);
                 listView.requestLayout();
-            }
-            else if(list.size() == 2){
+            } else if (list.size() == 2) {
                 ViewGroup.LayoutParams params = listView.getLayoutParams();
                 params.height = 300;
                 listView.setLayoutParams(params);
                 listView.requestLayout();
             }
-            adapter = new ListviewAdapter(getApplicationContext(),list);
+            adapter = new ListviewAdapter(getApplicationContext(), list);
             listView.setAdapter(adapter);
         });
 
         binding.imageremove.setOnClickListener(v -> {
-            if(list.size() > 1) list.remove(list.size()-1);
-            if(list.size() > 2){
+            if (list.size() > 1) list.remove(list.size() - 1);
+            if (list.size() > 2) {
                 ViewGroup.LayoutParams params = listView.getLayoutParams();
                 params.height = 450;
                 listView.setLayoutParams(params);
                 listView.requestLayout();
-            }
-            else if(list.size() == 2){
+            } else if (list.size() == 2) {
                 ViewGroup.LayoutParams params = listView.getLayoutParams();
                 params.height = 300;
                 listView.setLayoutParams(params);
                 listView.requestLayout();
-            }
-            else {
+            } else {
                 ViewGroup.LayoutParams params = listView.getLayoutParams();
                 params.height = 150;
                 listView.setLayoutParams(params);
                 listView.requestLayout();
             }
-            adapter = new ListviewAdapter(getApplicationContext(),list);
+            adapter = new ListviewAdapter(getApplicationContext(), list);
             listView.setAdapter(adapter);
         });
 
@@ -283,7 +274,7 @@ public class RecipeActivity extends AppCompatActivity {
                 .setPositiveButton(android.R.string.yes, (dialog, whichButton) -> {
                     Recipe recipe = new Recipe(binding.nameRecipeFill.getText().toString().equals("") ? binding.nameRecipeFill.getHint().toString() : binding.nameRecipeFill.getText().toString(),
                             binding.descriptionRecipeFill.getText().toString().equals("") ? binding.descriptionRecipeFill.getHint().toString() : binding.descriptionRecipeFill.getText().toString()
-                            ,  adapter.getList(), checked.toLowerCase(Locale.ROOT));
+                            , adapter.getList(), checked.toLowerCase(Locale.ROOT));
 
                     DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
                     StorageReference storageRef = FirebaseStorage.getInstance().getReference();
@@ -294,50 +285,51 @@ public class RecipeActivity extends AppCompatActivity {
                     byte[] data = baos.toByteArray();
 
 
-                    if(type.equals("public")){
+                    if (type.equals("public")) {
                         UploadTask uploadTask = recipeRef.putBytes(data);
                         uploadTask.addOnFailureListener(new OnFailureListener() {
                             @Override
-                            public void onFailure(@NonNull Exception exception) {Toast.makeText(getApplicationContext(), "An error has occurred while updating the recipe ", Toast.LENGTH_SHORT).show();}
+                            public void onFailure(@NonNull Exception exception) {
+                                Toast.makeText(getApplicationContext(), "An error has occurred while updating the recipe ", Toast.LENGTH_SHORT).show();
+                            }
                         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                             @Override
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                if(checked.equals("public") && recipe.getName().equals(name)){
+                                if (checked.equals("public") && recipe.getName().equals(name)) {
                                     myRef.child("recipes").child("public").child(uid).child(recipe.getName()).setValue(recipe);
-                                }
-                                else if(checked.equals("public")){
+                                } else if (checked.equals("public")) {
                                     myRef.child("recipes").child("public").child(uid).child(name).removeValue();
                                     myRef.child("recipes").child("public").child(uid).child(recipe.getName()).setValue(recipe);
                                     storageRef.child(name).delete();
-                                }
-                                else{
+                                } else {
                                     myRef.child("recipes").child("public").child(uid).child(name).removeValue();
                                     myRef.child("recipes").child(uid).child(recipe.getName()).setValue(recipe);
-                                    if(!recipe.getName().equals(name)) storageRef.child(name).delete();
+                                    if (!recipe.getName().equals(name))
+                                        storageRef.child(name).delete();
                                 }
                             }
                         });
-                    }
-                    else {
+                    } else {
                         UploadTask uploadTask = recipeRef.putBytes(data);
                         uploadTask.addOnFailureListener(new OnFailureListener() {
                             @Override
-                            public void onFailure(@NonNull Exception exception) {Toast.makeText(getApplicationContext(), "An error has occurred while updating the recipe ", Toast.LENGTH_SHORT).show();}
+                            public void onFailure(@NonNull Exception exception) {
+                                Toast.makeText(getApplicationContext(), "An error has occurred while updating the recipe ", Toast.LENGTH_SHORT).show();
+                            }
                         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                             @Override
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                if(checked.equals("private") && recipe.getName().equals(name)){
+                                if (checked.equals("private") && recipe.getName().equals(name)) {
                                     myRef.child("recipes").child(uid).child(recipe.getName()).setValue(recipe);
-                                }
-                                else if(checked.equals("private")){
+                                } else if (checked.equals("private")) {
                                     myRef.child("recipes").child(uid).child(name).removeValue();
                                     myRef.child("recipes").child(uid).child(recipe.getName()).setValue(recipe);
                                     storageRef.child(name).delete();
-                                }
-                                else{
+                                } else {
                                     myRef.child("recipes").child(uid).child(name).removeValue();
                                     myRef.child("recipes").child("public").child(uid).child(recipe.getName()).setValue(recipe);
-                                    if(!recipe.getName().equals(name)) storageRef.child(name).delete();
+                                    if (!recipe.getName().equals(name))
+                                        storageRef.child(name).delete();
                                 }
                             }
                         });

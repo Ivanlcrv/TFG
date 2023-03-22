@@ -47,26 +47,25 @@ public class RecipeViewActivity extends AppCompatActivity {
         listView = findViewById(R.id.listviewpublic);
         listView.setItemsCanFocus(true);
 
-        adapter = new ListviewPublicRecipeAdapter(this,list);
+        adapter = new ListviewPublicRecipeAdapter(this, list);
         listView.setAdapter(adapter);
 
 
-        myRef.child("recipes").addValueEventListener(new ValueEventListener(){
+        myRef.child("recipes").addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot idSnapshot: snapshot.getChildren()) {
-                    if(Objects.equals(idSnapshot.getKey(), "public")) {
+                for (DataSnapshot idSnapshot : snapshot.getChildren()) {
+                    if (Objects.equals(idSnapshot.getKey(), "public")) {
                         for (DataSnapshot recipeSnapshot : idSnapshot.getChildren())
                             for (DataSnapshot r : recipeSnapshot.getChildren()) {
                                 if (Objects.equals(r.child("name").getValue(String.class), name)) {
                                     binding.nameRecipeFill.setHint(r.child("name").getValue(String.class));
                                     binding.descriptionRecipeFill.setHint(r.child("description").getValue(String.class));
-                                    if (Objects.equals(r.child("type").getValue(String.class), "public")){
+                                    if (Objects.equals(r.child("type").getValue(String.class), "public")) {
                                         binding.radioPublic.setChecked(true);
                                         binding.radioPublic.setVisibility(View.VISIBLE);
-                                    }
-                                    else {
+                                    } else {
                                         binding.radioPrivate.setChecked(true);
                                         binding.radioPrivate.setVisibility(View.VISIBLE);
                                     }
@@ -107,35 +106,33 @@ public class RecipeViewActivity extends AppCompatActivity {
                                     StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(Objects.requireNonNull(r.child("name").getValue(String.class)));
                                     final long ONE_MEGABYTE = 1024 * 1024;
                                     storageReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(bytes -> {
-                                        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0,bytes.length);
+                                        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                                         binding.iconRecipe.setImageBitmap(bitmap);
                                     }).addOnFailureListener(exception -> {
                                     });
                                 }
                             }
-                    }
-                    else {
+                    } else {
                         if (Objects.equals(idSnapshot.getKey(), uid))
-                            for(DataSnapshot r: idSnapshot.getChildren()){
-                                if(Objects.equals(r.child("name").getValue(String.class), name)){
+                            for (DataSnapshot r : idSnapshot.getChildren()) {
+                                if (Objects.equals(r.child("name").getValue(String.class), name)) {
                                     Recipe recipe = new Recipe(r.child("name").getValue(String.class), r.child("description").getValue(String.class),
                                             (List<Pair<String, String>>) r.child("list").getValue(), r.child("type").getValue(String.class));
                                     binding.nameRecipeFill.setHint(recipe.getName());
                                     binding.descriptionRecipeFill.setHint(recipe.getDescription());
-                                    if (Objects.equals(r.child("type").getValue(String.class), "public")){
+                                    if (Objects.equals(r.child("type").getValue(String.class), "public")) {
                                         binding.radioPublic.setChecked(true);
                                         binding.radioPublic.setVisibility(View.VISIBLE);
-                                    }
-                                    else {
+                                    } else {
                                         binding.radioPrivate.setChecked(true);
                                         binding.radioPrivate.setVisibility(View.VISIBLE);
                                     }
-                                    for(HashMap<String, String> m : (ArrayList<HashMap<String, String>>) Objects.requireNonNull(r.child("list").getValue())){
+                                    for (HashMap<String, String> m : (ArrayList<HashMap<String, String>>) Objects.requireNonNull(r.child("list").getValue())) {
                                         String n, a;
                                         n = a = "";
                                         boolean x = false;
-                                        for(Map.Entry<String, String> aux: m.entrySet()){
-                                            if(x) a = aux.getValue();
+                                        for (Map.Entry<String, String> aux : m.entrySet()) {
+                                            if (x) a = aux.getValue();
                                             else {
                                                 n = aux.getValue();
                                                 x = true;
@@ -144,31 +141,29 @@ public class RecipeViewActivity extends AppCompatActivity {
                                         list.add(new Pair<>(n, a));
 
                                     }
-                                    if(list.size() > 2){
+                                    if (list.size() > 2) {
                                         ViewGroup.LayoutParams params = listView.getLayoutParams();
                                         params.height = 450;
                                         listView.setLayoutParams(params);
                                         listView.requestLayout();
-                                    }
-                                    else if(list.size() == 2){
+                                    } else if (list.size() == 2) {
                                         ViewGroup.LayoutParams params = listView.getLayoutParams();
                                         params.height = 300;
                                         listView.setLayoutParams(params);
                                         listView.requestLayout();
-                                    }
-                                    else {
+                                    } else {
                                         ViewGroup.LayoutParams params = listView.getLayoutParams();
                                         params.height = 150;
                                         listView.setLayoutParams(params);
                                         listView.requestLayout();
                                     }
-                                    adapter = new ListviewPublicRecipeAdapter(getApplicationContext(),list);
+                                    adapter = new ListviewPublicRecipeAdapter(getApplicationContext(), list);
                                     listView.setAdapter(adapter);
 
                                     StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(Objects.requireNonNull(r.child("name").getValue(String.class)));
                                     final long ONE_MEGABYTE = 1024 * 1024;
                                     storageReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(bytes -> {
-                                        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0,bytes.length);
+                                        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                                         binding.iconRecipe.setImageBitmap(bitmap);
                                     }).addOnFailureListener(exception -> {
                                     });

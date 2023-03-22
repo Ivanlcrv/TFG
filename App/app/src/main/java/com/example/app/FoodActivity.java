@@ -1,11 +1,11 @@
 package com.example.app;
 
+import android.os.Bundle;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.os.Bundle;
-import android.widget.Toast;
 
 import com.example.app.databinding.ActivityFoodBinding;
 import com.google.firebase.auth.FirebaseAuth;
@@ -19,6 +19,7 @@ public class FoodActivity extends AppCompatActivity {
 
     private ActivityFoodBinding binding;
     private DatabaseReference myRef;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,11 +28,11 @@ public class FoodActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         String name = getIntent().getStringExtra("food");
 
-        myRef.child("pantry").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(new ValueEventListener(){
+        myRef.child("pantry").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot foodSnapshot: snapshot.getChildren()) {
+                for (DataSnapshot foodSnapshot : snapshot.getChildren()) {
                     String name_food = foodSnapshot.getKey();
                     if (name_food.equals(name)) {
                         binding.nameFoodFill.setHint(name);
@@ -54,16 +55,14 @@ public class FoodActivity extends AppCompatActivity {
                     String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
                     String food_name = binding.nameFoodFill.getText().toString();
                     String food_amount = binding.amountFoodFill.getText().toString();
-                    if(!food_name.equals("") && !food_amount.equals("")) {
+                    if (!food_name.equals("") && !food_amount.equals("")) {
                         myRef.child("pantry").child(uid).child(name).removeValue();
                         myRef.child("pantry").child(uid).child(food_name).setValue(food_amount);
                         Toast.makeText(this, "Name and amount have been update", Toast.LENGTH_SHORT).show();
-                    }
-                    else if(!food_amount.equals("")) {
+                    } else if (!food_amount.equals("")) {
                         myRef.child("pantry").child(uid).child(name).setValue(food_amount);
                         Toast.makeText(this, "Amount has been update", Toast.LENGTH_SHORT).show();
-                    }
-                    else {
+                    } else {
                         myRef.child("pantry").child(uid).child(name).removeValue();
                         myRef.child("pantry").child(uid).child(food_name).setValue(binding.amountFoodFill.getHint());
                         Toast.makeText(this, "Name has been update", Toast.LENGTH_SHORT).show();

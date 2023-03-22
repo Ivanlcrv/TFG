@@ -20,6 +20,7 @@ import java.util.Objects;
 public class ItemActivity extends AppCompatActivity {
     private ActivityItemBinding binding;
     private DatabaseReference myRef;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,11 +29,11 @@ public class ItemActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         String name = getIntent().getStringExtra("item");
 
-        myRef.child("shopping").child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()).addValueEventListener(new ValueEventListener(){
+        myRef.child("shopping").child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()).addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot itemSnapshot: snapshot.getChildren()) {
+                for (DataSnapshot itemSnapshot : snapshot.getChildren()) {
                     String name_item = itemSnapshot.getKey();
                     assert name_item != null;
                     if (name_item.equals(name)) {
@@ -56,16 +57,14 @@ public class ItemActivity extends AppCompatActivity {
                     String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
                     String item_name = Objects.requireNonNull(binding.nameItemFill.getText()).toString();
                     String item_amount = Objects.requireNonNull(binding.amountItemFill.getText()).toString();
-                    if(!item_name.equals("") && !item_amount.equals("")) {
+                    if (!item_name.equals("") && !item_amount.equals("")) {
                         myRef.child("shopping").child(uid).child(name).removeValue();
                         myRef.child("shopping").child(uid).child(item_name).setValue(item_amount);
                         Toast.makeText(this, "Name and amount have been update", Toast.LENGTH_SHORT).show();
-                    }
-                    else if(!item_amount.equals("")) {
+                    } else if (!item_amount.equals("")) {
                         myRef.child("shopping").child(uid).child(name).setValue(item_amount);
                         Toast.makeText(this, "Amount has been update", Toast.LENGTH_SHORT).show();
-                    }
-                    else {
+                    } else {
                         myRef.child("shopping").child(uid).child(name).removeValue();
                         myRef.child("shopping").child(uid).child(item_name).setValue(binding.amountItemFill.getHint());
                         Toast.makeText(this, "Name has been update", Toast.LENGTH_SHORT).show();

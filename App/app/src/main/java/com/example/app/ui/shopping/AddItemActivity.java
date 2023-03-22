@@ -43,11 +43,10 @@ public class AddItemActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(nameEditText.getText() != null && amountEditText.getText() != null &&
-                        !nameEditText.getText().toString().equals("") && !amountEditText.getText().toString().equals("")){
+                if (nameEditText.getText() != null && amountEditText.getText() != null &&
+                        !nameEditText.getText().toString().equals("") && !amountEditText.getText().toString().equals("")) {
                     addButton.setEnabled(true);
-                }
-                else addButton.setEnabled(false);
+                } else addButton.setEnabled(false);
             }
         };
         nameEditText.addTextChangedListener(afterTextChangedListener);

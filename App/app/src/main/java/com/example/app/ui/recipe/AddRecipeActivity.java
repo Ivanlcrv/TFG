@@ -32,19 +32,14 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -63,7 +58,7 @@ public class AddRecipeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        checked="private";
+        checked = "private";
 
         mAuth = FirebaseAuth.getInstance();
         binding = ActivityAddRecipeBinding.inflate(getLayoutInflater());
@@ -73,10 +68,10 @@ public class AddRecipeActivity extends AppCompatActivity {
         listView = findViewById(R.id.listview);
         listView.setItemsCanFocus(true);
 
-        Pair<String, String> p = new Pair<>("","");
+        Pair<String, String> p = new Pair<>("", "");
         list.add(p);
 
-        adapter = new ListviewAdapter(this,list);
+        adapter = new ListviewAdapter(this, list);
         listView.setAdapter(adapter);
 
         final EditText nameEditText = binding.editNameRecipe;
@@ -85,7 +80,7 @@ public class AddRecipeActivity extends AppCompatActivity {
         final RadioGroup radioGroup = binding.radioType;
         final Button uploadButton = binding.upload;
 
-        ActivityResultLauncher<Intent> launchSomeActivity = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),result -> {
+        ActivityResultLauncher<Intent> launchSomeActivity = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if (result.getResultCode() == Activity.RESULT_OK) {
                 Intent data = result.getData();
                 if (data != null && data.getData() != null) {
@@ -112,45 +107,42 @@ public class AddRecipeActivity extends AppCompatActivity {
 
         binding.imageadd.setOnClickListener(v -> {
             list = adapter.getList();
-            Pair<String, String> pair = new Pair<>("","");
+            Pair<String, String> pair = new Pair<>("", "");
             list.add(pair);
-            if(list.size() > 2){
+            if (list.size() > 2) {
                 ViewGroup.LayoutParams params = listView.getLayoutParams();
                 params.height = 450;
                 listView.setLayoutParams(params);
                 listView.requestLayout();
-            }
-            else if(list.size() == 2){
+            } else if (list.size() == 2) {
                 ViewGroup.LayoutParams params = listView.getLayoutParams();
                 params.height = 300;
                 listView.setLayoutParams(params);
                 listView.requestLayout();
             }
-            adapter = new ListviewAdapter(getApplicationContext(),list);
+            adapter = new ListviewAdapter(getApplicationContext(), list);
             listView.setAdapter(adapter);
         });
 
         binding.imageremove.setOnClickListener(v -> {
-            if(list.size() > 1) list.remove(list.size()-1);
-            if(list.size() > 2){
+            if (list.size() > 1) list.remove(list.size() - 1);
+            if (list.size() > 2) {
                 ViewGroup.LayoutParams params = listView.getLayoutParams();
                 params.height = 450;
                 listView.setLayoutParams(params);
                 listView.requestLayout();
-            }
-            else if(list.size() == 2){
+            } else if (list.size() == 2) {
                 ViewGroup.LayoutParams params = listView.getLayoutParams();
                 params.height = 300;
                 listView.setLayoutParams(params);
                 listView.requestLayout();
-            }
-            else {
+            } else {
                 ViewGroup.LayoutParams params = listView.getLayoutParams();
                 params.height = 150;
                 listView.setLayoutParams(params);
                 listView.requestLayout();
             }
-            adapter = new ListviewAdapter(getApplicationContext(),list);
+            adapter = new ListviewAdapter(getApplicationContext(), list);
             listView.setAdapter(adapter);
         });
 
@@ -165,10 +157,12 @@ public class AddRecipeActivity extends AppCompatActivity {
 
         TextWatcher afterTextChangedListener = new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
 
             @Override
             public void afterTextChanged(Editable s) {
@@ -194,23 +188,25 @@ public class AddRecipeActivity extends AppCompatActivity {
             selectedImageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
             byte[] data = baos.toByteArray();
 
-            if(checked.equals("Public")){
+            if (checked.equals("Public")) {
                 myRef.child("recipes").child("public").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DataSnapshot> task) {
                         List<Recipe> recipesList = new ArrayList<>();
-                        for(DataSnapshot userSnapshot: task.getResult().getChildren()){
-                            for (DataSnapshot recipeSnapshot: userSnapshot.getChildren()) {
+                        for (DataSnapshot userSnapshot : task.getResult().getChildren()) {
+                            for (DataSnapshot recipeSnapshot : userSnapshot.getChildren()) {
                                 Recipe recipe = new Recipe(recipeSnapshot.child("name").getValue(String.class), recipeSnapshot.child("description").getValue(String.class),
                                         (List<Pair<String, String>>) recipeSnapshot.child("list").getValue(), recipeSnapshot.child("type").getValue(String.class));
                                 recipesList.add(recipe);
                             }
                         }
-                        if(!recipesList.contains(recipe.getName())) {
+                        if (!recipesList.contains(recipe.getName())) {
                             UploadTask uploadTask = recipeRef.putBytes(data);
                             uploadTask.addOnFailureListener(new OnFailureListener() {
                                 @Override
-                                public void onFailure(@NonNull Exception exception) {Toast.makeText(getApplicationContext(), "An error has occurred while uploading the recipe ", Toast.LENGTH_SHORT).show();}
+                                public void onFailure(@NonNull Exception exception) {
+                                    Toast.makeText(getApplicationContext(), "An error has occurred while uploading the recipe ", Toast.LENGTH_SHORT).show();
+                                }
                             }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                 @Override
                                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -221,12 +217,11 @@ public class AddRecipeActivity extends AppCompatActivity {
                                 }
                             });
 
-                        }
-                        else  Toast.makeText(getApplicationContext(), "The recipe: " + recipe.getName() + " already exists", Toast.LENGTH_SHORT).show();
+                        } else
+                            Toast.makeText(getApplicationContext(), "The recipe: " + recipe.getName() + " already exists", Toast.LENGTH_SHORT).show();
                     }
                 });
-            }
-            else {
+            } else {
                 assert user != null;
                 myRef.child("recipes").child(user.getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                     @Override
@@ -241,7 +236,9 @@ public class AddRecipeActivity extends AppCompatActivity {
                             UploadTask uploadTask = recipeRef.putBytes(data);
                             uploadTask.addOnFailureListener(new OnFailureListener() {
                                 @Override
-                                public void onFailure(@NonNull Exception exception) {Toast.makeText(getApplicationContext(), "An error has occurred while uploading the recipe ", Toast.LENGTH_SHORT).show();}
+                                public void onFailure(@NonNull Exception exception) {
+                                    Toast.makeText(getApplicationContext(), "An error has occurred while uploading the recipe ", Toast.LENGTH_SHORT).show();
+                                }
                             }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                 @Override
                                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -250,8 +247,8 @@ public class AddRecipeActivity extends AppCompatActivity {
                                     finish();
                                 }
                             });
-                        }
-                        else Toast.makeText(getApplicationContext(), "The recipe: " + recipe.getName() + " already exists", Toast.LENGTH_SHORT).show();
+                        } else
+                            Toast.makeText(getApplicationContext(), "The recipe: " + recipe.getName() + " already exists", Toast.LENGTH_SHORT).show();
                     }
                 });
             }

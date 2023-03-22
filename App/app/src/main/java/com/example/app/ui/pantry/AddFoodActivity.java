@@ -11,7 +11,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.app.Food;
-import com.example.app.User;
 import com.example.app.databinding.ActivityAddFoodBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -45,11 +44,10 @@ public class AddFoodActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(nameEditText.getText() != null && amountEditText.getText() != null &&
-                        !nameEditText.getText().toString().equals("") && !amountEditText.getText().toString().equals("")){
+                if (nameEditText.getText() != null && amountEditText.getText() != null &&
+                        !nameEditText.getText().toString().equals("") && !amountEditText.getText().toString().equals("")) {
                     addButton.setEnabled(true);
-                }
-                else addButton.setEnabled(false);
+                } else addButton.setEnabled(false);
             }
         };
         nameEditText.addTextChangedListener(afterTextChangedListener);

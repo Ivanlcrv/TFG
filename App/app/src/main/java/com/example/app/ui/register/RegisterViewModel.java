@@ -1,10 +1,10 @@
 package com.example.app.ui.register;
 
 
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+
 import com.example.app.R;
 import com.example.app.User;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -18,12 +18,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.regex.Pattern;
 
 public class RegisterViewModel {
+    private static final String TAG = "AddToDatabase";
     private final MutableLiveData<RegisterFormState> registerFormState = new MutableLiveData<>();
     private final MutableLiveData<RegisterResult> registerResult = new MutableLiveData<>();
     FirebaseAuth mAuth;
     FirebaseUser userF;
     DatabaseReference myRef;
-    private static final String TAG = "AddToDatabase";
 
     LiveData<RegisterFormState> getRegisterFormState() {
         return registerFormState;
@@ -61,10 +61,10 @@ public class RegisterViewModel {
         Integer errPassword = isPasswordValid(password);
         Integer errGenre = isCheckValid(checked);
         Integer errDate = isDateValid(date);
-        if (errDate!= null || errGenre != null || errMail != null || errPassword != null || errUser != null)
-            registerFormState.setValue(new RegisterFormState(errUser, errMail,errPassword, errGenre, false));
+        if (errDate != null || errGenre != null || errMail != null || errPassword != null || errUser != null)
+            registerFormState.setValue(new RegisterFormState(errUser, errMail, errPassword, errGenre, false));
         else
-            registerFormState.setValue(new RegisterFormState(errUser, errMail,errPassword, errGenre, true));
+            registerFormState.setValue(new RegisterFormState(errUser, errMail, errPassword, errGenre, true));
     }
 
     // A placeholder email validation check

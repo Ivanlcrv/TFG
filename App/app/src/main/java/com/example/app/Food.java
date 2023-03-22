@@ -5,7 +5,8 @@ public class Food {
     private String name;
     private String amount;
 
-    public Food(){}
+    public Food() {
+    }
 
     public Food(String name, String amount) {
         this.name = name;

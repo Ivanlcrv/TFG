@@ -18,7 +18,7 @@ public class ListviewPublicRecipeAdapter extends BaseAdapter {
     LayoutInflater mInflater;
 
 
-    public ListviewPublicRecipeAdapter(Context context, List<Pair<String, String>> list){
+    public ListviewPublicRecipeAdapter(Context context, List<Pair<String, String>> list) {
         this.context = context;
         this.list = list;
     }
@@ -41,12 +41,18 @@ public class ListviewPublicRecipeAdapter extends BaseAdapter {
     }
 
     @Override
-    public int getCount() {return list.size();}
+    public int getCount() {
+        return list.size();
+    }
 
     @Override
-    public Object getItem(int arg0) {return arg0;}
+    public Object getItem(int arg0) {
+        return arg0;
+    }
 
     @Override
-    public long getItemId(int arg0) {return arg0;}
+    public long getItemId(int arg0) {
+        return arg0;
+    }
 
 }

@@ -91,4 +91,6 @@
     <string name="prompt_itemname">Name:</string>
     <string name="save_your_item">Save item info</string>
     <string name="title_activity_add_item">Add item</string>
+    <string name="description_shopping">Check the items you have purchased</string>
+    <string name="buy">Buy</string>
 </resources>

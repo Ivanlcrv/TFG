@@ -1,14 +1,14 @@
 package com.example.app;
 
 
+import android.os.Bundle;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import android.app.Fragment;
-import android.os.Bundle;
-import android.widget.Toast;
+
 import com.example.app.databinding.ActivityInfoUserAdminBinding;
-import com.example.app.ui.admin.AdminFragment;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -16,11 +16,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 
-public class InfoUserAdmin extends AppCompatActivity  {
+public class InfoUserAdmin extends AppCompatActivity {
 
     private ActivityInfoUserAdminBinding binding;
     private DatabaseReference myRef;
     private String uid;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,9 +36,9 @@ public class InfoUserAdmin extends AppCompatActivity  {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot userSnapshot: snapshot.getChildren()) {
+                for (DataSnapshot userSnapshot : snapshot.getChildren()) {
                     User user = userSnapshot.getValue(User.class);
-                    if(user.getEmail().equals(email)) {
+                    if (user.getEmail().equals(email)) {
                         uid = userSnapshot.getKey();
                         binding.usernameAccountAdmin.setText(user.getUsername());
                         binding.emailAccountAdmin.setText(user.getEmail());

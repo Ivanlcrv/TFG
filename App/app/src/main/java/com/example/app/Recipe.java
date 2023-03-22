@@ -14,7 +14,8 @@ public class Recipe {
     private List<Pair<String, String>> list;
     private String type;
 
-    public Recipe(){}
+    public Recipe() {
+    }
 
     public Recipe(String name, String description, List<Pair<String, String>> list, String type) {
         this.name = name;
@@ -27,17 +28,23 @@ public class Recipe {
         return name;
     }
 
-    public String getDescription() {return description;}
+    public String getDescription() {
+        return description;
+    }
 
-    public List<Pair<String, String>> getList() {return list;}
+    public List<Pair<String, String>> getList() {
+        return list;
+    }
 
-    public String getType(){ return type;}
+    public String getType() {
+        return type;
+    }
 
     @Override
     public boolean equals(@Nullable Object obj) {
         Recipe r = (Recipe) obj;
-        if(r == null) return false;
-        if (this.getName()==null) return r.getName()==null;
+        if (r == null) return false;
+        if (this.getName() == null) return r.getName() == null;
         return this.getName().equals(r.getName());
     }
 }

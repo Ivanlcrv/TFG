@@ -24,9 +24,9 @@
             android:layout_marginTop="20dp"
             android:layout_marginBottom="10dp"
             android:fontFamily="@font/calistoga"
+            android:gravity="center"
             android:text="@string/details_food"
-            android:textSize="24sp"
-            android:gravity="center"/>
+            android:textSize="24sp" />
 
         <ImageView
             android:id="@+id/icon_food"
@@ -81,10 +81,10 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
             android:fontFamily="@font/calistoga"
-            android:textColor="@color/primary_blue"
-            android:textSize="16sp"
             android:inputType="text"
             android:text=""
+            android:textColor="@color/primary_blue"
+            android:textSize="16sp"
             app:boxBackgroundColor="#FFF"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -114,14 +114,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
-            android:inputType="text"
             android:fontFamily="@font/calistoga"
+            android:inputType="text"
+            android:text=""
             android:textColor="@color/primary_blue"
             android:textSize="16sp"
-            android:text=""
+            app:boxBackgroundColor="#FFF"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:boxBackgroundColor="#FFF"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

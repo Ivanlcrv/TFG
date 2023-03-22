@@ -1,7 +1,6 @@
 package com.example.app.ui.login;
 
 
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -45,9 +44,11 @@ public class LoginViewModel {
                             myRef.child("users").child(user.getUid()).child("username").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                                 @Override
                                 public void onComplete(@NonNull Task<DataSnapshot> task) {
-                                    if (!task.isSuccessful()) loginResult.setValue(new LoginResult(R.string.login_failed));
+                                    if (!task.isSuccessful())
+                                        loginResult.setValue(new LoginResult(R.string.login_failed));
                                     else {
-                                        if(task.getResult().getValue() != null) loginResult.setValue(new LoginResult(String.valueOf(task.getResult().getValue())));
+                                        if (task.getResult().getValue() != null)
+                                            loginResult.setValue(new LoginResult(String.valueOf(task.getResult().getValue())));
                                         else {
                                             user.delete();
                                             loginResult.setValue(new LoginResult(R.string.account_delete));
