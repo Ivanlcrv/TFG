@@ -47,14 +47,40 @@ public class FoodAdapter  extends RecyclerView.Adapter<FoodAdapter.FoodViewHolde
         private String amount;
         private String name;
         private FirebaseUser user;
+        private DatabaseReference myRef;
         final FoodAdapter mAdapter;
 
         public FoodViewHolder(@NonNull View itemView, FoodAdapter foodAdapter) {
             super(itemView);
             foodItemView = itemView.findViewById(R.id.food_list);
             foodCardView = itemView.findViewById(R.id.bin);
-            DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
+            myRef = FirebaseDatabase.getInstance().getReference();
             user = FirebaseAuth.getInstance().getCurrentUser();
+            foodCardView.setOnClickListener(v -> new AlertDialog.Builder(context)
+                    .setTitle("Delete food")
+                    .setMessage("Do you really want to remove " + foodItemView.getText().toString() + " from your pantry")
+                    .setIcon(R.drawable.ic_warning)
+                    .setPositiveButton(android.R.string.yes, (dialog, whichButton) -> {
+                        myRef.child("pantry").child(user.getUid()).child(name).removeValue();
+                        Toast.makeText(context, foodItemView.getText().toString() + " has been removed from your pantry", Toast.LENGTH_SHORT).show();
+                        new AlertDialog.Builder(context)
+                                .setTitle("Shopping list food")
+                                .setMessage("Do you want to add " + foodItemView.getText().toString() + " to your shopping list")
+                                .setIcon(R.drawable.ic_warning)
+                                .setPositiveButton("Yes", (dialog_shopping, whichButton_shopping) -> {
+                                    myRef.child("shopping").child(user.getUid()).child(name).setValue(amount);
+                                    Toast.makeText(context, foodItemView.getText().toString() + " has been added to your shopping list", Toast.LENGTH_SHORT).show();
+                                })
+                                .setNegativeButton("No", null).show();
+                        })
+                    .setNegativeButton(android.R.string.no, null).show());
+
+            mAdapter = foodAdapter;
+            foodItemView.setOnClickListener(this);
+            foodItemView.setOnLongClickListener(this);
+        }
+
+        private void fill(){
             name = foodItemView.getText().toString();
             myRef.child("pantry").child(user.getUid()).child(name).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                 @Override
@@ -64,33 +90,7 @@ public class FoodAdapter  extends RecyclerView.Adapter<FoodAdapter.FoodViewHolde
                     } else amount = "";
                 }
             });
-            foodCardView.setOnClickListener(v -> new AlertDialog.Builder(context)
-                    .setTitle("Delete food")
-                    .setMessage("Do you really want to remove " + foodItemView.getText().toString() + " from your pantry")
-                    .setIcon(R.drawable.ic_warning)
-                    .setPositiveButton(android.R.string.yes, (dialog, whichButton) -> {
-
-
-
-                        myRef.child("pantry").child(user.getUid()).child(name).removeValue();
-                        Toast.makeText(context, foodItemView.getText().toString() + " has been removed from your pantry", Toast.LENGTH_SHORT).show();
-                        new AlertDialog.Builder(context)
-                                .setTitle("Shopping list food")
-                                .setMessage("Do you want to add " + foodItemView.getText().toString() + " to your shopping list")
-                                .setIcon(R.drawable.ic_warning)
-                                .setPositiveButton(android.R.string.yes, (dialog_shopping, whichButton_shopping) -> {
-                                    myRef.child("shopping").child(user.getUid()).child(name).setValue(amount);
-                                    Toast.makeText(context, foodItemView.getText().toString() + " has been added to your shopping list", Toast.LENGTH_SHORT).show();
-                                })
-                                .setNegativeButton(android.R.string.no, null).show();
-                    })
-                    .setNegativeButton(android.R.string.no, null).show());
-
-            mAdapter = foodAdapter;
-            foodItemView.setOnClickListener(this);
-            foodItemView.setOnLongClickListener(this);
         }
-
         @Override
         public void onClick(View v) {
             Intent intent = new Intent(context, FoodActivity.class);
@@ -117,6 +117,7 @@ public class FoodAdapter  extends RecyclerView.Adapter<FoodAdapter.FoodViewHolde
     public void onBindViewHolder(@NonNull FoodAdapter.FoodViewHolder holder, int position) {
         String mCurrent = foodList.get(position).getName();
         holder.foodItemView.setText(mCurrent);
+        holder.fill();
     }
 
     @Override

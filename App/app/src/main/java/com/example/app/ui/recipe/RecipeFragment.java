@@ -88,9 +88,9 @@ public class RecipeFragment extends Fragment {
                     if(r.getType().equals("private") && !list_aux.contains(r))iterator.remove();
                 }
 
-                mAdapter = new RecipeAdapter(getContext(), recipeList);
+                mAdapter = new RecipeAdapter(context, recipeList);
                 recyclerView.setAdapter(mAdapter);
-                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                recyclerView.setLayoutManager(new LinearLayoutManager(context));
             }
 
             @Override
@@ -129,9 +129,9 @@ public class RecipeFragment extends Fragment {
                                     }
                             }
                         }
-                        mAdapter = new RecipeAdapter(getContext(), recipeList);
+                        mAdapter = new RecipeAdapter(context, recipeList);
                         recyclerView.setAdapter(mAdapter);
-                        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                        recyclerView.setLayoutManager(new LinearLayoutManager(context));
                     }
                 });
             }

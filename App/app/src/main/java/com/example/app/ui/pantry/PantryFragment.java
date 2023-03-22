@@ -73,9 +73,9 @@ public class PantryFragment extends Fragment {
                         foodList.addLast(food);
                     }
                 }
-                mAdapter = new FoodAdapter(getContext(), foodList);
+                mAdapter = new FoodAdapter(context, foodList);
                 recyclerView.setAdapter(mAdapter);
-                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                recyclerView.setLayoutManager(new LinearLayoutManager(context));
             }
 
             @Override
@@ -106,9 +106,9 @@ public class PantryFragment extends Fragment {
                                     foodList.addLast(food);
                                 }
                             }
-                            mAdapter = new FoodAdapter(getContext(), foodList);
+                            mAdapter = new FoodAdapter(context, foodList);
                             recyclerView.setAdapter(mAdapter);
-                            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                            recyclerView.setLayoutManager(new LinearLayoutManager(context));
                         }
                     }
                 });

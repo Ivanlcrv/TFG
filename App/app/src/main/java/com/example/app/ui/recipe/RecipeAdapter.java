@@ -32,7 +32,7 @@ import com.google.firebase.storage.StorageReference;
 import java.util.LinkedList;
 import java.util.Objects;
 
-public class RecipeAdapter  extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder> {
+public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder> {
 
     private final LinkedList<Recipe> recipeList;
     private final LayoutInflater mInflater;
@@ -119,20 +119,13 @@ public class RecipeAdapter  extends RecyclerView.Adapter<RecipeAdapter.RecipeVie
 
         @Override
         public void onClick(View v) {
-            if(permission){
-                Intent intent = new Intent(context, RecipeActivity.class);
-                int mPosition = getLayoutPosition();
-                Recipe actual_recipe = recipeList.get(mPosition);
-                intent.putExtra("recipe", actual_recipe.getName());
-                context.startActivity(intent);
-            }
-            else{
-                Intent intent = new Intent(context, RecipeViewActivity.class);
-                int mPosition = getLayoutPosition();
-                Recipe actual_recipe = recipeList.get(mPosition);
-                intent.putExtra("recipe", actual_recipe.getName());
-                context.startActivity(intent);
-            }
+            Intent intent;
+            int mPosition = getLayoutPosition();
+            Recipe actual_recipe = recipeList.get(mPosition);
+            if(permission) intent = new Intent(context, RecipeActivity.class);
+            else intent = new Intent(context, RecipeViewActivity.class);
+            intent.putExtra("recipe", actual_recipe.getName());
+            context.startActivity(intent);
 
         }
 

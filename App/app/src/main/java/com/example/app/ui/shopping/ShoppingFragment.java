@@ -67,9 +67,9 @@ public class ShoppingFragment extends Fragment {
                         itemList.addLast(item);
                     }
                 }
-                mAdapter = new ItemAdapter(getContext(), itemList);
+                mAdapter = new ItemAdapter(context, itemList);
                 recyclerView.setAdapter(mAdapter);
-                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                recyclerView.setLayoutManager(new LinearLayoutManager(context));
             }
 
             @Override
@@ -100,9 +100,9 @@ public class ShoppingFragment extends Fragment {
                                     itemList.addLast(item);
                                 }
                             }
-                            mAdapter = new ItemAdapter(getContext(), itemList);
+                            mAdapter = new ItemAdapter(context, itemList);
                             recyclerView.setAdapter(mAdapter);
-                            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                            recyclerView.setLayoutManager(new LinearLayoutManager(context));
                         }
                     }
                 });
