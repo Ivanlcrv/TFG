@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,7 +46,10 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
     public void onBindViewHolder(@NonNull ItemAdapter.ItemViewHolder holder, int position) {
         String mCurrent = itemList.get(position).getName();
         holder.itemView.setText(mCurrent);
+        holder.setPosition(position);
     }
+
+    public LinkedList<Item> getList(){return itemList;}
 
     @Override
     public int getItemCount() {
@@ -56,29 +60,36 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
 
         public final TextView itemView;
         public final CardView itemCardView;
+        public final CheckBox checkBox;
+        private int position;
         final ItemAdapter mAdapter;
 
         public ItemViewHolder(@NonNull View _itemView, ItemAdapter itemAdapter) {
             super(_itemView);
             itemView = _itemView.findViewById(R.id.item_list);
             itemCardView = _itemView.findViewById(R.id.bin);
-
+            checkBox = _itemView.findViewById(R.id.checkBox);
             itemCardView.setOnClickListener(v -> new AlertDialog.Builder(context)
                     .setTitle("Delete item")
                     .setMessage("Do you really want to remove " + itemView.getText().toString() + " from your shopping list")
                     .setIcon(R.drawable.ic_warning)
                     .setPositiveButton(android.R.string.yes, (dialog, whichButton) -> {
                         DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
-                        myRef.child("shopping").child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()).child(itemView.getText().toString()).removeValue();
+                        myRef.child("shopping").child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()).child("list").child(itemView.getText().toString()).removeValue();
                         Toast.makeText(context, itemView.getText().toString() + " has been remove from your shopping list", Toast.LENGTH_SHORT).show();
                     })
                     .setNegativeButton(android.R.string.no, null).show());
 
             mAdapter = itemAdapter;
+            checkBox.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {itemList.get(position).setCheck(checkBox.isChecked());}
+            });
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
         }
 
+        public void setPosition(int pos){position = pos;}
         @Override
         public void onClick(View v) {
             Intent intent = new Intent(context, ItemActivity.class);

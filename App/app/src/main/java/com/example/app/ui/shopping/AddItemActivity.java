@@ -58,7 +58,7 @@ public class AddItemActivity extends AppCompatActivity {
                 DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
                 FirebaseUser user = mAuth.getCurrentUser();
                 Item item = new Item(nameEditText.getText().toString(), amountEditText.getText().toString());
-                myRef.child("shopping").child(user.getUid()).child(item.getName()).setValue(item.getAmount());
+                myRef.child("shopping").child(user.getUid()).child("list").child(item.getName()).setValue(item.getAmount());
                 Toast.makeText(getApplicationContext(), "Se ha añadido " + item.getAmount() + " de " + item.getName(), Toast.LENGTH_SHORT).show();
                 finish();
             }

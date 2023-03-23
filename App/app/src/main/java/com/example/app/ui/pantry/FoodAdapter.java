@@ -87,7 +87,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
                                 .setMessage("Do you want to add " + foodItemView.getText().toString() + " to your shopping list")
                                 .setIcon(R.drawable.ic_warning)
                                 .setPositiveButton("Yes", (dialog_shopping, whichButton_shopping) -> {
-                                    myRef.child("shopping").child(user.getUid()).child(name).setValue(amount);
+                                    myRef.child("shopping").child(user.getUid()).child("list").child(name).setValue(amount);
                                     Toast.makeText(context, foodItemView.getText().toString() + " has been added to your shopping list", Toast.LENGTH_SHORT).show();
                                 })
                                 .setNegativeButton("No", null).show();
