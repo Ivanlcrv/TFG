@@ -118,10 +118,7 @@ public class ShoppingFragment extends Fragment {
                     }
                 }
                 if(!any) Toast.makeText(context, "Please select at least 1 item", Toast.LENGTH_SHORT).show();
-                else{
-                    int a = Integer.parseInt(amount);
-                    myRef.child("shopping").child(user.getUid()).child("expenses").child(Calendar.getInstance().getTime().toString()).setValue(a);
-                }
+                else myRef.child("shopping").child(user.getUid()).child("expenses").child(Calendar.getInstance().getTime().toString()).setValue(amount);
             }
         });
         return root;
