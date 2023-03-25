@@ -4,6 +4,7 @@ public class Item {
     private String name;
     private String amount;
     private boolean check;
+
     public Item() {
     }
 
@@ -21,7 +22,11 @@ public class Item {
         return amount;
     }
 
-    public boolean getCheck(){return check;}
+    public boolean getCheck() {
+        return check;
+    }
 
-    public void setCheck(boolean checked) {check=checked;}
+    public void setCheck(boolean checked) {
+        check = checked;
+    }
 }

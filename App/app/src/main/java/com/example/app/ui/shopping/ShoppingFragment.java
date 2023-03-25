@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.app.Item;
+import com.example.app.SpendingActivity;
 import com.example.app.databinding.FragmentShoppingBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -107,20 +108,34 @@ public class ShoppingFragment extends Fragment {
         binding.editSearch.addTextChangedListener(afterTextChangedListener);
         binding.buyButton.setOnClickListener(v -> {
             String amount = Objects.requireNonNull(binding.editAmount.getText()).toString();
-            if(amount.isEmpty()) Toast.makeText(context, "Please enter the corresponding amount", Toast.LENGTH_SHORT).show();
+            if (amount.isEmpty())
+                Toast.makeText(context, "Please enter the corresponding amount", Toast.LENGTH_SHORT).show();
             else {
                 LinkedList<Item> list = mAdapter.getList();
                 boolean any = false;
-                for(Item i : list){
-                    if(i.getCheck()){
+                for (Item i : list) {
+                    if (i.getCheck()) {
                         any = true;
                         myRef.child("shopping").child(user.getUid()).child("list").child(i.getName()).removeValue();
                     }
                 }
-                if(!any) Toast.makeText(context, "Please select at least 1 item", Toast.LENGTH_SHORT).show();
-                else myRef.child("shopping").child(user.getUid()).child("expenses").child(Calendar.getInstance().getTime().toString()).setValue(amount);
+                if (!any)
+                    Toast.makeText(context, "Please select at least 1 item", Toast.LENGTH_SHORT).show();
+                else {
+                    Calendar calendar = Calendar.getInstance();
+                    String date = calendar.get(Calendar.DAY_OF_MONTH) + "-" + (calendar.get(Calendar.MONTH) + 1) + "-" + calendar.get(Calendar.YEAR);
+                    myRef.child("shopping").child(user.getUid()).child("expenses").child(date).get().addOnCompleteListener(task -> {
+                        if (task.isSuccessful())
+                            myRef.child("shopping").child(user.getUid()).child("expenses").child(date).setValue(Integer.parseInt(amount) + Integer.parseInt(Objects.requireNonNull(task.getResult().getValue(String.class))));
+                        else
+                            myRef.child("shopping").child(user.getUid()).child("expenses").child(date).setValue(amount);
+                    });
+                    Toast.makeText(context, "The shopping list has been bought", Toast.LENGTH_SHORT).show();
+                    binding.editAmount.setText("");
+                }
             }
         });
+        binding.spendingHistory.setOnClickListener(v -> context.startActivity(new Intent(context, SpendingActivity.class)));
         return root;
     }
 

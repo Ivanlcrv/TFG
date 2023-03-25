@@ -13,21 +13,29 @@
         android:theme="@style/Theme.App"
         tools:targetApi="31">
         <activity
+            android:name=".SpendingActivity"
+            android:exported="false"
+            android:label="@string/title_activity_spending"
+            android:parentActivityName=".MainActivityUser" />
+        <activity
             android:name=".FoodActivity"
             android:exported="false"
-            android:parentActivityName=".MainActivityUser"></activity>
+            android:label="Food"
+            android:parentActivityName=".MainActivityUser" />
         <activity
             android:name=".ItemActivity"
             android:exported="false"
-            android:parentActivityName=".MainActivityUser"></activity>
+            android:parentActivityName=".MainActivityUser" />
         <activity
             android:name=".RecipeActivity"
             android:exported="false"
-            android:parentActivityName=".MainActivityUser"></activity>
+            android:label="Recipe"
+            android:parentActivityName=".MainActivityUser" />
         <activity
             android:name=".RecipeViewActivity"
             android:exported="false"
-            android:parentActivityName=".MainActivityUser"></activity>
+            android:label="Recipe"
+            android:parentActivityName=".MainActivityUser" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

@@ -49,7 +49,9 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
         holder.setPosition(position);
     }
 
-    public LinkedList<Item> getList(){return itemList;}
+    public LinkedList<Item> getList() {
+        return itemList;
+    }
 
     @Override
     public int getItemCount() {
@@ -61,8 +63,8 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
         public final TextView itemView;
         public final CardView itemCardView;
         public final CheckBox checkBox;
-        private int position;
         final ItemAdapter mAdapter;
+        private int position;
 
         public ItemViewHolder(@NonNull View _itemView, ItemAdapter itemAdapter) {
             super(_itemView);
@@ -83,13 +85,18 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
             mAdapter = itemAdapter;
             checkBox.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {itemList.get(position).setCheck(checkBox.isChecked());}
+                public void onClick(View v) {
+                    itemList.get(position).setCheck(checkBox.isChecked());
+                }
             });
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
         }
 
-        public void setPosition(int pos){position = pos;}
+        public void setPosition(int pos) {
+            position = pos;
+        }
+
         @Override
         public void onClick(View v) {
             Intent intent = new Intent(context, ItemActivity.class);

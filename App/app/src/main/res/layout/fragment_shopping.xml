@@ -15,7 +15,7 @@
         android:layout_marginEnd="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spending_history"
         app:startIconDrawable="@drawable/ic_search">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -37,10 +37,10 @@
         android:id="@+id/shopping_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:text="@string/description_shopping"
         android:textColor="@color/primary_blue"
-        android:textSize="16sp"
+        android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/search_layout" />
@@ -79,7 +79,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginBottom="75dp"
-        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@+id/recyclerViewShopping"
         app:layout_constraintStart_toStartOf="parent"
         app:startIconDrawable="@drawable/ic_balance">
@@ -106,9 +105,21 @@
         android:layout_marginBottom="80dp"
         android:text="@string/buy"
         android:textColor="@color/white"
-        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/amount_layout"
         tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/spending_history"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:text=" View spending history"
+        android:textColor="@color/dark_green"
+        android:textSize="20sp"
+        app:drawableLeftCompat="@drawable/ic_graph"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
