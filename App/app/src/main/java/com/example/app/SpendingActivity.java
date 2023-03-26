@@ -27,6 +27,7 @@ public class SpendingActivity extends AppCompatActivity {
     private ArrayList<BarEntry> barEntriesArrayList;
     private DatabaseReference myRef;
     private String uid;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,29 +46,27 @@ public class SpendingActivity extends AppCompatActivity {
         barChart.getXAxis().setEnabled(false);
 
     }
+
     private void getBarEntries(String interval) {
         barEntriesArrayList = new ArrayList<>();
         myRef.child("shopping").child(uid).child("expenses").get().addOnCompleteListener(task -> {
             String name = "";
-            if(task.isSuccessful()){
-                if(interval.equals("Daily")){
+            if (task.isSuccessful()) {
+                if (interval.equals("Daily")) {
                     float pos_x = 1;
-                    for(DataSnapshot dataSnapshot : task.getResult().getChildren()){
+                    for (DataSnapshot dataSnapshot : task.getResult().getChildren()) {
                         barEntriesArrayList.add(new BarEntry(pos_x, dataSnapshot.getValue(Float.class)));
                         pos_x++;
                     }
                     name = "Daily expenses";
-                }
-                else if(interval.equals("Monthly")){
+                } else if (interval.equals("Monthly")) {
                     float pos_x = 1;
                     float sum = 0;
                     String month = Objects.requireNonNull(task.getResult().getChildren().iterator().next().getKey()).split("-")[1];
-                    for(DataSnapshot dataSnapshot : task.getResult().getChildren()){
+                    for (DataSnapshot dataSnapshot : task.getResult().getChildren()) {
                         String[] date = Objects.requireNonNull(dataSnapshot.getKey()).split("-");
-                        if(month.equals(date[1])){
-                            sum += dataSnapshot.getValue(Float.class);
-                        }
-                        else{
+                        if (month.equals(date[1])) sum += dataSnapshot.getValue(Float.class);
+                        else {
                             barEntriesArrayList.add(new BarEntry(pos_x, sum));
                             pos_x++;
                             sum = dataSnapshot.getValue(Float.class);
@@ -76,17 +75,14 @@ public class SpendingActivity extends AppCompatActivity {
                     }
                     barEntriesArrayList.add(new BarEntry(pos_x, sum));
                     name = "Monthly expenses";
-                }
-                else{
+                } else {
                     float pos_x = 1;
                     float sum = 0;
                     String month = Objects.requireNonNull(task.getResult().getChildren().iterator().next().getKey()).split("-")[2];
-                    for(DataSnapshot dataSnapshot : task.getResult().getChildren()){
+                    for (DataSnapshot dataSnapshot : task.getResult().getChildren()) {
                         String[] date = Objects.requireNonNull(dataSnapshot.getKey()).split("-");
-                        if(month.equals(date[2])){
-                            sum += dataSnapshot.getValue(Float.class);
-                        }
-                        else{
+                        if (month.equals(date[2])) sum += dataSnapshot.getValue(Float.class);
+                        else {
                             barEntriesArrayList.add(new BarEntry(pos_x, sum));
                             pos_x++;
                             sum = dataSnapshot.getValue(Float.class);
