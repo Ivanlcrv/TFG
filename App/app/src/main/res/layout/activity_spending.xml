@@ -33,8 +33,8 @@
             android:paddingTop="3dp"
             android:paddingRight="16dp"
             android:paddingBottom="3dp"
-            android:text="@string/diary"
-            android:textColor="@color/primary_blue" />
+            android:text="@string/daily"
+            android:textColor="@drawable/radio_flat_text_selector" />
 
         <RadioButton
             android:id="@+id/month"
@@ -48,7 +48,7 @@
             android:paddingRight="16dp"
             android:paddingBottom="3dp"
             android:text="@string/monthly"
-            android:textColor="@color/primary_blue" />
+            android:textColor="@drawable/radio_flat_text_selector" />
 
         <RadioButton
             android:id="@+id/year"
@@ -62,7 +62,7 @@
             android:paddingRight="16dp"
             android:paddingBottom="3dp"
             android:text="@string/yearly"
-            android:textColor="@color/primary_blue" />
+            android:textColor="@drawable/radio_flat_text_selector" />
 
     </RadioGroup>
 
