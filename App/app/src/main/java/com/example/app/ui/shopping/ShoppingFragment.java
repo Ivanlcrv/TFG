@@ -126,7 +126,7 @@ public class ShoppingFragment extends Fragment {
                     String date = calendar.get(Calendar.DAY_OF_MONTH) + "-" + (calendar.get(Calendar.MONTH) + 1) + "-" + calendar.get(Calendar.YEAR);
                     myRef.child("shopping").child(user.getUid()).child("expenses").child(date).get().addOnCompleteListener(task -> {
                         if (task.getResult().getValue() != null)
-                            myRef.child("shopping").child(user.getUid()).child("expenses").child(date).setValue(Integer.parseInt(amount) + Integer.parseInt(Objects.requireNonNull(task.getResult().getValue(String.class))));
+                            myRef.child("shopping").child(user.getUid()).child("expenses").child(date).setValue(Integer.parseInt(amount) + task.getResult().getValue(Float.class));
                         else
                             myRef.child("shopping").child(user.getUid()).child("expenses").child(date).setValue(amount);
                     });
