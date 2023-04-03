@@ -1,4 +1,4 @@
-package com.example.app;
+package com.example.app.ui.shopping;
 
 import android.os.Bundle;
 import android.widget.RadioButton;
@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.app.R;
 import com.example.app.databinding.ActivitySpendingBinding;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarData;

@@ -1,4 +1,4 @@
-package com.example.app;
+package com.example.app.ui.recipe;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -19,8 +19,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.app.R;
 import com.example.app.databinding.ActivityRecipeBinding;
-import com.example.app.ui.recipe.ListviewAdapter;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;

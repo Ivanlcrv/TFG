@@ -1,4 +1,4 @@
-package com.example.app;
+package com.example.app.ui.shopping;
 
 public class Item {
     private String name;

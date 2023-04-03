@@ -16,7 +16,6 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import com.example.app.R;
-import com.example.app.User;
 import com.example.app.databinding.FragmentAccountBinding;
 import com.example.app.ui.login.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;

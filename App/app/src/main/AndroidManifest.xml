@@ -13,26 +13,26 @@
         android:theme="@style/Theme.App"
         tools:targetApi="31">
         <activity
-            android:name=".SpendingActivity"
+            android:name=".ui.shopping.SpendingActivity"
             android:exported="false"
             android:label="@string/title_activity_spending"
             android:parentActivityName=".MainActivityUser" />
         <activity
-            android:name=".FoodActivity"
+            android:name=".ui.pantry.FoodActivity"
             android:exported="false"
             android:label="Food"
             android:parentActivityName=".MainActivityUser" />
         <activity
-            android:name=".ItemActivity"
+            android:name=".ui.shopping.ItemActivity"
             android:exported="false"
             android:parentActivityName=".MainActivityUser" />
         <activity
-            android:name=".RecipeActivity"
+            android:name=".ui.recipe.RecipeActivity"
             android:exported="false"
             android:label="Recipe"
             android:parentActivityName=".MainActivityUser" />
         <activity
-            android:name=".RecipeViewActivity"
+            android:name=".ui.recipe.RecipeViewActivity"
             android:exported="false"
             android:label="Recipe"
             android:parentActivityName=".MainActivityUser" />
@@ -50,7 +50,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".InfoUserAdmin"
+            android:name=".ui.admin.InfoUserAdmin"
             android:exported="false"
             android:label="InfoUserAdmin"
             android:parentActivityName=".MainActivityAdmin">

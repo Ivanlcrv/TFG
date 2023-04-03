@@ -1,4 +1,4 @@
-package com.example.app;
+package com.example.app.ui.recipe;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import com.example.app.R;
 
 import java.util.List;
 

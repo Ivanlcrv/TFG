@@ -10,9 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.app.InfoUserAdmin;
 import com.example.app.R;
-import com.example.app.User;
+import com.example.app.ui.account.User;
 
 import java.util.LinkedList;
 
