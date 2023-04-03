@@ -51,6 +51,16 @@ public class RecipeViewActivity extends AppCompatActivity {
         adapter = new ListviewPublicRecipeAdapter(this, list);
         listView.setAdapter(adapter);
 
+        if(!getIntent().getExtras().getBoolean("Menu")) binding.complete.setVisibility(View.INVISIBLE);
+
+        binding.complete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myRef.child("menu").child(uid).setValue(name);
+                Toast.makeText(getApplicationContext(), "The recipe has been added to your history", Toast.LENGTH_LONG).show();
+                finish();
+            }
+        });
 
         myRef.child("recipes").addValueEventListener(new ValueEventListener() {
 

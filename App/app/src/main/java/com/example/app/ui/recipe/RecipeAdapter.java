@@ -144,7 +144,10 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
             int mPosition = getLayoutPosition();
             Recipe actual_recipe = recipeList.get(mPosition);
             if (permission) intent = new Intent(context, RecipeActivity.class);
-            else intent = new Intent(context, RecipeViewActivity.class);
+            else {
+                intent = new Intent(context, RecipeViewActivity.class);
+                intent.putExtra("Menu", false);
+            }
             intent.putExtra("recipe", actual_recipe.getName());
             context.startActivity(intent);
 

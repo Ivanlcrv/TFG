@@ -115,6 +115,7 @@ public class ShoppingFragment extends Fragment {
                     if (i.getCheck()) {
                         any = true;
                         myRef.child("shopping").child(user.getUid()).child("list").child(i.getName()).removeValue();
+                        myRef.child("pantry").child(user.getUid()).child(i.getName()).setValue(i.getAmount());
                     }
                 }
                 if (!any)
@@ -126,7 +127,7 @@ public class ShoppingFragment extends Fragment {
                         if (task.getResult().getValue() != null)
                             myRef.child("shopping").child(user.getUid()).child("expenses").child(date).setValue(Integer.parseInt(amount) + task.getResult().getValue(Float.class));
                         else
-                            myRef.child("shopping").child(user.getUid()).child("expenses").child(date).setValue(amount);
+                            myRef.child("shopping").child(user.getUid()).child("expenses").child(date).setValue(Integer.parseInt(amount));
                     });
                     Toast.makeText(context, "The shopping list has been bought", Toast.LENGTH_SHORT).show();
                     binding.editAmount.setText("");

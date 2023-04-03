@@ -105,4 +105,6 @@
     <string name="daily">Daily</string>
     <string name="monthly">Monthly</string>
     <string name="yearly">Yearly</string>
+    <string name="Menu">MENU</string>
+    <string name="History">HISTORY</string>
 </resources>
