@@ -1,10 +1,7 @@
 package com.example.app.ui.menu;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,10 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.app.databinding.FragmentMenuBinding;
-import com.example.app.databinding.FragmentRecipeBinding;
-import com.example.app.ui.recipe.AddRecipeActivity;
 import com.example.app.ui.recipe.Recipe;
-import com.example.app.ui.recipe.RecipeAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -30,12 +24,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 
 public class MenuFragment extends Fragment {
@@ -66,11 +57,10 @@ public class MenuFragment extends Fragment {
 
         binding.radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
             RadioButton check = group.findViewById(checkedId);
-            if(check.getText().toString().equals("MENU")){
+            if (check.getText().toString().equals("MENU")) {
                 recyclerViewMenu.setVisibility(View.VISIBLE);
                 recyclerViewHistory.setVisibility(View.INVISIBLE);
-            }
-            else {
+            } else {
                 recyclerViewMenu.setVisibility(View.INVISIBLE);
                 recyclerViewHistory.setVisibility(View.VISIBLE);
             }
@@ -80,7 +70,7 @@ public class MenuFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 pantrySet.clear();
-                for(DataSnapshot data: snapshot.getChildren()){
+                for (DataSnapshot data : snapshot.getChildren()) {
                     pantrySet.add(data.getKey());
                 }
                 myRef.child("recipes").addValueEventListener(new ValueEventListener() {
@@ -94,14 +84,14 @@ public class MenuFragment extends Fragment {
                                         Recipe recipe = new Recipe(r.child("name").getValue(String.class), r.child("description").getValue(String.class),
                                                 (List<Pair<String, String>>) r.child("list").getValue(), r.child("type").getValue(String.class));
                                         List<String> l = new ArrayList<>();
-                                        for(DataSnapshot list: r.child("list").getChildren()){
+                                        for (DataSnapshot list : r.child("list").getChildren()) {
                                             l.add(list.child("first").getValue(String.class));
                                         }
                                         boolean control = true;
-                                        for(String ingredient: l){
-                                            if(!pantrySet.contains(ingredient)) control = false;
+                                        for (String ingredient : l) {
+                                            if (!pantrySet.contains(ingredient)) control = false;
                                         }
-                                        if(control) recipeList.add(recipe);
+                                        if (control) recipeList.add(recipe);
                                     }
                             else {
                                 assert user != null;
@@ -110,14 +100,14 @@ public class MenuFragment extends Fragment {
                                         Recipe recipe = new Recipe(r.child("name").getValue(String.class), r.child("description").getValue(String.class),
                                                 (List<Pair<String, String>>) r.child("list").getValue(), r.child("type").getValue(String.class));
                                         List<String> l = new ArrayList<>();
-                                        for(DataSnapshot list: r.child("list").getChildren()){
+                                        for (DataSnapshot list : r.child("list").getChildren()) {
                                             l.add(list.child("first").getValue(String.class));
                                         }
                                         boolean control = true;
-                                        for(String ingredient: l){
-                                            if(!pantrySet.contains(ingredient)) control = false;
+                                        for (String ingredient : l) {
+                                            if (!pantrySet.contains(ingredient)) control = false;
                                         }
-                                        if(control) recipeList.add(recipe);
+                                        if (control) recipeList.add(recipe);
                                     }
                             }
                         }
@@ -141,11 +131,11 @@ public class MenuFragment extends Fragment {
         myRef.child("menu").child(user.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot _snapshot) {
-                recipeHistory.clear();
-                List<Recipe> recipes = new ArrayList<>();
                 myRef.child("recipes").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        recipeHistory.clear();
+                        List<Recipe> recipes = new ArrayList<>();
                         for (DataSnapshot idSnapshot : snapshot.getChildren()) {
                             if (Objects.equals(idSnapshot.getKey(), "public"))
                                 for (DataSnapshot recipeSnapshot : idSnapshot.getChildren())
@@ -168,9 +158,10 @@ public class MenuFragment extends Fragment {
                         mAdapter = new MenuAdapter(context, recipeHistory);
                         recyclerViewHistory.setAdapter(mAdapter);
                         recyclerViewHistory.setLayoutManager(new LinearLayoutManager(context));
-                        for(DataSnapshot name: _snapshot.getChildren()){
-                            for(Recipe recipe: recipes){
-                                if(recipe.getName().equals(name)) recipeHistory.add(recipe);
+                        for (DataSnapshot name : _snapshot.getChildren()) {
+                            for (Recipe recipe : recipes) {
+                                if (recipe.getName().equals(name.getValue()))
+                                    recipeHistory.add(recipe);
                             }
                         }
                     }

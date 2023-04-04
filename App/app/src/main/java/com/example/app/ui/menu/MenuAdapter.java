@@ -10,20 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.app.R;
 import com.example.app.ui.recipe.Recipe;
-import com.example.app.ui.recipe.RecipeActivity;
 import com.example.app.ui.recipe.RecipeViewActivity;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -73,7 +67,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
         return recipeList.size();
     }
 
-    class MenuViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    class MenuViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public final TextView recipeItemView;
         public final ImageView imageRecipeView;
@@ -93,7 +87,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
             int mPosition = getLayoutPosition();
             Recipe actual_recipe = recipeList.get(mPosition);
             intent = new Intent(context, RecipeViewActivity.class);
-            intent.putExtra("Menu", true );
+            intent.putExtra("Menu", true);
             intent.putExtra("recipe", actual_recipe.getName());
             context.startActivity(intent);
 

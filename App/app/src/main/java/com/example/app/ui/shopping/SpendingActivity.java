@@ -101,8 +101,7 @@ public class SpendingActivity extends AppCompatActivity {
                 barDataSet.setValueTextColor(R.color.primary_blue);
                 barDataSet.setValueTextSize(16f);
                 barChart.getDescription().setEnabled(false);
-            }
-            else Toast.makeText(SpendingActivity.this, "No expenses", Toast.LENGTH_SHORT).show();
+            } else Toast.makeText(SpendingActivity.this, "No expenses", Toast.LENGTH_SHORT).show();
             barDataSet = new BarDataSet(barEntriesArrayList, name);
             barData = new BarData(barDataSet);
             barChart.setData(barData);
