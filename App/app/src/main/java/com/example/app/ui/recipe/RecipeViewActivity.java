@@ -95,17 +95,17 @@ public class RecipeViewActivity extends AppCompatActivity {
                                     }
                                     if (list.size() > 2) {
                                         ViewGroup.LayoutParams params = listView.getLayoutParams();
-                                        params.height = 450;
+                                        params.height = 300;
                                         listView.setLayoutParams(params);
                                         listView.requestLayout();
                                     } else if (list.size() == 2) {
                                         ViewGroup.LayoutParams params = listView.getLayoutParams();
-                                        params.height = 300;
+                                        params.height = 200;
                                         listView.setLayoutParams(params);
                                         listView.requestLayout();
                                     } else {
                                         ViewGroup.LayoutParams params = listView.getLayoutParams();
-                                        params.height = 150;
+                                        params.height = 100;
                                         listView.setLayoutParams(params);
                                         listView.requestLayout();
                                     }
@@ -152,17 +152,17 @@ public class RecipeViewActivity extends AppCompatActivity {
                                     }
                                     if (list.size() > 2) {
                                         ViewGroup.LayoutParams params = listView.getLayoutParams();
-                                        params.height = 450;
+                                        params.height = 300;
                                         listView.setLayoutParams(params);
                                         listView.requestLayout();
                                     } else if (list.size() == 2) {
                                         ViewGroup.LayoutParams params = listView.getLayoutParams();
-                                        params.height = 300;
+                                        params.height = 200;
                                         listView.setLayoutParams(params);
                                         listView.requestLayout();
                                     } else {
                                         ViewGroup.LayoutParams params = listView.getLayoutParams();
-                                        params.height = 150;
+                                        params.height = 100;
                                         listView.setLayoutParams(params);
                                         listView.requestLayout();
                                     }

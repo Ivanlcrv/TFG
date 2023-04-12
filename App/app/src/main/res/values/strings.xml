@@ -68,7 +68,7 @@
     <string name="recipe_text">Create a new recipe</string>
     <string name="prompt_search_recipe">Search a recipe</string>
     <string name="add_recipe">Add recipe</string>
-    <string name="prompt_description">Description</string>
+    <string name="prompt_description">Description:</string>
     <string name="type_private">Private</string>
     <string name="type_public">Public</string>
     <string name="upload_an_image">Upload an image</string>
@@ -108,4 +108,5 @@
     <string name="Menu">MENU</string>
     <string name="History">HISTORY</string>
     <string name="register_failed">Error while creating your account</string>
+    <string name="check_as_done">Check as done!</string>
 </resources>

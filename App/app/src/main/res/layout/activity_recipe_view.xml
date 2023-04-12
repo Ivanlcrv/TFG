@@ -48,130 +48,10 @@
         android:text="@string/information_recipe"
         android:textColor="@color/primary_blue"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/constraint_recipe_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraint_recipe_name"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:outlineProvider="background"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/information_recipe">
-
-        <TextView
-            android:id="@+id/recipe_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="35dp"
-            android:fontFamily="@font/calistoga"
-            android:text="@string/prompt_recipename"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/name_recipe_fill"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="20dp"
-            android:fontFamily="@font/calistoga"
-            android:text=""
-            android:textColor="@color/primary_blue"
-            android:textSize="16sp"
-            app:boxBackgroundColor="#FFF"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraint_description_recipe"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraint_recipe_name">
-
-        <TextView
-            android:id="@+id/recipe_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="35dp"
-            android:layout_marginTop="10dp"
-            android:fontFamily="@font/calistoga"
-            android:text="@string/prompt_description"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/descriptionRecipeFill"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="20dp"
-            android:fontFamily="@font/calistoga"
-            android:text=""
-            android:textColor="@color/primary_blue"
-            android:textSize="16sp"
-            app:boxBackgroundColor="#FFF"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <TextView
-        android:id="@+id/title_pair"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="35dp"
-        android:layout_marginTop="10dp"
-        android:text="@string/list_ingredients"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraint_description_recipe" />
-
-    <ListView
-        android:id="@+id/listviewpublic"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="35dp"
-        android:layout_marginTop="10dp"
-        android:animationCache="false"
-        android:scrollingCache="false"
-        android:smoothScrollbar="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title_pair">
-
-    </ListView>
-
-
-    <RadioButton
-        android:id="@+id/radio_private"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="5dp"
-        android:fontFamily="@font/calistoga"
-        android:text="@string/type_private"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/listviewpublic" />
-
-    <RadioButton
-        android:id="@+id/radio_public"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="5dp"
-        android:fontFamily="@font/calistoga"
-        android:text="@string/type_public"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="@+id/radio_private"
-        app:layout_constraintTop_toBottomOf="@+id/listviewpublic" />
 
     <Button
         android:id="@+id/complete"
@@ -180,10 +60,139 @@
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp"
-        android:text="Check as done!"
+        android:text="@string/check_as_done"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="370dp"
+        app:layout_constraintBottom_toTopOf="@+id/complete"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/information_recipe">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraint_recipe_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:outlineProvider="background">
+
+                <TextView
+                    android:id="@+id/recipe_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="35dp"
+                    android:fontFamily="@font/calistoga"
+                    android:text="@string/prompt_recipename"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/name_recipe_fill"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="20dp"
+                    android:fontFamily="@font/calistoga"
+                    android:text=""
+                    android:textColor="@color/primary_blue"
+                    android:textSize="16sp"
+                    app:boxBackgroundColor="#FFF"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <LinearLayout
+                android:id="@+id/constraint_description_recipe"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/recipe_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="35dp"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/calistoga"
+                    android:text="@string/prompt_description"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/descriptionRecipeFill"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="20dp"
+                    android:fontFamily="@font/calistoga"
+                    android:text=""
+                    android:textColor="@color/primary_blue"
+                    android:textSize="16sp"
+                    app:boxBackgroundColor="#FFF"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/title_pair"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="35dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/list_ingredients"
+                android:textSize="16sp" />
+
+            <ListView
+                android:id="@+id/listviewpublic"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="35dp"
+                android:layout_marginTop="10dp"
+                android:animationCache="false"
+                android:scrollingCache="false"
+                android:smoothScrollbar="true">
+
+            </ListView>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <RadioButton
+                    android:id="@+id/radio_private"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:fontFamily="@font/calistoga"
+                    android:text="@string/type_private"
+                    android:visibility="invisible"
+                    android:layout_alignParentRight="true"/>
+
+                <RadioButton
+                    android:id="@+id/radio_public"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:fontFamily="@font/calistoga"
+                    android:text="@string/type_public"
+                    android:visibility="invisible"
+                    android:layout_alignParentRight="true"/>
+            </RelativeLayout>
+
+        </LinearLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
