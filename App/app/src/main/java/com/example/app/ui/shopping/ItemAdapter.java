@@ -81,12 +81,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
                     .setNegativeButton(android.R.string.no, null).show());
 
             mAdapter = itemAdapter;
-            checkBox.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    itemList.get(position).setCheck(checkBox.isChecked());
-                }
-            });
+            checkBox.setOnClickListener(v -> itemList.get(position).setCheck(checkBox.isChecked()));
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
         }

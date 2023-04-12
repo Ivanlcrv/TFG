@@ -54,13 +54,10 @@ public class RecipeViewActivity extends AppCompatActivity {
         if (!getIntent().getExtras().getBoolean("Menu"))
             binding.complete.setVisibility(View.INVISIBLE);
 
-        binding.complete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                myRef.child("menu").child(uid).child(name).setValue(name);
-                Toast.makeText(getApplicationContext(), "The recipe has been added to your history", Toast.LENGTH_LONG).show();
-                finish();
-            }
+        binding.complete.setOnClickListener(v -> {
+            myRef.child("menu").child(uid).child(name).setValue(name);
+            Toast.makeText(getApplicationContext(), "The recipe has been added to your history", Toast.LENGTH_LONG).show();
+            finish();
         });
 
         myRef.child("recipes").addValueEventListener(new ValueEventListener() {

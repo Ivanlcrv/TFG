@@ -1,5 +1,6 @@
 package com.example.app.ui.account;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -26,9 +27,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Objects;
+
 
 public class AccountFragment extends Fragment {
 
+    @SuppressLint("StaticFieldLeak")
     private static AccountFragment instance = null;
     private FragmentAccountBinding binding;
     private TextView date;
@@ -49,6 +53,7 @@ public class AccountFragment extends Fragment {
         myRef = FirebaseDatabase.getInstance().getReference();
         FirebaseUser actual_user = mAuth.getCurrentUser();
 
+        assert actual_user != null;
         myRef.child("users").child(actual_user.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -87,20 +92,19 @@ public class AccountFragment extends Fragment {
                 .setMessage("Do you really want to update your account")
                 .setIcon(R.drawable.ic_warning)
                 .setPositiveButton(android.R.string.yes, (dialog, whichButton) -> {
-                    String username = binding.editUsernameAccount.getText().toString();
-                    String email = binding.editEmailAccount.getText().toString();
+                    String username = Objects.requireNonNull(binding.editUsernameAccount.getText()).toString();
+                    String email = Objects.requireNonNull(binding.editEmailAccount.getText()).toString();
                     String edit_date = date.getText().toString();
-                    if (!username.equals(""))
-                        myRef.child("users").child(actual_user.getUid()).child("username").setValue(username);
+                    if (!username.equals("")) myRef.child("users").child(actual_user.getUid()).child("username").setValue(username);
                     if (!email.equals("")) {
                         myRef.child("users").child(actual_user.getUid()).child("email").setValue(email);
                         actual_user.updateEmail(email);
                     }
-                    if (!checked.equals(""))
-                        myRef.child("users").child(actual_user.getUid()).child("genre").setValue(checked);
-                    if (!edit_date.equals("")) {
-                        myRef.child("users").child(actual_user.getUid()).child("date").setValue(edit_date);
-                    }
+                    if (!checked.equals("")) myRef.child("users").child(actual_user.getUid()).child("genre").setValue(checked);
+                    if (!edit_date.equals("")) myRef.child("users").child(actual_user.getUid()).child("date").setValue(edit_date);
+                    binding.editUsernameAccount.setText("");
+                    binding.editEmailAccount.setText("");
+                    Toast.makeText(getContext(), "Your account information has beed updated", Toast.LENGTH_SHORT).show();
                 })
                 .setNegativeButton(android.R.string.no, null).show());
         binding.deleteAccount.setOnClickListener(v -> new AlertDialog.Builder(requireContext())
@@ -126,18 +130,20 @@ public class AccountFragment extends Fragment {
         date = binding.editDateAccount;
         date.setOnClickListener(v -> {
             DialogFragment newFragment = new DatePickerAccountFragment();
+            assert getFragmentManager() != null;
             newFragment.show(getFragmentManager(), getString(R.string.datepicker));
         });
         instance = this;
         return root;
     }
 
+    @SuppressLint("SetTextI18n")
     public void processDatePickerResult(int year, int month, int day) {
         String day_string;
         String month_string;
-        if (day < 9) day_string = "0" + Integer.toString(day);
+        if (day < 9) day_string = "0" + day;
         else day_string = Integer.toString(day);
-        if (month < 9) month_string = "0" + Integer.toString(month + 1);
+        if (month < 9) month_string = "0" + (month + 1);
         else month_string = Integer.toString(month + 1);
         String year_string = Integer.toString(year);
         date.setText(day_string + "/" + month_string + "/" + year_string);

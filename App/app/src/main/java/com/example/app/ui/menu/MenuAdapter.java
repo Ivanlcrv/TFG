@@ -31,15 +31,11 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
     private final LinkedList<Recipe> recipeList;
     private final LayoutInflater mInflater;
     private final Context context;
-    private final DatabaseReference myRef;
-    private final String user;
 
     public MenuAdapter(Context recipeFragment, LinkedList<Recipe> recipeList) {
         mInflater = LayoutInflater.from(recipeFragment);
         this.recipeList = recipeList;
         context = recipeFragment;
-        myRef = FirebaseDatabase.getInstance().getReference();
-        user = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
     }
 
     @NonNull

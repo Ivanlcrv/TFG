@@ -1,17 +1,12 @@
 package com.example.app.ui.login;
 
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.app.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -35,30 +30,25 @@ public class LoginViewModel {
     public void login(String email, String password) {
         mAuth = FirebaseAuth.getInstance();
         mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            myRef = FirebaseDatabase.getInstance().getReference();
-                            myRef.child("users").child(user.getUid()).child("username").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<DataSnapshot> task) {
-                                    if (!task.isSuccessful())
-                                        loginResult.setValue(new LoginResult(R.string.login_failed));
-                                    else {
-                                        if (task.getResult().getValue() != null)
-                                            loginResult.setValue(new LoginResult(String.valueOf(task.getResult().getValue())));
-                                        else {
-                                            user.delete();
-                                            loginResult.setValue(new LoginResult(R.string.account_delete));
-                                        }
-                                    }
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        myRef = FirebaseDatabase.getInstance().getReference();
+                        assert user != null;
+                        myRef.child("users").child(user.getUid()).child("username").get().addOnCompleteListener(task1 -> {
+                            if (!task1.isSuccessful())
+                                loginResult.setValue(new LoginResult(R.string.login_failed));
+                            else {
+                                if (task1.getResult().getValue() != null)
+                                    loginResult.setValue(new LoginResult(String.valueOf(task1.getResult().getValue())));
+                                else {
+                                    user.delete();
+                                    loginResult.setValue(new LoginResult(R.string.account_delete));
                                 }
-                            });
-                        } else {
-                            loginResult.setValue(new LoginResult(R.string.login_failed));
-                        }
+                            }
+                        });
+                    } else {
+                        loginResult.setValue(new LoginResult(R.string.login_failed));
                     }
                 });
     }

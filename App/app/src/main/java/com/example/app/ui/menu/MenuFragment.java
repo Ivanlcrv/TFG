@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 public class MenuFragment extends Fragment {
@@ -37,14 +38,13 @@ public class MenuFragment extends Fragment {
     private RecyclerView recyclerViewMenu;
     private RecyclerView recyclerViewHistory;
     private MenuAdapter mAdapter;
-    private FragmentMenuBinding binding;
     private final HashSet<String> pantrySet = new HashSet<>();
     private final LinkedList<Recipe> recipeHistory = new LinkedList<>();
 
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        binding = FragmentMenuBinding.inflate(inflater, container, false);
+        com.example.app.databinding.FragmentMenuBinding binding = FragmentMenuBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         context = getContext();
 
@@ -66,12 +66,13 @@ public class MenuFragment extends Fragment {
             }
         });
 
+        assert user != null;
         myRef.child("pantry").child(user.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 pantrySet.clear();
                 for (DataSnapshot data : snapshot.getChildren()) {
-                    pantrySet.add(data.getKey());
+                    pantrySet.add(Objects.requireNonNull(data.getKey()).toLowerCase(Locale.ROOT));
                 }
                 myRef.child("recipes").addValueEventListener(new ValueEventListener() {
                     @Override
@@ -89,12 +90,14 @@ public class MenuFragment extends Fragment {
                                         }
                                         boolean control = true;
                                         for (String ingredient : l) {
-                                            if (!pantrySet.contains(ingredient)) control = false;
+                                            if (!pantrySet.contains(ingredient.toLowerCase(Locale.ROOT))) {
+                                                control = false;
+                                                break;
+                                            }
                                         }
                                         if (control) recipeList.add(recipe);
                                     }
                             else {
-                                assert user != null;
                                 if (Objects.equals(idSnapshot.getKey(), user.getUid()))
                                     for (DataSnapshot r : idSnapshot.getChildren()) {
                                         Recipe recipe = new Recipe(r.child("name").getValue(String.class), r.child("description").getValue(String.class),
@@ -105,7 +108,10 @@ public class MenuFragment extends Fragment {
                                         }
                                         boolean control = true;
                                         for (String ingredient : l) {
-                                            if (!pantrySet.contains(ingredient)) control = false;
+                                            if (!pantrySet.contains(ingredient.toLowerCase(Locale.ROOT))) {
+                                                control = false;
+                                                break;
+                                            }
                                         }
                                         if (control) recipeList.add(recipe);
                                     }
@@ -145,7 +151,6 @@ public class MenuFragment extends Fragment {
                                         recipes.add(recipe);
                                     }
                             else {
-                                assert user != null;
                                 if (Objects.equals(idSnapshot.getKey(), user.getUid()))
                                     for (DataSnapshot r : idSnapshot.getChildren()) {
                                         Recipe recipe = new Recipe(r.child("name").getValue(String.class), r.child("description").getValue(String.class),

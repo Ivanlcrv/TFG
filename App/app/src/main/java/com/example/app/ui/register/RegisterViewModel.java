@@ -45,11 +45,9 @@ public class RegisterViewModel {
                             userF = mAuth.getCurrentUser();
                             User user = new User(username, email, checked, date);
                             myRef.child("users").child(userF.getUid()).setValue(user);
-                            myRef.child("pantry").child(userF.getUid()).setValue("");
-                            myRef.child("recipes").child(userF.getUid()).setValue("");
                             registerResult.setValue(new RegisterResult(username));
                         } else {
-                            registerResult.setValue(new RegisterResult(R.string.login_failed));
+                            registerResult.setValue(new RegisterResult(R.string.register_failed));
                         }
                     }
                 });
@@ -67,32 +65,27 @@ public class RegisterViewModel {
             registerFormState.setValue(new RegisterFormState(errUser, errMail, errPassword, errGenre, true));
     }
 
-    // A placeholder email validation check
     private Integer isEmailValid(String email) {
         Pattern pattern = Pattern.compile("[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}");
         if (pattern.matcher(email).matches()) return null;
         else return R.string.invalid_email;
     }
 
-    // A placeholder username validation check
     private Integer isUserNameValid(String user) {
         if (user.isEmpty()) return R.string.invalid_user;
         return null;
     }
 
-    // A placeholder password validation check
     private Integer isPasswordValid(String password) {
         if (password != null && password.trim().length() > 5) return null;
         else return R.string.invalid_password;
     }
 
-    // A placeholder genre validation check
     private Integer isCheckValid(String checked) {
         if (checked == null) return R.string.invalid_genre;
         return null;
     }
 
-    // A placeholder genre validation check
     private Integer isDateValid(String date) {
         Pattern pattern = Pattern.compile("([0-9]{2})/([0-9]{2})/([0-9]{4})");
         if (!pattern.matcher(date).matches()) return R.string.invalid_date;

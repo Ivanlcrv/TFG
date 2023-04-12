@@ -25,7 +25,7 @@ public class ListviewPublicRecipeAdapter extends BaseAdapter {
         this.list = list;
     }
 
-    @SuppressLint("ViewHolder")
+    @SuppressLint({"ViewHolder", "InflateParams"})
     @Override
     public View getView(int position, View convertView, ViewGroup arg2) {
 

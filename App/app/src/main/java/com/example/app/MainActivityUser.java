@@ -12,12 +12,10 @@ import com.example.app.databinding.ActivityMainUserBinding;
 
 public class MainActivityUser extends AppCompatActivity {
 
-    private ActivityMainUserBinding binding;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityMainUserBinding.inflate(getLayoutInflater());
+        ActivityMainUserBinding binding = ActivityMainUserBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(

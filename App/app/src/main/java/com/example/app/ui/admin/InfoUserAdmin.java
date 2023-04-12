@@ -40,6 +40,7 @@ public class InfoUserAdmin extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot userSnapshot : snapshot.getChildren()) {
                     User user = userSnapshot.getValue(User.class);
+                    assert user != null;
                     if (user.getEmail().equals(email)) {
                         uid = userSnapshot.getKey();
                         binding.usernameAccountAdmin.setText(user.getUsername());
@@ -70,6 +71,5 @@ public class InfoUserAdmin extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //MainActivityAdmin.fa.getFragmentManager().beginTransaction().detach((Fragment) AdminFragment.f).attach(AdminFragment.f).commit();
     }
 }

@@ -1,5 +1,6 @@
 package com.example.app.ui.recipe;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -19,15 +20,10 @@ import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.app.R;
 import com.example.app.databinding.ActivityAddRecipeBinding;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -79,7 +75,7 @@ public class AddRecipeActivity extends AppCompatActivity {
         final RadioGroup radioGroup = binding.radioType;
         final Button uploadButton = binding.upload;
 
-        ActivityResultLauncher<Intent> launchSomeActivity = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        @SuppressLint("SetTextI18n") ActivityResultLauncher<Intent> launchSomeActivity = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if (result.getResultCode() == Activity.RESULT_OK) {
                 Intent data = result.getData();
                 if (data != null && data.getData() != null) {
@@ -188,67 +184,45 @@ public class AddRecipeActivity extends AppCompatActivity {
             byte[] data = baos.toByteArray();
 
             if (checked.equals("Public")) {
-                myRef.child("recipes").child("public").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DataSnapshot> task) {
-                        List<Recipe> recipesList = new ArrayList<>();
-                        for (DataSnapshot userSnapshot : task.getResult().getChildren()) {
-                            for (DataSnapshot recipeSnapshot : userSnapshot.getChildren()) {
-                                Recipe recipe = new Recipe(recipeSnapshot.child("name").getValue(String.class), recipeSnapshot.child("description").getValue(String.class),
-                                        (List<Pair<String, String>>) recipeSnapshot.child("list").getValue(), recipeSnapshot.child("type").getValue(String.class));
-                                recipesList.add(recipe);
-                            }
+                myRef.child("recipes").child("public").get().addOnCompleteListener(task -> {
+                    List<Recipe> recipesList = new ArrayList<>();
+                    for (DataSnapshot userSnapshot : task.getResult().getChildren()) {
+                        for (DataSnapshot recipeSnapshot : userSnapshot.getChildren()) {
+                            Recipe recipe1 = new Recipe(recipeSnapshot.child("name").getValue(String.class), recipeSnapshot.child("description").getValue(String.class),
+                                    (List<Pair<String, String>>) recipeSnapshot.child("list").getValue(), recipeSnapshot.child("type").getValue(String.class));
+                            recipesList.add(recipe1);
                         }
-                        if (!recipesList.contains(recipe.getName())) {
-                            UploadTask uploadTask = recipeRef.putBytes(data);
-                            uploadTask.addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception exception) {
-                                    Toast.makeText(getApplicationContext(), "An error has occurred while uploading the recipe ", Toast.LENGTH_SHORT).show();
-                                }
-                            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                @Override
-                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                    assert user != null;
-                                    myRef.child("recipes").child("public").child(user.getUid()).child(recipe.getName()).setValue(recipe);
-                                    Toast.makeText(getApplicationContext(), "The recipe: " + recipe.getName() + " has been added successfully", Toast.LENGTH_SHORT).show();
-                                    finish();
-                                }
-                            });
-
-                        } else
-                            Toast.makeText(getApplicationContext(), "The recipe: " + recipe.getName() + " already exists", Toast.LENGTH_SHORT).show();
                     }
+                    if (!recipesList.contains(recipe.getName())) {
+                        UploadTask uploadTask = recipeRef.putBytes(data);
+                        uploadTask.addOnFailureListener(exception -> Toast.makeText(getApplicationContext(), "An error has occurred while uploading the recipe ", Toast.LENGTH_SHORT).show()).addOnSuccessListener(taskSnapshot -> {
+                            assert user != null;
+                            myRef.child("recipes").child("public").child(user.getUid()).child(recipe.getName()).setValue(recipe);
+                            Toast.makeText(getApplicationContext(), "The recipe: " + recipe.getName() + " has been added successfully", Toast.LENGTH_SHORT).show();
+                            finish();
+                        });
+
+                    } else
+                        Toast.makeText(getApplicationContext(), "The recipe: " + recipe.getName() + " already exists", Toast.LENGTH_SHORT).show();
                 });
             } else {
                 assert user != null;
-                myRef.child("recipes").child(user.getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DataSnapshot> task) {
-                        List<Recipe> recipesList = new ArrayList<>();
-                        for (DataSnapshot recipeSnapshot : task.getResult().getChildren()) {
-                            Recipe recipe = new Recipe(recipeSnapshot.child("name").getValue(String.class), recipeSnapshot.child("description").getValue(String.class),
-                                    (List<Pair<String, String>>) recipeSnapshot.child("list").getValue(), recipeSnapshot.child("type").getValue(String.class));
-                            recipesList.add(recipe);
-                        }
-                        if (!recipesList.contains(recipe.getName())) {
-                            UploadTask uploadTask = recipeRef.putBytes(data);
-                            uploadTask.addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception exception) {
-                                    Toast.makeText(getApplicationContext(), "An error has occurred while uploading the recipe ", Toast.LENGTH_SHORT).show();
-                                }
-                            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                @Override
-                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                    myRef.child("recipes").child(user.getUid()).child(recipe.getName()).setValue(recipe);
-                                    Toast.makeText(getApplicationContext(), "The recipe: " + recipe.getName() + " has been added successfully", Toast.LENGTH_SHORT).show();
-                                    finish();
-                                }
-                            });
-                        } else
-                            Toast.makeText(getApplicationContext(), "The recipe: " + recipe.getName() + " already exists", Toast.LENGTH_SHORT).show();
+                myRef.child("recipes").child(user.getUid()).get().addOnCompleteListener(task -> {
+                    List<Recipe> recipesList = new ArrayList<>();
+                    for (DataSnapshot recipeSnapshot : task.getResult().getChildren()) {
+                        Recipe recipe12 = new Recipe(recipeSnapshot.child("name").getValue(String.class), recipeSnapshot.child("description").getValue(String.class),
+                                (List<Pair<String, String>>) recipeSnapshot.child("list").getValue(), recipeSnapshot.child("type").getValue(String.class));
+                        recipesList.add(recipe12);
                     }
+                    if (!recipesList.contains(recipe.getName())) {
+                        UploadTask uploadTask = recipeRef.putBytes(data);
+                        uploadTask.addOnFailureListener(exception -> Toast.makeText(getApplicationContext(), "An error has occurred while uploading the recipe ", Toast.LENGTH_SHORT).show()).addOnSuccessListener(taskSnapshot -> {
+                            myRef.child("recipes").child(user.getUid()).child(recipe.getName()).setValue(recipe);
+                            Toast.makeText(getApplicationContext(), "The recipe: " + recipe.getName() + " has been added successfully", Toast.LENGTH_SHORT).show();
+                            finish();
+                        });
+                    } else
+                        Toast.makeText(getApplicationContext(), "The recipe: " + recipe.getName() + " already exists", Toast.LENGTH_SHORT).show();
                 });
             }
         });

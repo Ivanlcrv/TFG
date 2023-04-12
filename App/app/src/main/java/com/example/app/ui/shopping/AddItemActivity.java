@@ -3,7 +3,6 @@ package com.example.app.ui.shopping;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -42,25 +41,21 @@ public class AddItemActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (nameEditText.getText() != null && amountEditText.getText() != null &&
-                        !nameEditText.getText().toString().equals("") && !amountEditText.getText().toString().equals("")) {
-                    addButton.setEnabled(true);
-                } else addButton.setEnabled(false);
+                addButton.setEnabled(nameEditText.getText() != null && amountEditText.getText() != null &&
+                        !nameEditText.getText().toString().equals("") && !amountEditText.getText().toString().equals(""));
             }
         };
         nameEditText.addTextChangedListener(afterTextChangedListener);
         amountEditText.addTextChangedListener(afterTextChangedListener);
 
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
-                FirebaseUser user = mAuth.getCurrentUser();
-                Item item = new Item(nameEditText.getText().toString(), amountEditText.getText().toString());
-                myRef.child("shopping").child(user.getUid()).child("list").child(item.getName()).setValue(item.getAmount());
-                Toast.makeText(getApplicationContext(), "Se ha añadido " + item.getAmount() + " de " + item.getName(), Toast.LENGTH_SHORT).show();
-                finish();
-            }
+        addButton.setOnClickListener(v -> {
+            DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
+            FirebaseUser user = mAuth.getCurrentUser();
+            Item item = new Item(nameEditText.getText().toString(), amountEditText.getText().toString());
+            assert user != null;
+            myRef.child("shopping").child(user.getUid()).child("list").child(item.getName()).setValue(item.getAmount());
+            Toast.makeText(getApplicationContext(), "Se ha añadido " + item.getAmount() + " de " + item.getName(), Toast.LENGTH_SHORT).show();
+            finish();
         });
     }
 

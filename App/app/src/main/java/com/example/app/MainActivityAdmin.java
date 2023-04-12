@@ -11,12 +11,11 @@ import androidx.navigation.ui.NavigationUI;
 import com.example.app.databinding.ActivityMainAdminBinding;
 
 public class MainActivityAdmin extends AppCompatActivity {
-    private ActivityMainAdminBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityMainAdminBinding.inflate(getLayoutInflater());
+        ActivityMainAdminBinding binding = ActivityMainAdminBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(R.id.navigation_admin, R.id.navigation_account_admin).build();

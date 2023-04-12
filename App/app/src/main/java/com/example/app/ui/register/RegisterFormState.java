@@ -15,7 +15,7 @@ class RegisterFormState {
         this.passwordError = passwordError;
         this.emailError = emailError;
         this.genreError = genreError;
-        this.isDataValid = isDataValid;
+        this.isDataValid = Boolean.TRUE.equals(isDataValid);
     }
 
     @Nullable

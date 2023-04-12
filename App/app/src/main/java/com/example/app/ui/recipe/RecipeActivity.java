@@ -21,8 +21,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.app.R;
 import com.example.app.databinding.ActivityRecipeBinding;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -45,7 +43,6 @@ import java.util.Objects;
 public class RecipeActivity extends AppCompatActivity {
 
     private ActivityRecipeBinding binding;
-    private DatabaseReference myRef;
     private List<Pair<String, String>> list;
     private ListView listView;
     private ListviewAdapter adapter;
@@ -56,11 +53,11 @@ public class RecipeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        myRef = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference myRef1 = FirebaseDatabase.getInstance().getReference();
         binding = ActivityRecipeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         String name = getIntent().getStringExtra("recipe");
-        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String uid = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
 
         list = new ArrayList<>();
         listView = findViewById(R.id.listview);
@@ -69,7 +66,7 @@ public class RecipeActivity extends AppCompatActivity {
         adapter = new ListviewAdapter(this, list);
         listView.setAdapter(adapter);
 
-        myRef.child("recipes").addValueEventListener(new ValueEventListener() {
+        myRef1.child("recipes").addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -81,14 +78,14 @@ public class RecipeActivity extends AppCompatActivity {
                                     if (Objects.equals(r.child("name").getValue(String.class), name)) {
                                         binding.nameRecipeFill.setHint(r.child("name").getValue(String.class));
                                         binding.descriptionRecipeFill.setHint(r.child("description").getValue(String.class));
-                                        if (r.child("type").getValue(String.class).equals("public")) {
+                                        if (Objects.equals(r.child("type").getValue(String.class), "public")) {
                                             binding.radioPublic.setChecked(true);
                                             checked = type = "public";
                                         } else {
                                             binding.radioPrivate.setChecked(true);
                                             checked = type = "private";
                                         }
-                                        for (HashMap<String, String> m : (ArrayList<HashMap<String, String>>) r.child("list").getValue()) {
+                                        for (HashMap<String, String> m : (ArrayList<HashMap<String, String>>) Objects.requireNonNull(r.child("list").getValue())) {
                                             String n, a;
                                             n = a = "";
                                             boolean x = false;
@@ -102,12 +99,7 @@ public class RecipeActivity extends AppCompatActivity {
                                             list.add(new Pair<>(n, a));
 
                                         }
-                                        if (list.size() > 2) {
-                                            ViewGroup.LayoutParams params = listView.getLayoutParams();
-                                            params.height = 450;
-                                            listView.setLayoutParams(params);
-                                            listView.requestLayout();
-                                        } else if (list.size() == 2) {
+                                        if (list.size() >= 2) {
                                             ViewGroup.LayoutParams params = listView.getLayoutParams();
                                             params.height = 300;
                                             listView.setLayoutParams(params);
@@ -139,7 +131,7 @@ public class RecipeActivity extends AppCompatActivity {
                                             (List<Pair<String, String>>) r.child("list").getValue(), r.child("type").getValue(String.class));
                                     binding.nameRecipeFill.setHint(recipe.getName());
                                     binding.descriptionRecipeFill.setHint(recipe.getDescription());
-                                    if (r.child("type").getValue(String.class).equals("public")) {
+                                    if (Objects.equals(r.child("type").getValue(String.class), "public")) {
                                         binding.radioPublic.setChecked(true);
                                         checked = type = "public";
                                     } else {
@@ -160,12 +152,7 @@ public class RecipeActivity extends AppCompatActivity {
                                         list.add(new Pair<>(n, a));
 
                                     }
-                                    if (list.size() > 2) {
-                                        ViewGroup.LayoutParams params = listView.getLayoutParams();
-                                        params.height = 450;
-                                        listView.setLayoutParams(params);
-                                        listView.requestLayout();
-                                    } else if (list.size() == 2) {
+                                    if (list.size() >= 2) {
                                         ViewGroup.LayoutParams params = listView.getLayoutParams();
                                         params.height = 300;
                                         listView.setLayoutParams(params);
@@ -272,8 +259,8 @@ public class RecipeActivity extends AppCompatActivity {
                 .setMessage("Do you really want to update information about this recipe")
                 .setIcon(R.drawable.ic_warning)
                 .setPositiveButton(android.R.string.yes, (dialog, whichButton) -> {
-                    Recipe recipe = new Recipe(binding.nameRecipeFill.getText().toString().equals("") ? binding.nameRecipeFill.getHint().toString() : binding.nameRecipeFill.getText().toString(),
-                            binding.descriptionRecipeFill.getText().toString().equals("") ? binding.descriptionRecipeFill.getHint().toString() : binding.descriptionRecipeFill.getText().toString()
+                    Recipe recipe = new Recipe(Objects.requireNonNull(binding.nameRecipeFill.getText()).toString().equals("") ? Objects.requireNonNull(binding.nameRecipeFill.getHint()).toString() : binding.nameRecipeFill.getText().toString(),
+                            Objects.requireNonNull(binding.descriptionRecipeFill.getText()).toString().equals("") ? Objects.requireNonNull(binding.descriptionRecipeFill.getHint()).toString() : binding.descriptionRecipeFill.getText().toString()
                             , adapter.getList(), checked.toLowerCase(Locale.ROOT));
 
                     DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
@@ -285,52 +272,35 @@ public class RecipeActivity extends AppCompatActivity {
                     byte[] data = baos.toByteArray();
 
 
+                    UploadTask uploadTask = recipeRef.putBytes(data);
                     if (type.equals("public")) {
-                        UploadTask uploadTask = recipeRef.putBytes(data);
-                        uploadTask.addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception exception) {
-                                Toast.makeText(getApplicationContext(), "An error has occurred while updating the recipe ", Toast.LENGTH_SHORT).show();
-                            }
-                        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                if (checked.equals("public") && recipe.getName().equals(name)) {
-                                    myRef.child("recipes").child("public").child(uid).child(recipe.getName()).setValue(recipe);
-                                } else if (checked.equals("public")) {
-                                    myRef.child("recipes").child("public").child(uid).child(name).removeValue();
-                                    myRef.child("recipes").child("public").child(uid).child(recipe.getName()).setValue(recipe);
+                        uploadTask.addOnFailureListener(exception -> Toast.makeText(getApplicationContext(), "An error has occurred while updating the recipe ", Toast.LENGTH_SHORT).show()).addOnSuccessListener(taskSnapshot -> {
+                            if (checked.equals("public") && recipe.getName().equals(name)) {
+                                myRef.child("recipes").child("public").child(uid).child(recipe.getName()).setValue(recipe);
+                            } else if (checked.equals("public")) {
+                                myRef.child("recipes").child("public").child(uid).child(name).removeValue();
+                                myRef.child("recipes").child("public").child(uid).child(recipe.getName()).setValue(recipe);
+                                storageRef.child(name).delete();
+                            } else {
+                                myRef.child("recipes").child("public").child(uid).child(name).removeValue();
+                                myRef.child("recipes").child(uid).child(recipe.getName()).setValue(recipe);
+                                if (!recipe.getName().equals(name))
                                     storageRef.child(name).delete();
-                                } else {
-                                    myRef.child("recipes").child("public").child(uid).child(name).removeValue();
-                                    myRef.child("recipes").child(uid).child(recipe.getName()).setValue(recipe);
-                                    if (!recipe.getName().equals(name))
-                                        storageRef.child(name).delete();
-                                }
                             }
                         });
                     } else {
-                        UploadTask uploadTask = recipeRef.putBytes(data);
-                        uploadTask.addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception exception) {
-                                Toast.makeText(getApplicationContext(), "An error has occurred while updating the recipe ", Toast.LENGTH_SHORT).show();
-                            }
-                        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                if (checked.equals("private") && recipe.getName().equals(name)) {
-                                    myRef.child("recipes").child(uid).child(recipe.getName()).setValue(recipe);
-                                } else if (checked.equals("private")) {
-                                    myRef.child("recipes").child(uid).child(name).removeValue();
-                                    myRef.child("recipes").child(uid).child(recipe.getName()).setValue(recipe);
+                        uploadTask.addOnFailureListener(exception -> Toast.makeText(getApplicationContext(), "An error has occurred while updating the recipe ", Toast.LENGTH_SHORT).show()).addOnSuccessListener(taskSnapshot -> {
+                            if (checked.equals("private") && recipe.getName().equals(name)) {
+                                myRef.child("recipes").child(uid).child(recipe.getName()).setValue(recipe);
+                            } else if (checked.equals("private")) {
+                                myRef.child("recipes").child(uid).child(name).removeValue();
+                                myRef.child("recipes").child(uid).child(recipe.getName()).setValue(recipe);
+                                storageRef.child(name).delete();
+                            } else {
+                                myRef.child("recipes").child(uid).child(name).removeValue();
+                                myRef.child("recipes").child("public").child(uid).child(recipe.getName()).setValue(recipe);
+                                if (!recipe.getName().equals(name))
                                     storageRef.child(name).delete();
-                                } else {
-                                    myRef.child("recipes").child(uid).child(name).removeValue();
-                                    myRef.child("recipes").child("public").child(uid).child(recipe.getName()).setValue(recipe);
-                                    if (!recipe.getName().equals(name))
-                                        storageRef.child(name).delete();
-                                }
                             }
                         });
                     }

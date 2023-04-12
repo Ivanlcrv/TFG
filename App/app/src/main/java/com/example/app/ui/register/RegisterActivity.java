@@ -1,5 +1,6 @@
 package com.example.app.ui.register;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -114,12 +115,13 @@ public class RegisterActivity extends AppCompatActivity {
         newFragment.show(getSupportFragmentManager(), getString(R.string.datepicker));
     }
 
+    @SuppressLint("SetTextI18n")
     public void processDatePickerResult(int year, int month, int day) {
         String day_string;
         String month_string;
-        if (day < 9) day_string = "0" + Integer.toString(day);
+        if (day < 9) day_string = "0" + day;
         else day_string = Integer.toString(day);
-        if (month < 9) month_string = "0" + Integer.toString(month + 1);
+        if (month < 9) month_string = "0" + (month + 1);
         else month_string = Integer.toString(month + 1);
         String year_string = Integer.toString(year);
         date.setText(day_string + "/" + month_string + "/" + year_string);

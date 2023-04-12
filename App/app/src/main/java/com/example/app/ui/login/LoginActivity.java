@@ -50,30 +50,25 @@ public class LoginActivity extends AppCompatActivity {
         final EditText passwordEditText = binding.editPassword;
         final Button loginButton = binding.login;
 
-        loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
-            @Override
-            public void onChanged(@Nullable LoginFormState loginFormState) {
-                if (loginFormState == null) return;
-                loginButton.setEnabled(loginFormState.isDataValid());
-                if (loginFormState.getUsernameError() != null)
-                    binding.emailLayout.setError(getString(loginFormState.getUsernameError()));
-                else binding.emailLayout.setError(null);
-                if (loginFormState.getPasswordError() != null)
-                    binding.passwordLayout.setError(getString(loginFormState.getPasswordError()));
-                else binding.passwordLayout.setError(null);
-            }
+        loginViewModel.getLoginFormState().observe(this, loginFormState -> {
+            if (loginFormState == null) return;
+            loginButton.setEnabled(loginFormState.isDataValid());
+            if (loginFormState.getUsernameError() != null)
+                binding.emailLayout.setError(getString(loginFormState.getUsernameError()));
+            else binding.emailLayout.setError(null);
+            if (loginFormState.getPasswordError() != null)
+                binding.passwordLayout.setError(getString(loginFormState.getPasswordError()));
+            else binding.passwordLayout.setError(null);
         });
 
-        loginViewModel.getLoginResult().observe(this, new Observer<LoginResult>() {
-            @Override
-            public void onChanged(@Nullable LoginResult loginResult) {
-                if (loginResult == null) return;
-                if (loginResult.getError() != null) showLoginFailed(loginResult.getError());
-                if (loginResult.getUserName() != null) {
-                    updateUiWithUser(loginResult.getUserName());
-                    FirebaseUser user = mAuth.getCurrentUser();
-                    checkUser(user.getUid());
-                }
+        loginViewModel.getLoginResult().observe(this, loginResult -> {
+            if (loginResult == null) return;
+            if (loginResult.getError() != null) showLoginFailed(loginResult.getError());
+            if (loginResult.getUserName() != null) {
+                updateUiWithUser(loginResult.getUserName());
+                FirebaseUser user = mAuth.getCurrentUser();
+                assert user != null;
+                checkUser(user.getUid());
             }
         });
 
@@ -95,12 +90,7 @@ public class LoginActivity extends AppCompatActivity {
         emailEditText.addTextChangedListener(afterTextChangedListener);
         passwordEditText.addTextChangedListener(afterTextChangedListener);
 
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loginViewModel.login(emailEditText.getText().toString(), passwordEditText.getText().toString());
-            }
-        });
+        loginButton.setOnClickListener(v -> loginViewModel.login(emailEditText.getText().toString(), passwordEditText.getText().toString()));
     }
 
 
@@ -110,6 +100,7 @@ public class LoginActivity extends AppCompatActivity {
         if (requestCode == TEXT_REQUEST)
             if (resultCode == RESULT_OK) {
                 FirebaseUser user = mAuth.getCurrentUser();
+                assert user != null;
                 checkUser(user.getUid());
             }
     }
@@ -132,22 +123,19 @@ public class LoginActivity extends AppCompatActivity {
     private void checkUser(String uid) {
         DatabaseReference myRef;
         myRef = FirebaseDatabase.getInstance().getReference();
-        myRef.child("users").child(uid).child("admin").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful())
-                    Toast.makeText(getApplicationContext(), "Account delete.", Toast.LENGTH_LONG).show();
-                else {
-                    if (task.getResult().getValue() == null) register(null);
-                    if ((Boolean) task.getResult().getValue()) {
-                        Intent intent_amin = new Intent(getApplicationContext(), MainActivityAdmin.class);
-                        startActivity(intent_amin);
-                        finish();
-                    } else {
-                        Intent intent_user = new Intent(getApplicationContext(), MainActivityUser.class);
-                        startActivity(intent_user);
-                        finish();
-                    }
+        myRef.child("users").child(uid).child("admin").get().addOnCompleteListener(task -> {
+            if (!task.isSuccessful())
+                Toast.makeText(getApplicationContext(), "Account delete.", Toast.LENGTH_LONG).show();
+            else {
+                if (task.getResult().getValue() == null) register(null);
+                if ((Boolean) task.getResult().getValue()) {
+                    Intent intent_amin = new Intent(getApplicationContext(), MainActivityAdmin.class);
+                    startActivity(intent_amin);
+                    finish();
+                } else {
+                    Intent intent_user = new Intent(getApplicationContext(), MainActivityUser.class);
+                    startActivity(intent_user);
+                    finish();
                 }
             }
         });

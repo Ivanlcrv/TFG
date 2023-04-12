@@ -18,12 +18,13 @@ import java.util.LinkedList;
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> {
 
     private final LinkedList<User> userList;
-    private LayoutInflater mInflater;
-    private Context context;
-    private User usuario_actual;
+    private final LayoutInflater mInflater;
+    private final Context context;
 
     public UserAdapter(Context adminFragment, LinkedList<User> userList) {
-        mInflater = LayoutInflater.from(adminFragment);
+        mInflater = LayoutInflater.
+
+                from(adminFragment);
         this.userList = userList;
         context = adminFragment;
     }
@@ -62,7 +63,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         public void onClick(View v) {
             Intent intent = new Intent(context, InfoUserAdmin.class);
             int mPosition = getLayoutPosition();
-            usuario_actual = userList.get(mPosition);
+            User usuario_actual = userList.get(mPosition);
             intent.putExtra("user", usuario_actual.getEmail());
             context.startActivity(intent);
 
