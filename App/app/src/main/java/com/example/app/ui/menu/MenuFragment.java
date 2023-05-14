@@ -117,7 +117,7 @@ public class MenuFragment extends Fragment {
                                     }
                             }
                         }
-                        mAdapter = new MenuAdapter(context, recipeList);
+                        mAdapter = new MenuAdapter(context, recipeList, true);
                         recyclerViewMenu.setAdapter(mAdapter);
                         recyclerViewMenu.setLayoutManager(new LinearLayoutManager(context));
                     }
@@ -160,7 +160,7 @@ public class MenuFragment extends Fragment {
                                     }
                             }
                         }
-                        mAdapter = new MenuAdapter(context, recipeHistory);
+                        mAdapter = new MenuAdapter(context, recipeHistory, false);
                         recyclerViewHistory.setAdapter(mAdapter);
                         recyclerViewHistory.setLayoutManager(new LinearLayoutManager(context));
                         for (DataSnapshot name : _snapshot.getChildren()) {

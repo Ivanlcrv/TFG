@@ -31,11 +31,13 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
     private final LinkedList<Recipe> recipeList;
     private final LayoutInflater mInflater;
     private final Context context;
+    private final boolean menu;
 
-    public MenuAdapter(Context recipeFragment, LinkedList<Recipe> recipeList) {
+    public MenuAdapter(Context recipeFragment, LinkedList<Recipe> recipeList, boolean menu) {
         mInflater = LayoutInflater.from(recipeFragment);
         this.recipeList = recipeList;
         context = recipeFragment;
+        this.menu = menu;
     }
 
     @NonNull
@@ -83,7 +85,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
             int mPosition = getLayoutPosition();
             Recipe actual_recipe = recipeList.get(mPosition);
             intent = new Intent(context, RecipeViewActivity.class);
-            intent.putExtra("Menu", true);
+            if(menu) intent.putExtra("Menu", true);
             intent.putExtra("recipe", actual_recipe.getName());
             context.startActivity(intent);
 
